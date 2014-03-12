@@ -1,0 +1,37 @@
+ASxxxx Assembler V01.75  (Zilog Z80 / Hitachi HD64180), page 1.
+
+Symbol Table
+
+    __divsint_rrx_s                    **** GX
+    __modsint_rrx_s                    **** GX
+  0 __str_0                            0224 R
+  0 __str_1                            0260 R
+  0 __str_10                           027B R
+  0 __str_11                           027D R
+  0 __str_2                            0262 R
+  0 __str_3                            0265 R
+  0 __str_4                            0268 R
+  0 __str_5                            026B R
+  0 __str_6                            026E R
+  0 __str_7                            0271 R
+  0 __str_8                            0274 R
+  0 __str_9                            0278 R
+  0 _mem_dump                          0000 GR
+  0 _mem_dump_end                      0224 GR
+  0 _mem_dump_start                    0000 GR
+    _mem_num_pages_free                **** GX
+    _page_list                         **** GX
+    _page_map                          **** GX
+    _printk                            **** GX
+    _printnhex                         **** GX
+
+ASxxxx Assembler V01.75  (Zilog Z80 / Hitachi HD64180), page 2.
+
+Area Table
+
+   0 _CODE                              size  28E   flags 0
+   1 _DATA                              size    0   flags 0
+   2 _OVERLAY                           size    0   flags 0
+   3 _HOME                              size    0   flags 0
+   4 _GSINIT                            size    0   flags 0
+   5 _GSFINAL                           size    0   flags 0

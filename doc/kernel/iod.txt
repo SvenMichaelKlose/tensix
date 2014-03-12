@@ -1,0 +1,63 @@
+tensix operating system project documentation
+Copyright (c) 2004, 2005 Sven Klose <pixel@copei.de>
+
+*** THIS DOCUMENTATION IS NOT VERIFIED ***
+
+I/O daemon
+
+1. Features
+
+The I/O daemon (or 'iod' for short) is a kernel process which copies data
+between files. Drivers run in the context of the iod.
+
+2. Controlling the I/O daemon
+
+Commands must be written to file '/iod'. Writes must be immediate (see
+bsend()) to read return values.
+
+Here's an example how to print the local file README to the console.
+
+    open (&iod, "/iod");
+    open (&source, "/local/README");
+    open (&destination, "/con");
+
+    bref (&buffer, iod, 0, IO_CREATE | IO_NOWAIT);
+    IOD_INIT_CMD_CREATE(buffer, source, destination,
+			IODCHN_IMMEDIATE | IODCHN_AUTOCLOSE);
+    err = bsend (buffer);
+
+    close (destination);
+    close (source);
+    close (iod);
+
+3. Commands
+
+There two commands the iod understands:
+
+    IODCMD_CREATE
+    IODCMD_DESTROY
+
+4. IODCMD_CREATE
+
+This command requires flags that determine how the created channel should
+work:
+
+    IODCHN_AUTOCLOSE
+    IODCHN_POLL
+    IODCHN_INTR
+    IODCHN_IMMEDIATE
+
+4.1. IODCHN_AUTOCLOSE
+
+The channel is removed automatically if no source buffer could be read.
+Doesn't work with streams.
+
+4.2. IODCHN_POLL
+
+The source file cannot signal incoming data and must be test-read regularly
+by the daemon.
+
+4.3. IODCHN_IMMEDIATE
+
+Block process until the channel was autoclosed. Implies IODCHN_AUTOCLOSE.
+

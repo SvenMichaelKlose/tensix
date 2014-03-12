@@ -1,0 +1,39 @@
+ASxxxx Assembler V01.75  (Zilog Z80 / Hitachi HD64180), page 1.
+
+Symbol Table
+
+  0 _bzero                             0000 GR
+  0 _bzero_end                         0025 GR
+  0 _bzero_start                       0000 GR
+  0 _memcmp                            006E GR
+  0 _memcmp_end                        00AA GR
+  0 _memcmp_start                      006E GR
+  0 _memcpy                            0025 GR
+  0 _memcpy_end                        006E GR
+  0 _memcpy_start                      0025 GR
+  0 _strcat                            011B GR
+  0 _strcat_end                        0176 GR
+  0 _strcat_start                      011B GR
+  0 _strcmp                            0176 GR
+  0 _strcmp_end                        01C7 GR
+  0 _strcmp_start                      0176 GR
+  0 _strcpy                            00CA GR
+  0 _strcpy_end                        011B GR
+  0 _strcpy_start                      00CA GR
+  0 _strlen                            00AA GR
+  0 _strlen_end                        00CA GR
+  0 _strlen_start                      00AA GR
+  0 _strncmp                           01C7 GR
+  0 _strncmp_end                       023C GR
+  0 _strncmp_start                     01C7 GR
+
+ASxxxx Assembler V01.75  (Zilog Z80 / Hitachi HD64180), page 2.
+
+Area Table
+
+   0 _CODE                              size  23C   flags 0
+   1 _DATA                              size    0   flags 0
+   2 _OVERLAY                           size    0   flags 0
+   3 _HOME                              size    0   flags 0
+   4 _GSINIT                            size    0   flags 0
+   5 _GSFINAL                           size    0   flags 0

@@ -1,0 +1,24 @@
+#!/bin/sh
+#
+# tensix operating system project
+# Copyright (C) 2003, 2004, 2005 Sven Klose <pixel@copei.de>
+
+HOST=gcc ARCH=unix CONFIG=generic ./make.sh build
+./tensix
+exit
+
+This directory contains the kernel and drivers. You can compile a generic
+user mode kernel by just typing 'sh README' into your shell.
+
+README		This file.
+arch		Architecture-dependend drivers.
+builtin		Built-in applications (like the kernel shell).
+conf		Build configurations.
+dev		Generic drivers.
+fs		Filesystem drivers.
+help		Help files.
+include		C header files.
+kern		Basic kernel.
+lib		C libraries.
+make.sh		Build control script.
+tests		Self-tests.

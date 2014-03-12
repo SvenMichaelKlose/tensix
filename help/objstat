@@ -1,0 +1,18 @@
+objstat - Show object information
+
+Syntax: objstat
+
+This command displays a list of all file and directory objects currently
+maintained by the virtual filesystem.
+
+The list is formatted as follows:
+
+	- name of the file or directory the object represents
+	- number of references to the object
+	- number of locks held for the object
+	- number of dirty buffers
+	- object flags:
+		'b': block-oriented
+		's': stream-oriented
+		'p': persistent (will not be removed)
+	- names of processes referencing the object

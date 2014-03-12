@@ -1,0 +1,512 @@
+                              1 ;--------------------------------------------------------
+                              2 ; File Created by SDCC : FreeWare ANSI-C Compiler
+                              3 ; Version 2.6.0 #4309 (Oct 17 2006)
+                              4 ; This file generated Thu Oct 19 04:11:58 2006
+                              5 ;--------------------------------------------------------
+                              6 	.module klibc
+                              7 	.optsdcc -mz80
+                              8 	
+                              9 ;--------------------------------------------------------
+                             10 ; Public variables in this module
+                             11 ;--------------------------------------------------------
+                             12 	.globl _printnhex
+                             13 	.globl _printndec
+                             14 	.globl _printk
+                             15 ;--------------------------------------------------------
+                             16 ; special function registers
+                             17 ;--------------------------------------------------------
+                             18 ;--------------------------------------------------------
+                             19 ;  ram data
+                             20 ;--------------------------------------------------------
+                             21 	.area _DATA
+                             22 ;--------------------------------------------------------
+                             23 ; overlayable items in  ram 
+                             24 ;--------------------------------------------------------
+                             25 	.area _OVERLAY
+                             26 ;--------------------------------------------------------
+                             27 ; external initialized ram data
+                             28 ;--------------------------------------------------------
+                             29 ;--------------------------------------------------------
+                             30 ; global & static initialisations
+                             31 ;--------------------------------------------------------
+                             32 	.area _HOME
+                             33 	.area _GSINIT
+                             34 	.area _GSFINAL
+                             35 	.area _GSINIT
+                             36 ;--------------------------------------------------------
+                             37 ; Home
+                             38 ;--------------------------------------------------------
+                             39 	.area _HOME
+                             40 	.area _CODE
+                             41 ;--------------------------------------------------------
+                             42 ; code
+                             43 ;--------------------------------------------------------
+                             44 	.area _CODE
+                             45 ;klibc.c:15: printnhex (unsigned int n, unsigned int digits)
+                             46 ;	genLabel
+                             47 ;	genFunction
+                             48 ;	---------------------------------
+                             49 ; Function printnhex
+                             50 ; ---------------------------------
+   0000                      51 _printnhex_start::
+   0000                      52 _printnhex:
+   0000 DD E5                53 	push	ix
+   0002 DD 21 00 00          54 	ld	ix,#0
+   0006 DD 39                55 	add	ix,sp
+   0008 21 FE FF             56 	ld	hl,#-2
+   000B 39                   57 	add	hl,sp
+   000C F9                   58 	ld	sp,hl
+                             59 ;klibc.c:17: unsigned s = digits << 2;
+                             60 ;	genLeftShift
+                             61 ;	AOP_STK for 
+                             62 ;	AOP_STK for _printnhex_s_1_1
+   000D DD 7E 06             63 	ld	a,6(ix)
+   0010 DD 77 FE             64 	ld	-2(ix),a
+   0013 DD 7E 07             65 	ld	a,7(ix)
+   0016 DD 77 FF             66 	ld	-1(ix),a
+   0019 3E 03                67 	ld	a,#0x02+1
+   001B C3r26s00             68 	jp	00110$
+   001E                      69 00109$:
+   001E DD CB FE 26          70 	sla	-2(ix)
+   0022 DD CB FF 16          71 	rl	-1(ix)
+   0026                      72 00110$:
+   0026 3D                   73 	dec	a
+   0027 C2r1Es00             74 	jp	nz,00109$
+                             75 ;klibc.c:19: while (digits--)
+                             76 ;	genAssign
+                             77 ;	AOP_STK for 
+   002A DD 5E 06             78 	ld	e,6(ix)
+   002D DD 56 07             79 	ld	d,7(ix)
+                             80 ;	genLabel
+   0030                      81 00101$:
+                             82 ;	genAssign
+   0030 4B                   83 	ld	c,e
+   0031 42                   84 	ld	b,d
+                             85 ;	genMinus
+   0032 1B                   86 	dec	de
+                             87 ;	genIfx
+   0033 79                   88 	ld	a,c
+   0034 B0                   89 	or	a,b
+   0035 CAr79s00             90 	jp	z,00104$
+                             91 ;klibc.c:20: con_out ("0123456789abcdef"[(n >> (s -= 4)) & 15]);
+                             92 ;	genMinus
+                             93 ;	AOP_STK for _printnhex_s_1_1
+   0038 DD 7E FE             94 	ld	a,-2(ix)
+   003B C6 FC                95 	add	a,#0xFC
+   003D 4F                   96 	ld	c,a
+   003E DD 7E FF             97 	ld	a,-1(ix)
+   0041 CE FF                98 	adc	a,#0xFF
+   0043 47                   99 	ld	b,a
+                            100 ;	genAssign
+                            101 ;	AOP_STK for _printnhex_s_1_1
+   0044 DD 71 FE            102 	ld	-2(ix),c
+   0047 DD 70 FF            103 	ld	-1(ix),b
+                            104 ;	genRightShift
+   004A 79                  105 	ld	a,c
+   004B 3C                  106 	inc	a
+                            107 ;	AOP_STK for 
+   004C F5                  108 	push	af
+   004D DD 4E 04            109 	ld	c,4(ix)
+   0050 DD 46 05            110 	ld	b,5(ix)
+   0053 F1                  111 	pop	af
+   0054 C3r5Bs00            112 	jp	00112$
+   0057                     113 00111$:
+   0057 CB 38               114 	srl	b
+   0059 CB 19               115 	rr	c
+   005B                     116 00112$:
+   005B 3D                  117 	dec	a
+   005C C2r57s00            118 	jp	nz,00111$
+                            119 ;	genAnd
+   005F 79                  120 	ld	a,c
+   0060 E6 0F               121 	and	a,#0x0F
+   0062 4F                  122 	ld	c,a
+   0063 06 00               123 	ld	b,#0x00
+                            124 ;	genPlus
+                            125 ;	Can't optimise plus by inc, falling back to the normal way
+   0065 21r7Es00            126 	ld	hl,#__str_0
+   0068 09                  127 	add	hl,bc
+   0069 4D                  128 	ld	c,l
+   006A 44                  129 	ld	b,h
+                            130 ;	genPointerGet
+   006B 0A                  131 	ld	a,(bc)
+   006C 4F                  132 	ld	c,a
+                            133 ;	genIpush
+                            134 ; _saveRegsForCall: sendSetSize: 0 deInUse: 1 bcInUse: 0 deSending: 0
+   006D D5                  135 	push	de
+   006E 79                  136 	ld	a,c
+   006F F5                  137 	push	af
+   0070 33                  138 	inc	sp
+                            139 ;	genCall
+   0071 CDr00s00            140 	call	_con_out
+   0074 33                  141 	inc	sp
+   0075 D1                  142 	pop	de
+                            143 ;	genGoto
+   0076 C3r30s00            144 	jp	00101$
+                            145 ;	genLabel
+   0079                     146 00104$:
+                            147 ;	genEndFunction
+   0079 DD F9               148 	ld	sp,ix
+   007B DD E1               149 	pop	ix
+   007D C9                  150 	ret
+   007E                     151 _printnhex_end::
+   007E                     152 __str_0:
+   007E 30 31 32 33 34 35   153 	.ascii "0123456789abcdef"
+        36 37 38 39 61 62
+        63 64 65 66
+   008E 00                  154 	.db 0x00
+                            155 ;klibc.c:27: printndec (unsigned int n)
+                            156 ;	genLabel
+                            157 ;	genFunction
+                            158 ;	---------------------------------
+                            159 ; Function printndec
+                            160 ; ---------------------------------
+   008F                     161 _printndec_start::
+   008F                     162 _printndec:
+   008F DD E5               163 	push	ix
+   0091 DD 21 00 00         164 	ld	ix,#0
+   0095 DD 39               165 	add	ix,sp
+   0097 21 F0 FF            166 	ld	hl,#-16
+   009A 39                  167 	add	hl,sp
+   009B F9                  168 	ld	sp,hl
+                            169 ;klibc.c:32: do {
+                            170 ;	genAddrOf
+   009C 21 04 00            171 	ld	hl,#0x0004
+   009F 39                  172 	add	hl,sp
+   00A0 4D                  173 	ld	c,l
+   00A1 44                  174 	ld	b,h
+                            175 ;	genAssign
+                            176 ;	AOP_STK for _printndec_i_1_1
+   00A2 DD 36 F2 00         177 	ld	-14(ix),#0x00
+   00A6 DD 36 F3 00         178 	ld	-13(ix),#0x00
+                            179 ;	genLabel
+   00AA                     180 00101$:
+                            181 ;klibc.c:33: out[i++] = n % 10;
+                            182 ;	genAssign
+                            183 ;	AOP_STK for _printndec_i_1_1
+   00AA DD 5E F2            184 	ld	e,-14(ix)
+   00AD DD 56 F3            185 	ld	d,-13(ix)
+                            186 ;	genPlus
+                            187 ;	AOP_STK for _printndec_i_1_1
+                            188 ;	genPlusIncr
+   00B0 DD 34 F2            189 	inc	-14(ix)
+   00B3 C2rB9s00            190 	jp	nz,00114$
+   00B6 DD 34 F3            191 	inc	-13(ix)
+   00B9                     192 00114$:
+                            193 ;	genPlus
+                            194 ;	AOP_STK for _printndec_sloc0_1_0
+                            195 ;	Can't optimise plus by inc, falling back to the normal way
+   00B9 79                  196 	ld	a,c
+   00BA 83                  197 	add	a,e
+   00BB DD 77 F0            198 	ld	-16(ix),a
+   00BE 78                  199 	ld	a,b
+   00BF 8A                  200 	adc	a,d
+   00C0 DD 77 F1            201 	ld	-15(ix),a
+                            202 ;	genIpush
+                            203 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 1 deSending: 0
+   00C3 C5                  204 	push	bc
+   00C4 21 0A 00            205 	ld	hl,#0x000A
+   00C7 E5                  206 	push	hl
+                            207 ;	genIpush
+                            208 ;	AOP_STK for 
+   00C8 DD 6E 04            209 	ld	l,4(ix)
+   00CB DD 66 05            210 	ld	h,5(ix)
+   00CE E5                  211 	push	hl
+                            212 ;	genCall
+   00CF CDr00s00            213 	call	__moduint_rrx_s
+   00D2 54                  214 	ld	d,h
+   00D3 5D                  215 	ld	e,l
+   00D4 F1                  216 	pop	af
+   00D5 F1                  217 	pop	af
+   00D6 C1                  218 	pop	bc
+                            219 ;	genCast
+   00D7 7B                  220 	ld	a,e
+                            221 ;	genAssign (pointer)
+                            222 ;	AOP_STK for _printndec_sloc0_1_0
+                            223 ;	isBitvar = 0
+   00D8 DD 6E F0            224 	ld	l,-16(ix)
+   00DB DD 66 F1            225 	ld	h,-15(ix)
+   00DE 77                  226 	ld	(hl),a
+                            227 ;klibc.c:34: n /= 10;
+                            228 ;	genIpush
+                            229 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 1 deSending: 0
+   00DF C5                  230 	push	bc
+   00E0 21 0A 00            231 	ld	hl,#0x000A
+   00E3 E5                  232 	push	hl
+                            233 ;	genIpush
+                            234 ;	AOP_STK for 
+   00E4 DD 6E 04            235 	ld	l,4(ix)
+   00E7 DD 66 05            236 	ld	h,5(ix)
+   00EA E5                  237 	push	hl
+                            238 ;	genCall
+   00EB CDr00s00            239 	call	__divuint_rrx_s
+   00EE 54                  240 	ld	d,h
+   00EF 5D                  241 	ld	e,l
+   00F0 F1                  242 	pop	af
+   00F1 F1                  243 	pop	af
+   00F2 C1                  244 	pop	bc
+                            245 ;	genAssign
+                            246 ;	AOP_STK for 
+   00F3 DD 73 04            247 	ld	4(ix),e
+   00F6 DD 72 05            248 	ld	5(ix),d
+                            249 ;klibc.c:35: } while (n);
+                            250 ;	genIfx
+                            251 ;	AOP_STK for 
+   00F9 DD 7E 04            252 	ld	a,4(ix)
+   00FC DD B6 05            253 	or	a,5(ix)
+   00FF C2rAAs00            254 	jp	nz,00101$
+                            255 ;klibc.c:37: while (i--)
+                            256 ;	genAssign
+                            257 ;	AOP_STK for _printndec_i_1_1
+                            258 ;	(registers are the same)
+                            259 ;	genLabel
+   0102                     260 00104$:
+                            261 ;	genAssign
+                            262 ;	AOP_STK for _printndec_i_1_1
+   0102 DD 5E F2            263 	ld	e,-14(ix)
+   0105 DD 56 F3            264 	ld	d,-13(ix)
+                            265 ;	genMinus
+                            266 ;	AOP_STK for _printndec_i_1_1
+   0108 DD 6E F2            267 	ld	l,-14(ix)
+   010B DD 66 F3            268 	ld	h,-13(ix)
+   010E 2B                  269 	dec	hl
+   010F DD 75 F2            270 	ld	-14(ix),l
+   0112 DD 74 F3            271 	ld	-13(ix),h
+                            272 ;	genIfx
+   0115 7B                  273 	ld	a,e
+   0116 B2                  274 	or	a,d
+   0117 CAr35s01            275 	jp	z,00107$
+                            276 ;klibc.c:38: con_out (out[i] + '0');
+                            277 ;	genPlus
+                            278 ;	AOP_STK for _printndec_i_1_1
+                            279 ;	Can't optimise plus by inc, falling back to the normal way
+   011A 79                  280 	ld	a,c
+   011B DD 86 F2            281 	add	a,-14(ix)
+   011E 5F                  282 	ld	e,a
+   011F 78                  283 	ld	a,b
+   0120 DD 8E F3            284 	adc	a,-13(ix)
+   0123 57                  285 	ld	d,a
+                            286 ;	genPointerGet
+   0124 1A                  287 	ld	a,(de)
+                            288 ;	genPlus
+                            289 ;	genPlusIncr
+                            290 ;	Can't optimise plus by inc, falling back to the normal way
+   0125 5F                  291 	ld	e,a
+   0126 C6 30               292 	add	a,#0x30
+   0128 5F                  293 	ld	e,a
+                            294 ;	genIpush
+                            295 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 1 deSending: 0
+   0129 C5                  296 	push	bc
+   012A 7B                  297 	ld	a,e
+   012B F5                  298 	push	af
+   012C 33                  299 	inc	sp
+                            300 ;	genCall
+   012D CDr00s00            301 	call	_con_out
+   0130 33                  302 	inc	sp
+   0131 C1                  303 	pop	bc
+                            304 ;	genGoto
+   0132 C3r02s01            305 	jp	00104$
+                            306 ;	genLabel
+   0135                     307 00107$:
+                            308 ;	genEndFunction
+   0135 DD F9               309 	ld	sp,ix
+   0137 DD E1               310 	pop	ix
+   0139 C9                  311 	ret
+   013A                     312 _printndec_end::
+                            313 ;klibc.c:43: printk (char *fmt, unsigned int v)
+                            314 ;	genLabel
+                            315 ;	genFunction
+                            316 ;	---------------------------------
+                            317 ; Function printk
+                            318 ; ---------------------------------
+   013A                     319 _printk_start::
+   013A                     320 _printk:
+   013A DD E5               321 	push	ix
+   013C DD 21 00 00         322 	ld	ix,#0
+   0140 DD 39               323 	add	ix,sp
+   0142 21 FE FF            324 	ld	hl,#-2
+   0145 39                  325 	add	hl,sp
+   0146 F9                  326 	ld	sp,hl
+                            327 ;klibc.c:49: while ((c = *fmt++) != 0) {
+                            328 ;	genAssign
+                            329 ;	AOP_STK for 
+                            330 ;	AOP_STK for _printk_sloc0_1_0
+   0147 DD 7E 06            331 	ld	a,6(ix)
+   014A DD 77 FE            332 	ld	-2(ix),a
+   014D DD 7E 07            333 	ld	a,7(ix)
+   0150 DD 77 FF            334 	ld	-1(ix),a
+                            335 ;	genLabel
+   0153                     336 00111$:
+                            337 ;	genAssign
+                            338 ;	AOP_STK for 
+   0153 DD 5E 04            339 	ld	e,4(ix)
+   0156 DD 56 05            340 	ld	d,5(ix)
+                            341 ;	genPointerGet
+   0159 1A                  342 	ld	a,(de)
+   015A 4F                  343 	ld	c,a
+                            344 ;	genPlus
+                            345 ;	AOP_STK for 
+                            346 ;	genPlusIncr
+                            347 ;	Can't optimise plus by inc, falling back to the normal way
+   015B 7B                  348 	ld	a,e
+   015C C6 01               349 	add	a,#0x01
+   015E DD 77 04            350 	ld	4(ix),a
+   0161 7A                  351 	ld	a,d
+   0162 CE 00               352 	adc	a,#0x00
+   0164 DD 77 05            353 	ld	5(ix),a
+                            354 ;	genAssign
+                            355 ;	genCmpEq
+                            356 ; genCmpEq: left 1, right 1, result 0
+   0167 41                  357 	ld	b,c
+   0168 78                  358 	ld	a,b
+   0169 B7                  359 	or	a,a
+   016A CArE1s01            360 	jp	z,00114$
+   016D                     361 00124$:
+                            362 ;klibc.c:50: if (c != '%') {
+                            363 ;	genCmpEq
+                            364 ; genCmpEq: left 1, right 1, result 0
+   016D 78                  365 	ld	a,b
+   016E FE 25               366 	cp	a,#0x25
+   0170 CAr7Cs01            367 	jp	z,00102$
+   0173                     368 00125$:
+                            369 ;klibc.c:51: con_out (c);
+                            370 ;	genIpush
+                            371 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   0173 C5                  372 	push	bc
+   0174 33                  373 	inc	sp
+                            374 ;	genCall
+   0175 CDr00s00            375 	call	_con_out
+   0178 33                  376 	inc	sp
+                            377 ;klibc.c:52: continue;
+                            378 ;	genGoto
+   0179 C3r53s01            379 	jp	00111$
+                            380 ;	genLabel
+   017C                     381 00102$:
+                            382 ;klibc.c:54: c = *fmt++;
+                            383 ;	genAssign
+                            384 ;	AOP_STK for 
+   017C DD 5E 04            385 	ld	e,4(ix)
+   017F DD 56 05            386 	ld	d,5(ix)
+                            387 ;	genPointerGet
+   0182 1A                  388 	ld	a,(de)
+   0183 4F                  389 	ld	c,a
+                            390 ;	genPlus
+                            391 ;	AOP_STK for 
+                            392 ;	genPlusIncr
+                            393 ;	Can't optimise plus by inc, falling back to the normal way
+   0184 7B                  394 	ld	a,e
+   0185 C6 01               395 	add	a,#0x01
+   0187 DD 77 04            396 	ld	4(ix),a
+   018A 7A                  397 	ld	a,d
+   018B CE 00               398 	adc	a,#0x00
+   018D DD 77 05            399 	ld	5(ix),a
+                            400 ;	genAssign
+   0190 41                  401 	ld	b,c
+                            402 ;klibc.c:55: switch (c) {
+                            403 ;	genCmpEq
+                            404 ; genCmpEq: left 1, right 1, result 0
+   0191 78                  405 	ld	a,b
+   0192 FE 64               406 	cp	a,#0x64
+   0194 CArA6s01            407 	jp	z,00104$
+   0197                     408 00126$:
+                            409 ;	genCmpEq
+                            410 ; genCmpEq: left 1, right 1, result 0
+   0197 78                  411 	ld	a,b
+   0198 FE 6C               412 	cp	a,#0x6C
+   019A CArA6s01            413 	jp	z,00104$
+   019D                     414 00127$:
+                            415 ;	genCmpEq
+                            416 ; genCmpEq: left 1, right 1, result 0
+   019D 78                  417 	ld	a,b
+   019E FE 73               418 	cp	a,#0x73
+   01A0 CArB4s01            419 	jp	z,00105$
+   01A3                     420 00128$:
+                            421 ;	genGoto
+   01A3 C3rCEs01            422 	jp	00109$
+                            423 ;klibc.c:57: case 'l':
+                            424 ;	genLabel
+   01A6                     425 00104$:
+                            426 ;klibc.c:59: printndec ((unsigned int) d);
+                            427 ;	genIpush
+                            428 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+                            429 ;	AOP_STK for _printk_sloc0_1_0
+   01A6 DD 6E FE            430 	ld	l,-2(ix)
+   01A9 DD 66 FF            431 	ld	h,-1(ix)
+   01AC E5                  432 	push	hl
+                            433 ;	genCall
+   01AD CDr8Fs00            434 	call	_printndec
+   01B0 F1                  435 	pop	af
+                            436 ;klibc.c:60: break;
+                            437 ;	genGoto
+   01B1 C3r53s01            438 	jp	00111$
+                            439 ;klibc.c:62: case 's':
+                            440 ;	genLabel
+   01B4                     441 00105$:
+                            442 ;klibc.c:63: s = (char*) v;
+                            443 ;	genCast
+                            444 ;	AOP_STK for 
+   01B4 DD 5E 06            445 	ld	e,6(ix)
+   01B7 DD 56 07            446 	ld	d,7(ix)
+                            447 ;klibc.c:64: while ((c = *s++) != 0)
+                            448 ;	genAssign
+                            449 ;	(registers are the same)
+                            450 ;	genLabel
+   01BA                     451 00106$:
+                            452 ;	genPointerGet
+   01BA 1A                  453 	ld	a,(de)
+   01BB 4F                  454 	ld	c,a
+                            455 ;	genPlus
+                            456 ;	genPlusIncr
+   01BC 13                  457 	inc	de
+                            458 ;	genAssign
+                            459 ;	genCmpEq
+                            460 ; genCmpEq: left 1, right 1, result 0
+   01BD 41                  461 	ld	b,c
+   01BE 78                  462 	ld	a,b
+   01BF B7                  463 	or	a,a
+   01C0 CAr53s01            464 	jp	z,00111$
+   01C3                     465 00129$:
+                            466 ;klibc.c:65: con_out (c);
+                            467 ;	genIpush
+                            468 ; _saveRegsForCall: sendSetSize: 0 deInUse: 1 bcInUse: 0 deSending: 0
+   01C3 D5                  469 	push	de
+   01C4 C5                  470 	push	bc
+   01C5 33                  471 	inc	sp
+                            472 ;	genCall
+   01C6 CDr00s00            473 	call	_con_out
+   01C9 33                  474 	inc	sp
+   01CA D1                  475 	pop	de
+                            476 ;	genGoto
+   01CB C3rBAs01            477 	jp	00106$
+                            478 ;klibc.c:68: default:
+                            479 ;	genLabel
+   01CE                     480 00109$:
+                            481 ;klibc.c:69: con_out ('%');
+                            482 ;	genIpush
+                            483 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 1 deSending: 0
+   01CE C5                  484 	push	bc
+   01CF 3E 25               485 	ld	a,#0x25
+   01D1 F5                  486 	push	af
+   01D2 33                  487 	inc	sp
+                            488 ;	genCall
+   01D3 CDr00s00            489 	call	_con_out
+   01D6 33                  490 	inc	sp
+   01D7 C1                  491 	pop	bc
+                            492 ;klibc.c:70: con_out (c);
+                            493 ;	genIpush
+                            494 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   01D8 C5                  495 	push	bc
+   01D9 33                  496 	inc	sp
+                            497 ;	genCall
+   01DA CDr00s00            498 	call	_con_out
+   01DD 33                  499 	inc	sp
+                            500 ;klibc.c:71: }
+                            501 ;	genGoto
+   01DE C3r53s01            502 	jp	00111$
+                            503 ;	genLabel
+   01E1                     504 00114$:
+                            505 ;	genEndFunction
+   01E1 DD F9               506 	ld	sp,ix
+   01E3 DD E1               507 	pop	ix
+   01E5 C9                  508 	ret
+   01E6                     509 _printk_end::
+                            510 	.area _CODE

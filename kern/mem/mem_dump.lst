@@ -1,0 +1,576 @@
+                              1 ;--------------------------------------------------------
+                              2 ; File Created by SDCC : FreeWare ANSI-C Compiler
+                              3 ; Version 2.6.0 #4309 (Oct 17 2006)
+                              4 ; This file generated Thu Oct 19 04:08:17 2006
+                              5 ;--------------------------------------------------------
+                              6 	.module mem_dump
+                              7 	.optsdcc -mz80
+                              8 	
+                              9 ;--------------------------------------------------------
+                             10 ; Public variables in this module
+                             11 ;--------------------------------------------------------
+                             12 	.globl _mem_dump
+                             13 ;--------------------------------------------------------
+                             14 ; special function registers
+                             15 ;--------------------------------------------------------
+                             16 ;--------------------------------------------------------
+                             17 ;  ram data
+                             18 ;--------------------------------------------------------
+                             19 	.area _DATA
+                             20 ;--------------------------------------------------------
+                             21 ; overlayable items in  ram 
+                             22 ;--------------------------------------------------------
+                             23 	.area _OVERLAY
+                             24 ;--------------------------------------------------------
+                             25 ; external initialized ram data
+                             26 ;--------------------------------------------------------
+                             27 ;--------------------------------------------------------
+                             28 ; global & static initialisations
+                             29 ;--------------------------------------------------------
+                             30 	.area _HOME
+                             31 	.area _GSINIT
+                             32 	.area _GSFINAL
+                             33 	.area _GSINIT
+                             34 ;--------------------------------------------------------
+                             35 ; Home
+                             36 ;--------------------------------------------------------
+                             37 	.area _HOME
+                             38 	.area _CODE
+                             39 ;--------------------------------------------------------
+                             40 ; code
+                             41 ;--------------------------------------------------------
+                             42 	.area _CODE
+                             43 ;mem_dump.c:26: mem_dump ()
+                             44 ;	genLabel
+                             45 ;	genFunction
+                             46 ;	---------------------------------
+                             47 ; Function mem_dump
+                             48 ; ---------------------------------
+   0000                      49 _mem_dump_start::
+   0000                      50 _mem_dump:
+   0000 DD E5                51 	push	ix
+   0002 DD 21 00 00          52 	ld	ix,#0
+   0006 DD 39                53 	add	ix,sp
+   0008 21 FA FF             54 	ld	hl,#-6
+   000B 39                   55 	add	hl,sp
+   000C F9                   56 	ld	sp,hl
+                             57 ;mem_dump.c:29: int c = 0;
+                             58 ;	genAssign
+                             59 ;	AOP_STK for _mem_dump_c_1_1
+   000D DD 36 FC 00          60 	ld	-4(ix),#0x00
+   0011 DD 36 FD 00          61 	ld	-3(ix),#0x00
+                             62 ;mem_dump.c:37: printk ("page map: *=locked, 0-3=page or frag, []=multipage, .=free\n", 0);
+                             63 ;	genIpush
+                             64 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   0015 21 00 00             65 	ld	hl,#0x0000
+   0018 E5                   66 	push	hl
+                             67 ;	genIpush
+   0019 21r24s02             68 	ld	hl,#__str_0
+   001C E5                   69 	push	hl
+                             70 ;	genCall
+   001D CDr00s00             71 	call	_printk
+   0020 F1                   72 	pop	af
+   0021 F1                   73 	pop	af
+                             74 ;mem_dump.c:38: for (i = 0; i < NUM_PAGES; i++) {
+                             75 ;	genAssign
+                             76 ;	AOP_STK for _mem_dump_i_1_1
+   0022 DD 36 FE 00          77 	ld	-2(ix),#0x00
+   0026 DD 36 FF 00          78 	ld	-1(ix),#0x00
+                             79 ;	genLabel
+   002A                      80 00118$:
+                             81 ;	genCast
+                             82 ;	AOP_STK for _mem_dump_i_1_1
+   002A DD 4E FE             83 	ld	c,-2(ix)
+   002D DD 46 FF             84 	ld	b,-1(ix)
+   0030 78                   85 	ld	a,b
+   0031 17                   86 	rla	
+   0032 9F                   87 	sbc	a,a
+   0033 5F                   88 	ld	e,a
+   0034 57                   89 	ld	d,a
+                             90 ;	genCmpLt
+   0035 79                   91 	ld	a,c
+   0036 D6 00                92 	sub	a,#0x00
+   0038 78                   93 	ld	a,b
+   0039 DE 01                94 	sbc	a,#0x01
+   003B 7B                   95 	ld	a,e
+   003C DE 00                96 	sbc	a,#0x00
+   003E 7A                   97 	ld	a,d
+   003F DE 00                98 	sbc	a,#0x00
+   0041 F2r0Cs02             99 	jp	p,00121$
+                            100 ;mem_dump.c:39: ct = PAGE_CONT(i);
+                            101 ;	genPlus
+                            102 ;	AOP_STK for _mem_dump_i_1_1
+                            103 ;	Can't optimise plus by inc, falling back to the normal way
+   0044 FD 21r00s00         104 	ld	iy,#_page_list
+   0048 FD 7E 00            105 	ld	a,0(iy)
+   004B DD 86 FE            106 	add	a,-2(ix)
+   004E 4F                  107 	ld	c,a
+   004F FD 7E 01            108 	ld	a,1(iy)
+   0052 DD 8E FF            109 	adc	a,-1(ix)
+   0055 47                  110 	ld	b,a
+                            111 ;	genPointerGet
+   0056 0A                  112 	ld	a,(bc)
+                            113 ;	genAnd
+   0057 4F                  114 	ld	c,a
+   0058 E6 04               115 	and	a,#0x04
+   005A 4F                  116 	ld	c,a
+                            117 ;	genCast
+                            118 ;	AOP_STK for _mem_dump_ct_1_1
+   005B DD 71 FA            119 	ld	-6(ix),c
+   005E DD 36 FB 00         120 	ld	-5(ix),#0x00
+                            121 ;mem_dump.c:40: if (!(i % 16) && i != 0)
+                            122 ;	genIpush
+                            123 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   0062 21 10 00            124 	ld	hl,#0x0010
+   0065 E5                  125 	push	hl
+                            126 ;	genIpush
+                            127 ;	AOP_STK for _mem_dump_i_1_1
+   0066 DD 6E FE            128 	ld	l,-2(ix)
+   0069 DD 66 FF            129 	ld	h,-1(ix)
+   006C E5                  130 	push	hl
+                            131 ;	genCall
+   006D CDr00s00            132 	call	__modsint_rrx_s
+   0070 54                  133 	ld	d,h
+   0071 5D                  134 	ld	e,l
+   0072 F1                  135 	pop	af
+   0073 F1                  136 	pop	af
+                            137 ;	genIfx
+   0074 7B                  138 	ld	a,e
+   0075 B2                  139 	or	a,d
+   0076 C2r8Fs00            140 	jp	nz,00102$
+                            141 ;	genCmpEq
+                            142 ;	AOP_STK for _mem_dump_i_1_1
+                            143 ; genCmpEq: left 2, right 2, result 0
+   0079 DD 7E FE            144 	ld	a,-2(ix)
+   007C DD B6 FF            145 	or	a,-1(ix)
+   007F CAr8Fs00            146 	jp	z,00102$
+   0082                     147 00144$:
+                            148 ;mem_dump.c:41: printk ("\n", 0);
+                            149 ;	genIpush
+                            150 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   0082 21 00 00            151 	ld	hl,#0x0000
+   0085 E5                  152 	push	hl
+                            153 ;	genIpush
+   0086 21r60s02            154 	ld	hl,#__str_1
+   0089 E5                  155 	push	hl
+                            156 ;	genCall
+   008A CDr00s00            157 	call	_printk
+   008D F1                  158 	pop	af
+   008E F1                  159 	pop	af
+                            160 ;	genLabel
+   008F                     161 00102$:
+                            162 ;mem_dump.c:42: if (!(i % 16)) {
+                            163 ;	genIpush
+                            164 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   008F 21 10 00            165 	ld	hl,#0x0010
+   0092 E5                  166 	push	hl
+                            167 ;	genIpush
+                            168 ;	AOP_STK for _mem_dump_i_1_1
+   0093 DD 6E FE            169 	ld	l,-2(ix)
+   0096 DD 66 FF            170 	ld	h,-1(ix)
+   0099 E5                  171 	push	hl
+                            172 ;	genCall
+   009A CDr00s00            173 	call	__modsint_rrx_s
+   009D 54                  174 	ld	d,h
+   009E 5D                  175 	ld	e,l
+   009F F1                  176 	pop	af
+   00A0 F1                  177 	pop	af
+                            178 ;	genIfx
+   00A1 7B                  179 	ld	a,e
+   00A2 B2                  180 	or	a,d
+   00A3 C2rC2s00            181 	jp	nz,00105$
+                            182 ;mem_dump.c:43: printnhex (PAGESIZE * i, 4);
+                            183 ;	genLeftShift
+                            184 ;	AOP_STK for _mem_dump_i_1_1
+   00A6 DD 56 FE            185 	ld	d,-2(ix)
+   00A9 1E 00               186 	ld	e,#0x00
+                            187 ;	genIpush
+                            188 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   00AB 21 04 00            189 	ld	hl,#0x0004
+   00AE E5                  190 	push	hl
+                            191 ;	genIpush
+   00AF D5                  192 	push	de
+                            193 ;	genCall
+   00B0 CDr00s00            194 	call	_printnhex
+   00B3 F1                  195 	pop	af
+   00B4 F1                  196 	pop	af
+                            197 ;mem_dump.c:44: printk (": ", 0);
+                            198 ;	genIpush
+                            199 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   00B5 21 00 00            200 	ld	hl,#0x0000
+   00B8 E5                  201 	push	hl
+                            202 ;	genIpush
+   00B9 21r62s02            203 	ld	hl,#__str_2
+   00BC E5                  204 	push	hl
+                            205 ;	genCall
+   00BD CDr00s00            206 	call	_printk
+   00C0 F1                  207 	pop	af
+   00C1 F1                  208 	pop	af
+                            209 ;	genLabel
+   00C2                     210 00105$:
+                            211 ;mem_dump.c:46: if (PAGE_LOCKED(i)) {
+                            212 ;	genPlus
+                            213 ;	AOP_STK for _mem_dump_i_1_1
+                            214 ;	Can't optimise plus by inc, falling back to the normal way
+   00C2 FD 21r00s00         215 	ld	iy,#_page_list
+   00C6 FD 7E 00            216 	ld	a,0(iy)
+   00C9 DD 86 FE            217 	add	a,-2(ix)
+   00CC 5F                  218 	ld	e,a
+   00CD FD 7E 01            219 	ld	a,1(iy)
+   00D0 DD 8E FF            220 	adc	a,-1(ix)
+   00D3 57                  221 	ld	d,a
+                            222 ;	genPointerGet
+   00D4 1A                  223 	ld	a,(de)
+                            224 ;	genAnd
+   00D5 5F                  225 	ld	e,a
+   00D6 E6 04               226 	and	a,#0x04
+   00D8 CArF9s00            227 	jp	z,00113$
+   00DB                     228 00145$:
+                            229 ;	genAnd
+   00DB 7B                  230 	ld	a,e
+   00DC E6 03               231 	and	a,#0x03
+   00DE CArF9s00            232 	jp	z,00113$
+   00E1                     233 00146$:
+                            234 ;mem_dump.c:47: printk ("* ", 0);
+                            235 ;	genIpush
+                            236 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   00E1 21 00 00            237 	ld	hl,#0x0000
+   00E4 E5                  238 	push	hl
+                            239 ;	genIpush
+   00E5 21r65s02            240 	ld	hl,#__str_3
+   00E8 E5                  241 	push	hl
+                            242 ;	genCall
+   00E9 CDr00s00            243 	call	_printk
+   00EC F1                  244 	pop	af
+   00ED F1                  245 	pop	af
+                            246 ;mem_dump.c:48: ct = 0;
+                            247 ;	genAssign
+                            248 ;	AOP_STK for _mem_dump_ct_1_1
+   00EE DD 36 FA 00         249 	ld	-6(ix),#0x00
+   00F2 DD 36 FB 00         250 	ld	-5(ix),#0x00
+                            251 ;	genGoto
+   00F6 C3rC7s01            252 	jp	00114$
+                            253 ;	genLabel
+   00F9                     254 00113$:
+                            255 ;mem_dump.c:49: } else if (PAGE_USED(i)) {
+                            256 ;	genIpush
+                            257 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   00F9 21 08 00            258 	ld	hl,#0x0008
+   00FC E5                  259 	push	hl
+                            260 ;	genIpush
+                            261 ;	AOP_STK for _mem_dump_i_1_1
+   00FD DD 6E FE            262 	ld	l,-2(ix)
+   0100 DD 66 FF            263 	ld	h,-1(ix)
+   0103 E5                  264 	push	hl
+                            265 ;	genCall
+   0104 CDr00s00            266 	call	__divsint_rrx_s
+   0107 54                  267 	ld	d,h
+   0108 5D                  268 	ld	e,l
+   0109 F1                  269 	pop	af
+   010A F1                  270 	pop	af
+                            271 ;	genPlus
+                            272 ;	Can't optimise plus by inc, falling back to the normal way
+   010B FD 21r00s00         273 	ld	iy,#_page_map
+   010F FD 7E 00            274 	ld	a,0(iy)
+   0112 83                  275 	add	a,e
+   0113 5F                  276 	ld	e,a
+   0114 FD 7E 01            277 	ld	a,1(iy)
+   0117 8A                  278 	adc	a,d
+   0118 57                  279 	ld	d,a
+                            280 ;	genPointerGet
+   0119 1A                  281 	ld	a,(de)
+   011A 5F                  282 	ld	e,a
+                            283 ;	genIpush
+                            284 ; _saveRegsForCall: sendSetSize: 0 deInUse: 1 bcInUse: 0 deSending: 0
+   011B D5                  285 	push	de
+   011C 21 08 00            286 	ld	hl,#0x0008
+   011F E5                  287 	push	hl
+                            288 ;	genIpush
+                            289 ;	AOP_STK for _mem_dump_i_1_1
+   0120 DD 6E FE            290 	ld	l,-2(ix)
+   0123 DD 66 FF            291 	ld	h,-1(ix)
+   0126 E5                  292 	push	hl
+                            293 ;	genCall
+   0127 CDr00s00            294 	call	__modsint_rrx_s
+   012A 4C                  295 	ld	c,h
+   012B 55                  296 	ld	d,l
+   012C F1                  297 	pop	af
+   012D F1                  298 	pop	af
+   012E 7A                  299 	ld	a,d
+   012F D1                  300 	pop	de
+                            301 ;	genLeftShift
+   0130 57                  302 	ld	d,a
+   0131 3C                  303 	inc	a
+   0132 F5                  304 	push	af
+   0133 16 01               305 	ld	d,#0x01
+   0135 0E 00               306 	ld	c,#0x00
+   0137 F1                  307 	pop	af
+   0138 C3r3Fs01            308 	jp	00148$
+   013B                     309 00147$:
+   013B CB 22               310 	sla	d
+   013D CB 11               311 	rl	c
+   013F                     312 00148$:
+   013F 3D                  313 	dec	a
+   0140 C2r3Bs01            314 	jp	nz,00147$
+                            315 ;	genCast
+                            316 ; Removed redundent load
+                            317 ;	genAnd
+   0143 7B                  318 	ld	a,e
+   0144 A2                  319 	and	a,d
+                            320 ;	genIfx
+   0145 B7                  321 	or	a,a
+   0146 CArBAs01            322 	jp	z,00110$
+                            323 ;mem_dump.c:50: if (FRAGLOG(i) == 0)
+                            324 ;	genPlus
+                            325 ;	AOP_STK for _mem_dump_i_1_1
+                            326 ;	Can't optimise plus by inc, falling back to the normal way
+   0149 FD 21r00s00         327 	ld	iy,#_page_list
+   014D FD 7E 00            328 	ld	a,0(iy)
+   0150 DD 86 FE            329 	add	a,-2(ix)
+   0153 4F                  330 	ld	c,a
+   0154 FD 7E 01            331 	ld	a,1(iy)
+   0157 DD 8E FF            332 	adc	a,-1(ix)
+   015A 47                  333 	ld	b,a
+                            334 ;	genPointerGet
+   015B 0A                  335 	ld	a,(bc)
+                            336 ;	genAnd
+   015C 4F                  337 	ld	c,a
+   015D E6 03               338 	and	a,#0x03
+   015F 4F                  339 	ld	c,a
+                            340 ;	genIfx
+   0160 AF                  341 	xor	a,a
+   0161 B1                  342 	or	a,c
+   0162 C2rABs01            343 	jp	nz,00107$
+                            344 ;mem_dump.c:51: printk (ct ? (!c ? "[ " : "X ") : (c ? "] " : "0 "), 0);
+                            345 ;	genIfx
+                            346 ;	AOP_STK for _mem_dump_ct_1_1
+   0165 DD 7E FA            347 	ld	a,-6(ix)
+   0168 DD B6 FB            348 	or	a,-5(ix)
+   016B CAr8As01            349 	jp	z,00124$
+                            350 ;	genNot
+                            351 ;	AOP_STK for _mem_dump_c_1_1
+   016E DD 7E FC            352 	ld	a,-4(ix)
+   0171 DD B6 FD            353 	or	a,-3(ix)
+   0174 D6 01               354 	sub	a,#0x01
+   0176 3E 00               355 	ld	a,#0x00
+   0178 17                  356 	rla
+                            357 ;	genIfx
+   0179 47                  358 	ld	b,a
+   017A B7                  359 	or	a,a
+   017B CAr84s01            360 	jp	z,00126$
+                            361 ;	genAssign
+   017E 11r68s02            362 	ld	de,#__str_4
+                            363 ;	genGoto
+   0181 C3r87s01            364 	jp	00127$
+                            365 ;	genLabel
+   0184                     366 00126$:
+                            367 ;	genAssign
+   0184 11r6Bs02            368 	ld	de,#__str_5
+                            369 ;	genLabel
+   0187                     370 00127$:
+                            371 ;	genAssign
+                            372 ;	(registers are the same)
+                            373 ;	genGoto
+   0187 C3r9Es01            374 	jp	00125$
+                            375 ;	genLabel
+   018A                     376 00124$:
+                            377 ;	genIfx
+                            378 ;	AOP_STK for _mem_dump_c_1_1
+   018A DD 7E FC            379 	ld	a,-4(ix)
+   018D DD B6 FD            380 	or	a,-3(ix)
+   0190 CAr99s01            381 	jp	z,00128$
+                            382 ;	genAssign
+   0193 01r6Es02            383 	ld	bc,#__str_6
+                            384 ;	genGoto
+   0196 C3r9Cs01            385 	jp	00129$
+                            386 ;	genLabel
+   0199                     387 00128$:
+                            388 ;	genAssign
+   0199 01r71s02            389 	ld	bc,#__str_7
+                            390 ;	genLabel
+   019C                     391 00129$:
+                            392 ;	genAssign
+   019C 59                  393 	ld	e,c
+   019D 50                  394 	ld	d,b
+                            395 ;	genLabel
+   019E                     396 00125$:
+                            397 ;	genIpush
+                            398 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   019E 21 00 00            399 	ld	hl,#0x0000
+   01A1 E5                  400 	push	hl
+                            401 ;	genIpush
+   01A2 D5                  402 	push	de
+                            403 ;	genCall
+   01A3 CDr00s00            404 	call	_printk
+   01A6 F1                  405 	pop	af
+   01A7 F1                  406 	pop	af
+                            407 ;	genGoto
+   01A8 C3rC7s01            408 	jp	00114$
+                            409 ;	genLabel
+   01AB                     410 00107$:
+                            411 ;mem_dump.c:53: printk ("%d ", FRAGLOG(i));
+                            412 ;	genCast
+                            413 ; Removed redundent load
+   01AB 06 00               414 	ld	b,#0x00
+                            415 ;	genIpush
+                            416 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   01AD C5                  417 	push	bc
+                            418 ;	genIpush
+   01AE 21r74s02            419 	ld	hl,#__str_8
+   01B1 E5                  420 	push	hl
+                            421 ;	genCall
+   01B2 CDr00s00            422 	call	_printk
+   01B5 F1                  423 	pop	af
+   01B6 F1                  424 	pop	af
+                            425 ;	genGoto
+   01B7 C3rC7s01            426 	jp	00114$
+                            427 ;	genLabel
+   01BA                     428 00110$:
+                            429 ;mem_dump.c:55: printk (". ", 0); /* free */
+                            430 ;	genIpush
+                            431 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   01BA 21 00 00            432 	ld	hl,#0x0000
+   01BD E5                  433 	push	hl
+                            434 ;	genIpush
+   01BE 21r78s02            435 	ld	hl,#__str_9
+   01C1 E5                  436 	push	hl
+                            437 ;	genCall
+   01C2 CDr00s00            438 	call	_printk
+   01C5 F1                  439 	pop	af
+   01C6 F1                  440 	pop	af
+                            441 ;	genLabel
+   01C7                     442 00114$:
+                            443 ;mem_dump.c:56: if ((i % 4) == 3)
+                            444 ;	genIpush
+                            445 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   01C7 21 04 00            446 	ld	hl,#0x0004
+   01CA E5                  447 	push	hl
+                            448 ;	genIpush
+                            449 ;	AOP_STK for _mem_dump_i_1_1
+   01CB DD 6E FE            450 	ld	l,-2(ix)
+   01CE DD 66 FF            451 	ld	h,-1(ix)
+   01D1 E5                  452 	push	hl
+                            453 ;	genCall
+   01D2 CDr00s00            454 	call	__modsint_rrx_s
+   01D5 44                  455 	ld	b,h
+   01D6 4D                  456 	ld	c,l
+   01D7 F1                  457 	pop	af
+   01D8 F1                  458 	pop	af
+                            459 ;	genCmpEq
+                            460 ; genCmpEq: left 2, right 2, result 0
+   01D9 79                  461 	ld	a,c
+   01DA FE 03               462 	cp	a,#0x03
+   01DC C2rE4s01            463 	jp	nz,00149$
+   01DF 78                  464 	ld	a,b
+   01E0 B7                  465 	or	a,a
+   01E1 CArE7s01            466 	jp	z,00150$
+   01E4                     467 00149$:
+   01E4 C3rF4s01            468 	jp	00117$
+   01E7                     469 00150$:
+                            470 ;mem_dump.c:57: printk (" ", 0);
+                            471 ;	genIpush
+                            472 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   01E7 21 00 00            473 	ld	hl,#0x0000
+   01EA E5                  474 	push	hl
+                            475 ;	genIpush
+   01EB 21r7Bs02            476 	ld	hl,#__str_10
+   01EE E5                  477 	push	hl
+                            478 ;	genCall
+   01EF CDr00s00            479 	call	_printk
+   01F2 F1                  480 	pop	af
+   01F3 F1                  481 	pop	af
+                            482 ;	genLabel
+   01F4                     483 00117$:
+                            484 ;mem_dump.c:58: c = ct;
+                            485 ;	genAssign
+                            486 ;	AOP_STK for _mem_dump_ct_1_1
+                            487 ;	AOP_STK for _mem_dump_c_1_1
+   01F4 DD 7E FA            488 	ld	a,-6(ix)
+   01F7 DD 77 FC            489 	ld	-4(ix),a
+   01FA DD 7E FB            490 	ld	a,-5(ix)
+   01FD DD 77 FD            491 	ld	-3(ix),a
+                            492 ;mem_dump.c:38: for (i = 0; i < NUM_PAGES; i++) {
+                            493 ;	genPlus
+                            494 ;	AOP_STK for _mem_dump_i_1_1
+                            495 ;	genPlusIncr
+   0200 DD 34 FE            496 	inc	-2(ix)
+   0203 C2r09s02            497 	jp	nz,00151$
+   0206 DD 34 FF            498 	inc	-1(ix)
+   0209                     499 00151$:
+                            500 ;	genGoto
+   0209 C3r2As00            501 	jp	00118$
+                            502 ;	genLabel
+   020C                     503 00121$:
+                            504 ;mem_dump.c:72: printk ("\n%d bytes free.\n", (int) (PAGESIZE * mem_num_pages_free));
+                            505 ;	genLeftShift
+   020C FD 21r00s00         506 	ld	iy,#_mem_num_pages_free
+   0210 FD 46 00            507 	ld	b,0(iy)
+   0213 0E 00               508 	ld	c,#0x00
+                            509 ;	genIpush
+                            510 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   0215 C5                  511 	push	bc
+                            512 ;	genIpush
+   0216 21r7Ds02            513 	ld	hl,#__str_11
+   0219 E5                  514 	push	hl
+                            515 ;	genCall
+   021A CDr00s00            516 	call	_printk
+   021D F1                  517 	pop	af
+   021E F1                  518 	pop	af
+                            519 ;	genLabel
+   021F                     520 00122$:
+                            521 ;	genEndFunction
+   021F DD F9               522 	ld	sp,ix
+   0221 DD E1               523 	pop	ix
+   0223 C9                  524 	ret
+   0224                     525 _mem_dump_end::
+   0224                     526 __str_0:
+   0224 70 61 67 65 20 6D   527 	.ascii "page map: *=locked, 0-3=page or frag, []=multipage, .=free"
+        61 70 3A 20 2A 3D
+        6C 6F 63 6B 65 64
+        2C 20 30 2D 33 3D
+        70 61 67 65 20 6F
+        72 20 66 72 61 67
+        2C 20 5B 5D 3D 6D
+        75 6C 74 69 70 61
+        67 65 2C 20 2E 3D
+        66 72 65 65
+   025E 0A                  528 	.db 0x0A
+   025F 00                  529 	.db 0x00
+   0260                     530 __str_1:
+   0260 0A                  531 	.db 0x0A
+   0261 00                  532 	.db 0x00
+   0262                     533 __str_2:
+   0262 3A 20               534 	.ascii ": "
+   0264 00                  535 	.db 0x00
+   0265                     536 __str_3:
+   0265 2A 20               537 	.ascii "* "
+   0267 00                  538 	.db 0x00
+   0268                     539 __str_4:
+   0268 5B 20               540 	.ascii "[ "
+   026A 00                  541 	.db 0x00
+   026B                     542 __str_5:
+   026B 58 20               543 	.ascii "X "
+   026D 00                  544 	.db 0x00
+   026E                     545 __str_6:
+   026E 5D 20               546 	.ascii "] "
+   0270 00                  547 	.db 0x00
+   0271                     548 __str_7:
+   0271 30 20               549 	.ascii "0 "
+   0273 00                  550 	.db 0x00
+   0274                     551 __str_8:
+   0274 25 64 20            552 	.ascii "%d "
+   0277 00                  553 	.db 0x00
+   0278                     554 __str_9:
+   0278 2E 20               555 	.ascii ". "
+   027A 00                  556 	.db 0x00
+   027B                     557 __str_10:
+   027B 20                  558 	.ascii " "
+   027C 00                  559 	.db 0x00
+   027D                     560 __str_11:
+   027D 0A                  561 	.db 0x0A
+   027E 25 64 20 62 79 74   562 	.ascii "%d bytes free."
+        65 73 20 66 72 65
+        65 2E
+   028C 0A                  563 	.db 0x0A
+   028D 00                  564 	.db 0x00
+                            565 	.area _CODE

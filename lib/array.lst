@@ -1,0 +1,176 @@
+                              1 ;--------------------------------------------------------
+                              2 ; File Created by SDCC : FreeWare ANSI-C Compiler
+                              3 ; Version 2.6.0 #4309 (Oct 17 2006)
+                              4 ; This file generated Thu Oct 19 04:11:58 2006
+                              5 ;--------------------------------------------------------
+                              6 	.module array
+                              7 	.optsdcc -mz80
+                              8 	
+                              9 ;--------------------------------------------------------
+                             10 ; Public variables in this module
+                             11 ;--------------------------------------------------------
+                             12 	.globl __sarray_add
+                             13 ;--------------------------------------------------------
+                             14 ; special function registers
+                             15 ;--------------------------------------------------------
+                             16 ;--------------------------------------------------------
+                             17 ;  ram data
+                             18 ;--------------------------------------------------------
+                             19 	.area _DATA
+                             20 ;--------------------------------------------------------
+                             21 ; overlayable items in  ram 
+                             22 ;--------------------------------------------------------
+                             23 	.area _OVERLAY
+                             24 ;--------------------------------------------------------
+                             25 ; external initialized ram data
+                             26 ;--------------------------------------------------------
+                             27 ;--------------------------------------------------------
+                             28 ; global & static initialisations
+                             29 ;--------------------------------------------------------
+                             30 	.area _HOME
+                             31 	.area _GSINIT
+                             32 	.area _GSFINAL
+                             33 	.area _GSINIT
+                             34 ;--------------------------------------------------------
+                             35 ; Home
+                             36 ;--------------------------------------------------------
+                             37 	.area _HOME
+                             38 	.area _CODE
+                             39 ;--------------------------------------------------------
+                             40 ; code
+                             41 ;--------------------------------------------------------
+                             42 	.area _CODE
+                             43 ;array.c:14: _sarray_add (size_t tlen, char* arr)
+                             44 ;	genLabel
+                             45 ;	genFunction
+                             46 ;	---------------------------------
+                             47 ; Function _sarray_add
+                             48 ; ---------------------------------
+   0000                      49 __sarray_add_start::
+   0000                      50 __sarray_add:
+   0000 DD E5                51 	push	ix
+   0002 DD 21 00 00          52 	ld	ix,#0
+   0006 DD 39                53 	add	ix,sp
+   0008 21 FE FF             54 	ld	hl,#-2
+   000B 39                   55 	add	hl,sp
+   000C F9                   56 	ld	sp,hl
+                             57 ;array.c:17: char *end = (char *) SARRAY_END(arr);
+                             58 ;	genCast
+                             59 ;	AOP_STK for 
+   000D DD 4E 06             60 	ld	c,6(ix)
+   0010 DD 46 07             61 	ld	b,7(ix)
+                             62 ;	genCast
+   0013 1Er00                63 	ld	e,#<_ram
+   0015 16s00                64 	ld	d,#>_ram
+                             65 ;	genMinus
+   0017 79                   66 	ld	a,c
+   0018 93                   67 	sub	a,e
+   0019 5F                   68 	ld	e,a
+   001A 78                   69 	ld	a,b
+   001B 9A                   70 	sbc	a,d
+   001C 57                   71 	ld	d,a
+                             72 ;	genCast
+                             73 ;	genCast
+                             74 ;	genRightShift
+   001D 5A                   75 	ld	e,d
+   001E 16 00                76 	ld	d,#0x00
+                             77 ;	genPlus
+                             78 ;	Can't optimise plus by inc, falling back to the normal way
+   0020 FD 21r00s00          79 	ld	iy,#_page_list
+   0024 FD 7E 00             80 	ld	a,0(iy)
+   0027 83                   81 	add	a,e
+   0028 5F                   82 	ld	e,a
+   0029 FD 7E 01             83 	ld	a,1(iy)
+   002C 8A                   84 	adc	a,d
+   002D 57                   85 	ld	d,a
+                             86 ;	genPointerGet
+   002E 1A                   87 	ld	a,(de)
+                             88 ;	genAnd
+   002F 5F                   89 	ld	e,a
+   0030 E6 03                90 	and	a,#0x03
+                             91 ;	genRightShift
+   0032 5F                   92 	ld	e,a
+   0033 3C                   93 	inc	a
+   0034 F5                   94 	push	af
+   0035 1E 00                95 	ld	e,#0x00
+   0037 16 01                96 	ld	d,#0x01
+   0039 F1                   97 	pop	af
+   003A C3r41s00             98 	jp	00113$
+   003D                      99 00112$:
+   003D CB 2A               100 	sra	d
+   003F CB 1B               101 	rr	e
+   0041                     102 00113$:
+   0041 3D                  103 	dec	a
+   0042 C2r3Ds00            104 	jp	nz,00112$
+                            105 ;	genPlus
+                            106 ;	Can't optimise plus by inc, falling back to the normal way
+   0045 79                  107 	ld	a,c
+   0046 83                  108 	add	a,e
+   0047 5F                  109 	ld	e,a
+   0048 78                  110 	ld	a,b
+   0049 8A                  111 	adc	a,d
+   004A 57                  112 	ld	d,a
+                            113 ;	genCast
+                            114 ;	AOP_STK for __sarray_add_end_1_1
+   004B DD 73 FE            115 	ld	-2(ix),e
+   004E DD 72 FF            116 	ld	-1(ix),d
+                            117 ;array.c:20: for (i = arr; i < end; i += tlen)
+                            118 ;	genAssign
+                            119 ;	AOP_STK for 
+   0051 DD 5E 06            120 	ld	e,6(ix)
+   0054 DD 56 07            121 	ld	d,7(ix)
+                            122 ;	genLabel
+   0057                     123 00103$:
+                            124 ;	genCmpLt
+                            125 ;	AOP_STK for __sarray_add_end_1_1
+   0057 7B                  126 	ld	a,e
+   0058 DD 96 FE            127 	sub	a,-2(ix)
+   005B 7A                  128 	ld	a,d
+   005C DD 9E FF            129 	sbc	a,-1(ix)
+   005F F2r7Es00            130 	jp	p,00106$
+                            131 ;array.c:21: if (*(u16_t *) i == 0)
+                            132 ;	genPointerGet
+   0062 6B                  133 	ld	l,e
+   0063 62                  134 	ld	h,d
+   0064 4E                  135 	ld	c,(hl)
+   0065 23                  136 	inc	hl
+   0066 46                  137 	ld	b,(hl)
+                            138 ;	genIfx
+   0067 79                  139 	ld	a,c
+   0068 B0                  140 	or	a,b
+   0069 C2r71s00            141 	jp	nz,00105$
+                            142 ;array.c:22: return (void*) i;
+                            143 ;	genRet
+                            144 ; Dump of IC_LEFT: type AOP_REG size 2
+                            145 ;	 reg = de
+   006C 6B                  146 	ld	l,e
+   006D 62                  147 	ld	h,d
+   006E C3r81s00            148 	jp	00107$
+                            149 ;	genLabel
+   0071                     150 00105$:
+                            151 ;array.c:20: for (i = arr; i < end; i += tlen)
+                            152 ;	genPlus
+                            153 ;	AOP_STK for 
+                            154 ;	Can't optimise plus by inc, falling back to the normal way
+   0071 7B                  155 	ld	a,e
+   0072 DD 86 04            156 	add	a,4(ix)
+   0075 5F                  157 	ld	e,a
+   0076 7A                  158 	ld	a,d
+   0077 DD 8E 05            159 	adc	a,5(ix)
+   007A 57                  160 	ld	d,a
+                            161 ;	genGoto
+   007B C3r57s00            162 	jp	00103$
+                            163 ;	genLabel
+   007E                     164 00106$:
+                            165 ;array.c:24: return NULL;
+                            166 ;	genRet
+                            167 ; Dump of IC_LEFT: type AOP_LIT size 2
+   007E 21 00 00            168 	ld	hl,#0x0000
+                            169 ;	genLabel
+   0081                     170 00107$:
+                            171 ;	genEndFunction
+   0081 DD F9               172 	ld	sp,ix
+   0083 DD E1               173 	pop	ix
+   0085 C9                  174 	ret
+   0086                     175 __sarray_add_end::
+                            176 	.area _CODE

@@ -1,0 +1,407 @@
+                              1 ;--------------------------------------------------------
+                              2 ; File Created by SDCC : FreeWare ANSI-C Compiler
+                              3 ; Version 2.6.0 #4309 (Oct 17 2006)
+                              4 ; This file generated Wed Oct 18 21:42:03 2006
+                              5 ;--------------------------------------------------------
+                              6 	.module bitmap
+                              7 	.optsdcc -mz80
+                              8 	
+                              9 ;--------------------------------------------------------
+                             10 ; Public variables in this module
+                             11 ;--------------------------------------------------------
+                             12 	.globl _bitmap_seek
+                             13 ;--------------------------------------------------------
+                             14 ; special function registers
+                             15 ;--------------------------------------------------------
+                             16 ;--------------------------------------------------------
+                             17 ;  ram data
+                             18 ;--------------------------------------------------------
+                             19 	.area _DATA
+                             20 ;--------------------------------------------------------
+                             21 ; overlayable items in  ram 
+                             22 ;--------------------------------------------------------
+                             23 	.area _OVERLAY
+                             24 ;--------------------------------------------------------
+                             25 ; external initialized ram data
+                             26 ;--------------------------------------------------------
+                             27 ;--------------------------------------------------------
+                             28 ; global & static initialisations
+                             29 ;--------------------------------------------------------
+                             30 	.area _HOME
+                             31 	.area _GSINIT
+                             32 	.area _GSFINAL
+                             33 	.area _GSINIT
+                             34 ;--------------------------------------------------------
+                             35 ; Home
+                             36 ;--------------------------------------------------------
+                             37 	.area _HOME
+                             38 	.area _CODE
+                             39 ;--------------------------------------------------------
+                             40 ; code
+                             41 ;--------------------------------------------------------
+                             42 	.area _CODE
+                             43 ;bitmap.c:20: bitmap_seek (char *bitmap, size_t size, size_t b, size_t len)
+                             44 ;	genLabel
+                             45 ;	genFunction
+                             46 ;	---------------------------------
+                             47 ; Function bitmap_seek
+                             48 ; ---------------------------------
+   0000                      49 _bitmap_seek_start::
+   0000                      50 _bitmap_seek:
+   0000 DD E5                51 	push	ix
+   0002 DD 21 00 00          52 	ld	ix,#0
+   0006 DD 39                53 	add	ix,sp
+   0008 21 F5 FF             54 	ld	hl,#-11
+   000B 39                   55 	add	hl,sp
+   000C F9                   56 	ld	sp,hl
+                             57 ;bitmap.c:25: ASSERT(len > size, "bitmap_seek: Wanted len is greater than bitmap size.\n");
+                             58 ;	genCmpGt
+                             59 ;	AOP_STK for 
+                             60 ;	AOP_STK for 
+   000D DD 7E 06             61 	ld	a,6(ix)
+   0010 DD 96 0A             62 	sub	a,10(ix)
+   0013 DD 7E 07             63 	ld	a,7(ix)
+   0016 DD 9E 0B             64 	sbc	a,11(ix)
+   0019 D2r24s00             65 	jp	nc,00125$
+                             66 ;	genIpush
+                             67 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   001C 21rAAs01             68 	ld	hl,#__str_0
+   001F E5                   69 	push	hl
+                             70 ;	genCall
+   0020 CDr00s00             71 	call	_panic
+   0023 F1                   72 	pop	af
+                             73 ;bitmap.c:27: while (b < (size - len)) {
+                             74 ;	genLabel
+   0024                      75 00125$:
+                             76 ;	genAssign
+                             77 ;	AOP_STK for 
+   0024 DD 4E 04             78 	ld	c,4(ix)
+   0027 DD 46 05             79 	ld	b,5(ix)
+                             80 ;	genMinus
+                             81 ;	AOP_STK for 
+                             82 ;	AOP_STK for 
+                             83 ;	AOP_STK for _bitmap_seek_sloc0_1_0
+   002A DD 7E 06             84 	ld	a,6(ix)
+   002D DD 96 0A             85 	sub	a,10(ix)
+   0030 DD 77 FA             86 	ld	-6(ix),a
+   0033 DD 7E 07             87 	ld	a,7(ix)
+   0036 DD 9E 0B             88 	sbc	a,11(ix)
+   0039 DD 77 FB             89 	ld	-5(ix),a
+                             90 ;	genAssign
+                             91 ;	AOP_STK for 
+                             92 ;	AOP_STK for _bitmap_seek_l_1_1
+   003C DD 7E 0A             93 	ld	a,10(ix)
+   003F DD 77 FE             94 	ld	-2(ix),a
+   0042 DD 7E 0B             95 	ld	a,11(ix)
+   0045 DD 77 FF             96 	ld	-1(ix),a
+                             97 ;	genAssign
+                             98 ;	AOP_STK for _bitmap_seek_sloc1_1_0
+   0048 DD 71 F8             99 	ld	-8(ix),c
+   004B DD 70 F9            100 	ld	-7(ix),b
+                            101 ;	genLabel
+   004E                     102 00116$:
+                            103 ;	genCmpLt
+                            104 ;	AOP_STK for 
+                            105 ;	AOP_STK for _bitmap_seek_sloc0_1_0
+   004E DD 7E 08            106 	ld	a,8(ix)
+   0051 DD 96 FA            107 	sub	a,-6(ix)
+   0054 DD 7E 09            108 	ld	a,9(ix)
+   0057 DD 9E FB            109 	sbc	a,-5(ix)
+   005A D2rA2s01            110 	jp	nc,00118$
+                            111 ;bitmap.c:28: if ((b % 8) && (BITMAP_BYTE(bitmap, b) == 255)) {
+                            112 ;	genAnd
+                            113 ;	AOP_STK for 
+   005D DD 7E 08            114 	ld	a,8(ix)
+   0060 E6 07               115 	and	a,#0x07
+   0062 CAr9As00            116 	jp	z,00104$
+   0065                     117 00132$:
+                            118 ;	genRightShift
+                            119 ;	AOP_STK for 
+   0065 DD 5E 08            120 	ld	e,8(ix)
+   0068 DD 56 09            121 	ld	d,9(ix)
+   006B CB 3A               122 	srl	d
+   006D CB 1B               123 	rr	e
+   006F CB 3A               124 	srl	d
+   0071 CB 1B               125 	rr	e
+   0073 CB 3A               126 	srl	d
+   0075 CB 1B               127 	rr	e
+                            128 ;	genPlus
+                            129 ;	Can't optimise plus by inc, falling back to the normal way
+   0077 79                  130 	ld	a,c
+   0078 83                  131 	add	a,e
+   0079 5F                  132 	ld	e,a
+   007A 78                  133 	ld	a,b
+   007B 8A                  134 	adc	a,d
+   007C 57                  135 	ld	d,a
+                            136 ;	genPointerGet
+   007D 1A                  137 	ld	a,(de)
+                            138 ;	genCmpEq
+                            139 ; genCmpEq: left 1, right 1, result 0
+   007E 5F                  140 	ld	e,a
+   007F FE FF               141 	cp	a,#0xFF
+   0081 CAr87s00            142 	jp	z,00136$
+   0084                     143 00135$:
+   0084 C3r9As00            144 	jp	00104$
+   0087                     145 00136$:
+                            146 ;bitmap.c:29: b += 8;
+                            147 ;	genPlus
+                            148 ;	AOP_STK for 
+                            149 ;	genPlusIncr
+                            150 ;	Can't optimise plus by inc, falling back to the normal way
+   0087 DD 7E 08            151 	ld	a,8(ix)
+   008A C6 08               152 	add	a,#0x08
+   008C DD 77 08            153 	ld	8(ix),a
+   008F DD 7E 09            154 	ld	a,9(ix)
+   0092 CE 00               155 	adc	a,#0x00
+   0094 DD 77 09            156 	ld	9(ix),a
+                            157 ;bitmap.c:30: continue;
+                            158 ;	genGoto
+   0097 C3r4Es00            159 	jp	00116$
+                            160 ;	genLabel
+   009A                     161 00104$:
+                            162 ;bitmap.c:34: if (BITMAP_GET(bitmap, b)) {
+                            163 ;	genRightShift
+                            164 ;	AOP_STK for 
+   009A DD 5E 08            165 	ld	e,8(ix)
+   009D DD 56 09            166 	ld	d,9(ix)
+   00A0 CB 3A               167 	srl	d
+   00A2 CB 1B               168 	rr	e
+   00A4 CB 3A               169 	srl	d
+   00A6 CB 1B               170 	rr	e
+   00A8 CB 3A               171 	srl	d
+   00AA CB 1B               172 	rr	e
+                            173 ;	genPlus
+                            174 ;	Can't optimise plus by inc, falling back to the normal way
+   00AC 79                  175 	ld	a,c
+   00AD 83                  176 	add	a,e
+   00AE 5F                  177 	ld	e,a
+   00AF 78                  178 	ld	a,b
+   00B0 8A                  179 	adc	a,d
+   00B1 57                  180 	ld	d,a
+                            181 ;	genPointerGet
+                            182 ;	AOP_STK for _bitmap_seek_sloc2_1_0
+   00B2 1A                  183 	ld	a,(de)
+   00B3 DD 77 F7            184 	ld	-9(ix),a
+                            185 ;	genAnd
+                            186 ;	AOP_STK for 
+   00B6 DD 7E 08            187 	ld	a,8(ix)
+   00B9 E6 07               188 	and	a,#0x07
+   00BB 57                  189 	ld	d,a
+   00BC 1E 00               190 	ld	e,#0x00
+                            191 ;	genLeftShift
+   00BE 7A                  192 	ld	a,d
+   00BF 3C                  193 	inc	a
+   00C0 F5                  194 	push	af
+   00C1 16 01               195 	ld	d,#0x01
+   00C3 1E 00               196 	ld	e,#0x00
+   00C5 F1                  197 	pop	af
+   00C6 C3rCDs00            198 	jp	00140$
+   00C9                     199 00139$:
+   00C9 CB 22               200 	sla	d
+   00CB CB 13               201 	rl	e
+   00CD                     202 00140$:
+   00CD 3D                  203 	dec	a
+   00CE C2rC9s00            204 	jp	nz,00139$
+                            205 ;	genCast
+                            206 ; Removed redundent load
+                            207 ;	genAnd
+                            208 ;	AOP_STK for _bitmap_seek_sloc2_1_0
+   00D1 DD 7E F7            209 	ld	a,-9(ix)
+   00D4 A2                  210 	and	a,d
+                            211 ;	genIfx
+   00D5 B7                  212 	or	a,a
+   00D6 CArEEs00            213 	jp	z,00107$
+                            214 ;bitmap.c:35: b++;
+                            215 ;	genAssign
+                            216 ;	AOP_STK for 
+   00D9 DD 5E 08            217 	ld	e,8(ix)
+   00DC DD 56 09            218 	ld	d,9(ix)
+                            219 ;	genPlus
+                            220 ;	AOP_STK for 
+                            221 ;	genPlusIncr
+                            222 ;	Can't optimise plus by inc, falling back to the normal way
+   00DF 7B                  223 	ld	a,e
+   00E0 C6 01               224 	add	a,#0x01
+   00E2 DD 77 08            225 	ld	8(ix),a
+   00E5 7A                  226 	ld	a,d
+   00E6 CE 00               227 	adc	a,#0x00
+   00E8 DD 77 09            228 	ld	9(ix),a
+                            229 ;bitmap.c:36: continue;
+                            230 ;	genGoto
+   00EB C3r4Es00            231 	jp	00116$
+                            232 ;	genLabel
+   00EE                     233 00107$:
+                            234 ;bitmap.c:40: l = len;
+                            235 ;	genAssign
+                            236 ;	AOP_STK for _bitmap_seek_l_1_1
+                            237 ;	AOP_STK for _bitmap_seek_sloc3_1_0
+   00EE DD 7E FE            238 	ld	a,-2(ix)
+   00F1 DD 77 F5            239 	ld	-11(ix),a
+   00F4 DD 7E FF            240 	ld	a,-1(ix)
+   00F7 DD 77 F6            241 	ld	-10(ix),a
+                            242 ;bitmap.c:41: i = b;
+                            243 ;	genAssign
+                            244 ;	AOP_STK for 
+   00FA DD 5E 08            245 	ld	e,8(ix)
+   00FD DD 56 09            246 	ld	d,9(ix)
+                            247 ;	genAssign
+                            248 ;	AOP_STK for _bitmap_seek_i_1_1
+   0100 DD 73 FC            249 	ld	-4(ix),e
+   0103 DD 72 FD            250 	ld	-3(ix),d
+                            251 ;	genAssign
+                            252 ;	AOP_STK for _bitmap_seek_sloc3_1_0
+                            253 ;	(registers are the same)
+                            254 ;	genLabel
+   0106                     255 00110$:
+                            256 ;bitmap.c:42: BITMAP_GAP_LEN(bitmap, i, l);
+                            257 ;	genCmpGt
+                            258 ;	AOP_STK for _bitmap_seek_sloc3_1_0
+   0106 3E 00               259 	ld	a,#0x00
+   0108 DD 96 F5            260 	sub	a,-11(ix)
+   010B 3E 00               261 	ld	a,#0x00
+   010D DD 9E F6            262 	sbc	a,-10(ix)
+   0110 F2r7Ds01            263 	jp	p,00113$
+                            264 ;	genIpush
+                            265 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 1 deSending: 0
+   0113 C5                  266 	push	bc
+   0114 21 08 00            267 	ld	hl,#0x0008
+   0117 E5                  268 	push	hl
+                            269 ;	genIpush
+                            270 ;	AOP_STK for _bitmap_seek_i_1_1
+   0118 DD 6E FC            271 	ld	l,-4(ix)
+   011B DD 66 FD            272 	ld	h,-3(ix)
+   011E E5                  273 	push	hl
+                            274 ;	genCall
+   011F CDr00s00            275 	call	__divsint_rrx_s
+   0122 54                  276 	ld	d,h
+   0123 5D                  277 	ld	e,l
+   0124 F1                  278 	pop	af
+   0125 F1                  279 	pop	af
+   0126 C1                  280 	pop	bc
+                            281 ;	genPlus
+                            282 ;	AOP_STK for _bitmap_seek_sloc1_1_0
+                            283 ;	Can't optimise plus by inc, falling back to the normal way
+   0127 DD 7E F8            284 	ld	a,-8(ix)
+   012A 83                  285 	add	a,e
+   012B 5F                  286 	ld	e,a
+   012C DD 7E F9            287 	ld	a,-7(ix)
+   012F 8A                  288 	adc	a,d
+   0130 57                  289 	ld	d,a
+                            290 ;	genPointerGet
+                            291 ;	AOP_STK for _bitmap_seek_sloc2_1_0
+   0131 1A                  292 	ld	a,(de)
+   0132 DD 77 F7            293 	ld	-9(ix),a
+                            294 ;	genIpush
+                            295 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 1 deSending: 0
+   0135 C5                  296 	push	bc
+   0136 21 08 00            297 	ld	hl,#0x0008
+   0139 E5                  298 	push	hl
+                            299 ;	genIpush
+                            300 ;	AOP_STK for _bitmap_seek_i_1_1
+   013A DD 6E FC            301 	ld	l,-4(ix)
+   013D DD 66 FD            302 	ld	h,-3(ix)
+   0140 E5                  303 	push	hl
+                            304 ;	genCall
+   0141 CDr00s00            305 	call	__modsint_rrx_s
+   0144 5C                  306 	ld	e,h
+   0145 55                  307 	ld	d,l
+   0146 F1                  308 	pop	af
+   0147 F1                  309 	pop	af
+   0148 C1                  310 	pop	bc
+                            311 ;	genLeftShift
+   0149 7A                  312 	ld	a,d
+   014A 3C                  313 	inc	a
+   014B F5                  314 	push	af
+   014C 16 01               315 	ld	d,#0x01
+   014E 1E 00               316 	ld	e,#0x00
+   0150 F1                  317 	pop	af
+   0151 C3r58s01            318 	jp	00142$
+   0154                     319 00141$:
+   0154 CB 22               320 	sla	d
+   0156 CB 13               321 	rl	e
+   0158                     322 00142$:
+   0158 3D                  323 	dec	a
+   0159 C2r54s01            324 	jp	nz,00141$
+                            325 ;	genCast
+                            326 ; Removed redundent load
+                            327 ;	genAnd
+                            328 ;	AOP_STK for _bitmap_seek_sloc2_1_0
+   015C DD 7E F7            329 	ld	a,-9(ix)
+   015F A2                  330 	and	a,d
+                            331 ;	genIfx
+   0160 B7                  332 	or	a,a
+   0161 C2r7Ds01            333 	jp	nz,00113$
+                            334 ;	genPlus
+                            335 ;	AOP_STK for _bitmap_seek_i_1_1
+                            336 ;	genPlusIncr
+   0164 DD 34 FC            337 	inc	-4(ix)
+   0167 C2r6Ds01            338 	jp	nz,00143$
+   016A DD 34 FD            339 	inc	-3(ix)
+   016D                     340 00143$:
+                            341 ;	genMinus
+                            342 ;	AOP_STK for _bitmap_seek_sloc3_1_0
+   016D DD 6E F5            343 	ld	l,-11(ix)
+   0170 DD 66 F6            344 	ld	h,-10(ix)
+   0173 2B                  345 	dec	hl
+   0174 DD 75 F5            346 	ld	-11(ix),l
+   0177 DD 74 F6            347 	ld	-10(ix),h
+                            348 ;	genGoto
+   017A C3r06s01            349 	jp	00110$
+                            350 ;	genLabel
+   017D                     351 00113$:
+                            352 ;bitmap.c:45: if (l == 0)
+                            353 ;	genIfx
+                            354 ;	AOP_STK for _bitmap_seek_sloc3_1_0
+   017D DD 7E F5            355 	ld	a,-11(ix)
+   0180 DD B6 F6            356 	or	a,-10(ix)
+   0183 C2r8Fs01            357 	jp	nz,00115$
+                            358 ;bitmap.c:46: return b; /* Yes. */
+                            359 ;	genAssign
+                            360 ;	AOP_STK for 
+   0186 DD 6E 08            361 	ld	l,8(ix)
+   0189 DD 66 09            362 	ld	h,9(ix)
+                            363 ;	genRet
+                            364 ; Dump of IC_LEFT: type AOP_STR size 2
+   018C C3rA5s01            365 	jp	00119$
+                            366 ;	genLabel
+   018F                     367 00115$:
+                            368 ;bitmap.c:49: b = i + 1;
+                            369 ;	genPlus
+                            370 ;	AOP_STK for _bitmap_seek_i_1_1
+                            371 ;	AOP_STK for 
+                            372 ;	genPlusIncr
+                            373 ;	Can't optimise plus by inc, falling back to the normal way
+   018F DD 7E FC            374 	ld	a,-4(ix)
+   0192 C6 01               375 	add	a,#0x01
+   0194 DD 77 08            376 	ld	8(ix),a
+   0197 DD 7E FD            377 	ld	a,-3(ix)
+   019A CE 00               378 	adc	a,#0x00
+   019C DD 77 09            379 	ld	9(ix),a
+                            380 ;	genGoto
+   019F C3r4Es00            381 	jp	00116$
+                            382 ;	genLabel
+   01A2                     383 00118$:
+                            384 ;bitmap.c:52: return 0; /* Nothing found. */
+                            385 ;	genRet
+                            386 ; Dump of IC_LEFT: type AOP_LIT size 2
+   01A2 21 00 00            387 	ld	hl,#0x0000
+                            388 ;	genLabel
+   01A5                     389 00119$:
+                            390 ;	genEndFunction
+   01A5 DD F9               391 	ld	sp,ix
+   01A7 DD E1               392 	pop	ix
+   01A9 C9                  393 	ret
+   01AA                     394 _bitmap_seek_end::
+   01AA                     395 __str_0:
+   01AA 62 69 74 6D 61 70   396 	.ascii "bitmap_seek: Wanted len is greater than bitmap size."
+        5F 73 65 65 6B 3A
+        20 57 61 6E 74 65
+        64 20 6C 65 6E 20
+        69 73 20 67 72 65
+        61 74 65 72 20 74
+        68 61 6E 20 62 69
+        74 6D 61 70 20 73
+        69 7A 65 2E
+   01DE 0A                  397 	.db 0x0A
+   01DF 00                  398 	.db 0x00
+                            399 	.area _CODE

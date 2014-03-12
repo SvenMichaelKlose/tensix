@@ -1,0 +1,763 @@
+                              1 ;--------------------------------------------------------
+                              2 ; File Created by SDCC : FreeWare ANSI-C Compiler
+                              3 ; Version 2.6.0 #4309 (Oct 17 2006)
+                              4 ; This file generated Thu Oct 19 04:08:19 2006
+                              5 ;--------------------------------------------------------
+                              6 	.module lock
+                              7 	.optsdcc -mz80
+                              8 	
+                              9 ;--------------------------------------------------------
+                             10 ; Public variables in this module
+                             11 ;--------------------------------------------------------
+                             12 	.globl _lock_read_unref
+                             13 	.globl _lock_write_ref
+                             14 	.globl _lock_read_ref
+                             15 	.globl _lock_wakeup
+                             16 	.globl _lock_ref2
+                             17 	.globl _lock_ref
+                             18 	.globl _lock_ref_wait
+                             19 	.globl _lock_unref
+                             20 ;--------------------------------------------------------
+                             21 ; special function registers
+                             22 ;--------------------------------------------------------
+                             23 ;--------------------------------------------------------
+                             24 ;  ram data
+                             25 ;--------------------------------------------------------
+                             26 	.area _DATA
+                             27 ;--------------------------------------------------------
+                             28 ; overlayable items in  ram 
+                             29 ;--------------------------------------------------------
+                             30 	.area _OVERLAY
+                             31 ;--------------------------------------------------------
+                             32 ; external initialized ram data
+                             33 ;--------------------------------------------------------
+                             34 ;--------------------------------------------------------
+                             35 ; global & static initialisations
+                             36 ;--------------------------------------------------------
+                             37 	.area _HOME
+                             38 	.area _GSINIT
+                             39 	.area _GSFINAL
+                             40 	.area _GSINIT
+                             41 ;--------------------------------------------------------
+                             42 ; Home
+                             43 ;--------------------------------------------------------
+                             44 	.area _HOME
+                             45 	.area _CODE
+                             46 ;--------------------------------------------------------
+                             47 ; code
+                             48 ;--------------------------------------------------------
+                             49 	.area _CODE
+                             50 ;lock.c:48: lock_ref2 (lock_t *lockp, bool do_wait)
+                             51 ;	genLabel
+                             52 ;	genFunction
+                             53 ;	---------------------------------
+                             54 ; Function lock_ref2
+                             55 ; ---------------------------------
+   0000                      56 _lock_ref2_start::
+   0000                      57 _lock_ref2:
+   0000 DD E5                58 	push	ix
+   0002 DD 21 00 00          59 	ld	ix,#0
+   0006 DD 39                60 	add	ix,sp
+   0008 21 FE FF             61 	ld	hl,#-2
+   000B 39                   62 	add	hl,sp
+   000C F9                   63 	ld	sp,hl
+                             64 ;lock.c:50: struct proc *proc = CURRENT_PROC();
+                             65 ;	genAssign
+                             66 ;	AOP_STK for _lock_ref2_proc_1_1
+   000D 2Ar00s00             67 	ld	hl,(_proc_current)
+   0010 DD 75 FE             68 	ld	-2(ix),l
+   0013 DD 74 FF             69 	ld	-1(ix),h
+                             70 ;lock.c:58: (*lockp)++;
+                             71 ;	genAssign
+                             72 ;	AOP_STK for 
+   0016 DD 5E 04             73 	ld	e,4(ix)
+   0019 DD 56 05             74 	ld	d,5(ix)
+                             75 ;	genPointerGet
+   001C 1A                   76 	ld	a,(de)
+                             77 ;	genPlus
+                             78 ;	genPlusIncr
+                             79 ;	Can't optimise plus by inc, falling back to the normal way
+   001D 4F                   80 	ld	c,a
+   001E C6 01                81 	add	a,#0x01
+                             82 ;	genAssign (pointer)
+                             83 ;	isBitvar = 0
+   0020 12                   84 	ld	(de),a
+                             85 ;lock.c:61: if (do_wait == FALSE && *lockp == 1) {
+                             86 ;	genIfx
+                             87 ;	AOP_STK for 
+   0021 AF                   88 	xor	a,a
+   0022 DD B6 06             89 	or	a,6(ix)
+   0025 C2r35s00             90 	jp	nz,00102$
+                             91 ;	genPointerGet
+   0028 1A                   92 	ld	a,(de)
+                             93 ;	genCmpEq
+                             94 ; genCmpEq: left 1, right 1, result 0
+   0029 4F                   95 	ld	c,a
+   002A FE 01                96 	cp	a,#0x01
+   002C CAr32s00             97 	jp	z,00116$
+   002F                      98 00115$:
+   002F C3r35s00             99 	jp	00102$
+   0032                     100 00116$:
+                            101 ;lock.c:63: return;
+                            102 ;	genRet
+   0032 C3r65s00            103 	jp	00109$
+                            104 ;	genLabel
+   0035                     105 00102$:
+                            106 ;lock.c:67: proc->lock = lockp;
+                            107 ;	genPlus
+                            108 ;	AOP_STK for _lock_ref2_proc_1_1
+                            109 ;	genPlusIncr
+                            110 ;	Can't optimise plus by inc, falling back to the normal way
+   0035 DD 7E FE            111 	ld	a,-2(ix)
+   0038 C6 21               112 	add	a,#0x21
+   003A 4F                  113 	ld	c,a
+   003B DD 7E FF            114 	ld	a,-1(ix)
+   003E CE 00               115 	adc	a,#0x00
+   0040 47                  116 	ld	b,a
+                            117 ;	genAssign (pointer)
+                            118 ;	isBitvar = 0
+   0041 69                  119 	ld	l,c
+   0042 60                  120 	ld	h,b
+   0043 73                  121 	ld	(hl),e
+   0044 23                  122 	inc	hl
+   0045 72                  123 	ld	(hl),d
+                            124 ;lock.c:70: do {
+                            125 ;	genAssign
+                            126 ;	(registers are the same)
+                            127 ;	genLabel
+   0046                     128 00106$:
+                            129 ;lock.c:71: sleep (); /* Sleep. Will put switching on again. */
+                            130 ;	genCall
+                            131 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 1 deSending: 0
+   0046 C5                  132 	push	bc
+   0047 CDr00s00            133 	call	_sleep
+   004A C1                  134 	pop	bc
+                            135 ;lock.c:74: if (proc->lock == NULL) {
+                            136 ;	genPointerGet
+   004B 69                  137 	ld	l,c
+   004C 60                  138 	ld	h,b
+   004D 5E                  139 	ld	e,(hl)
+   004E 23                  140 	inc	hl
+   004F 56                  141 	ld	d,(hl)
+                            142 ;	genCmpEq
+                            143 ; genCmpEq: left 2, right 2, result 0
+   0050 7B                  144 	ld	a,e
+   0051 B2                  145 	or	a,d
+   0052 CAr58s00            146 	jp	z,00118$
+   0055                     147 00117$:
+   0055 C3r46s00            148 	jp	00106$
+   0058                     149 00118$:
+                            150 ;lock.c:75: printk ("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&", 0);
+                            151 ;	genIpush
+                            152 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   0058 21 00 00            153 	ld	hl,#0x0000
+   005B E5                  154 	push	hl
+                            155 ;	genIpush
+   005C 21r6As00            156 	ld	hl,#__str_0
+   005F E5                  157 	push	hl
+                            158 ;	genCall
+   0060 CDr00s00            159 	call	_printk
+   0063 F1                  160 	pop	af
+   0064 F1                  161 	pop	af
+                            162 ;lock.c:78: } while (1);
+                            163 ;	genLabel
+   0065                     164 00109$:
+                            165 ;	genEndFunction
+   0065 DD F9               166 	ld	sp,ix
+   0067 DD E1               167 	pop	ix
+   0069 C9                  168 	ret
+   006A                     169 _lock_ref2_end::
+   006A                     170 __str_0:
+   006A 26 26 26 26 26 26   171 	.ascii "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
+        26 26 26 26 26 26
+        26 26 26 26 26 26
+        26 26 26 26 26 26
+        26 26 26 26 26 26
+        26 26 26 26 26 26
+        26 26 26 26 26 26
+        26 26 26 26 26 26
+        26 26 26 26 26 26
+        26 26 26 26 26 26
+   00A6 26 26 26 26 26 26   172 	.ascii "&&&&&&&&&&&&&&&&&&&&&&"
+        26 26 26 26 26 26
+        26 26 26 26 26 26
+        26 26 26 26
+   00BC 00                  173 	.db 0x00
+                            174 ;lock.c:82: lock_ref (lock_t *lockp)
+                            175 ;	genLabel
+                            176 ;	genFunction
+                            177 ;	---------------------------------
+                            178 ; Function lock_ref
+                            179 ; ---------------------------------
+   00BD                     180 _lock_ref_start::
+   00BD                     181 _lock_ref:
+   00BD DD E5               182 	push	ix
+   00BF DD 21 00 00         183 	ld	ix,#0
+   00C3 DD 39               184 	add	ix,sp
+                            185 ;lock.c:84: lock_ref2 (lockp, FALSE);
+                            186 ;	genIpush
+                            187 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   00C5 3E 00               188 	ld	a,#0x00
+   00C7 F5                  189 	push	af
+   00C8 33                  190 	inc	sp
+                            191 ;	genIpush
+                            192 ;	AOP_STK for 
+   00C9 DD 6E 04            193 	ld	l,4(ix)
+   00CC DD 66 05            194 	ld	h,5(ix)
+   00CF E5                  195 	push	hl
+                            196 ;	genCall
+   00D0 CDr00s00            197 	call	_lock_ref2
+   00D3 F1                  198 	pop	af
+   00D4 33                  199 	inc	sp
+                            200 ;	genLabel
+   00D5                     201 00101$:
+                            202 ;	genEndFunction
+   00D5 DD E1               203 	pop	ix
+   00D7 C9                  204 	ret
+   00D8                     205 _lock_ref_end::
+                            206 ;lock.c:88: lock_ref_wait (lock_t *lockp)
+                            207 ;	genLabel
+                            208 ;	genFunction
+                            209 ;	---------------------------------
+                            210 ; Function lock_ref_wait
+                            211 ; ---------------------------------
+   00D8                     212 _lock_ref_wait_start::
+   00D8                     213 _lock_ref_wait:
+   00D8 DD E5               214 	push	ix
+   00DA DD 21 00 00         215 	ld	ix,#0
+   00DE DD 39               216 	add	ix,sp
+                            217 ;lock.c:90: lock_ref2 (lockp, TRUE);
+                            218 ;	genIpush
+                            219 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   00E0 3E FF               220 	ld	a,#0xFF
+   00E2 F5                  221 	push	af
+   00E3 33                  222 	inc	sp
+                            223 ;	genIpush
+                            224 ;	AOP_STK for 
+   00E4 DD 6E 04            225 	ld	l,4(ix)
+   00E7 DD 66 05            226 	ld	h,5(ix)
+   00EA E5                  227 	push	hl
+                            228 ;	genCall
+   00EB CDr00s00            229 	call	_lock_ref2
+   00EE F1                  230 	pop	af
+   00EF 33                  231 	inc	sp
+                            232 ;	genLabel
+   00F0                     233 00101$:
+                            234 ;	genEndFunction
+   00F0 DD E1               235 	pop	ix
+   00F2 C9                  236 	ret
+   00F3                     237 _lock_ref_wait_end::
+                            238 ;lock.c:94: lock_wakeup (lock_t *lockp)
+                            239 ;	genLabel
+                            240 ;	genFunction
+                            241 ;	---------------------------------
+                            242 ; Function lock_wakeup
+                            243 ; ---------------------------------
+   00F3                     244 _lock_wakeup_start::
+   00F3                     245 _lock_wakeup:
+   00F3 DD E5               246 	push	ix
+   00F5 DD 21 00 00         247 	ld	ix,#0
+   00F9 DD 39               248 	add	ix,sp
+   00FB 21 FE FF            249 	ld	hl,#-2
+   00FE 39                  250 	add	hl,sp
+   00FF F9                  251 	ld	sp,hl
+                            252 ;lock.c:97: struct proc *i_proc = (struct proc *) CURRENT_PROC();
+                            253 ;	genAssign
+                            254 ;	AOP_STK for _lock_wakeup_i_proc_1_1
+   0100 2Ar00s00            255 	ld	hl,(_proc_current)
+   0103 DD 75 FE            256 	ld	-2(ix),l
+   0106 DD 74 FF            257 	ld	-1(ix),h
+                            258 ;lock.c:99: do {
+                            259 ;	genLabel
+   0109                     260 00103$:
+                            261 ;lock.c:100: if (i_proc->lock != lockp) {
+                            262 ;	genPlus
+                            263 ;	AOP_STK for _lock_wakeup_i_proc_1_1
+                            264 ;	genPlusIncr
+                            265 ;	Can't optimise plus by inc, falling back to the normal way
+   0109 DD 7E FE            266 	ld	a,-2(ix)
+   010C C6 21               267 	add	a,#0x21
+   010E 5F                  268 	ld	e,a
+   010F DD 7E FF            269 	ld	a,-1(ix)
+   0112 CE 00               270 	adc	a,#0x00
+   0114 57                  271 	ld	d,a
+                            272 ;	genPointerGet
+   0115 6B                  273 	ld	l,e
+   0116 62                  274 	ld	h,d
+   0117 4E                  275 	ld	c,(hl)
+   0118 23                  276 	inc	hl
+   0119 46                  277 	ld	b,(hl)
+                            278 ;	genCmpEq
+                            279 ;	AOP_STK for 
+                            280 ; genCmpEq: left 2, right 2, result 0
+   011A DD 7E 04            281 	ld	a,4(ix)
+   011D B9                  282 	cp	c
+   011E C2r28s01            283 	jp	nz,00110$
+   0121 DD 7E 05            284 	ld	a,5(ix)
+   0124 B8                  285 	cp	b
+   0125 CAr3Es01            286 	jp	z,00102$
+   0128                     287 00110$:
+                            288 ;lock.c:101: i_proc = (struct proc*) i_proc->next;
+                            289 ;	genPlus
+                            290 ;	AOP_STK for _lock_wakeup_i_proc_1_1
+                            291 ;	genPlusIncr
+   0128 DD 4E FE            292 	ld	c,-2(ix)
+   012B DD 46 FF            293 	ld	b,-1(ix)
+   012E 03                  294 	inc	bc
+   012F 03                  295 	inc	bc
+                            296 ;	genPointerGet
+   0130 69                  297 	ld	l,c
+   0131 60                  298 	ld	h,b
+   0132 4E                  299 	ld	c,(hl)
+   0133 23                  300 	inc	hl
+   0134 46                  301 	ld	b,(hl)
+                            302 ;	genAssign
+                            303 ;	AOP_STK for _lock_wakeup_i_proc_1_1
+   0135 DD 71 FE            304 	ld	-2(ix),c
+   0138 DD 70 FF            305 	ld	-1(ix),b
+                            306 ;lock.c:102: continue;
+                            307 ;	genGoto
+   013B C3r53s01            308 	jp	00104$
+                            309 ;	genLabel
+   013E                     310 00102$:
+                            311 ;lock.c:106: i_proc->lock = NULL;
+                            312 ;	genAssign (pointer)
+                            313 ;	isBitvar = 0
+   013E 6B                  314 	ld	l,e
+   013F 62                  315 	ld	h,d
+   0140 36 00               316 	ld	(hl),#0x00
+   0142 23                  317 	inc	hl
+   0143 36 00               318 	ld	(hl),#0x00
+                            319 ;lock.c:109: proc_wakeup (i_proc);
+                            320 ;	genIpush
+                            321 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+                            322 ;	AOP_STK for _lock_wakeup_i_proc_1_1
+   0145 DD 6E FE            323 	ld	l,-2(ix)
+   0148 DD 66 FF            324 	ld	h,-1(ix)
+   014B E5                  325 	push	hl
+                            326 ;	genCall
+   014C CDr00s00            327 	call	_proc_wakeup
+   014F F1                  328 	pop	af
+                            329 ;lock.c:111: break;
+                            330 ;	genGoto
+   0150 C3r6Cs01            331 	jp	00106$
+                            332 ;	genLabel
+   0153                     333 00104$:
+                            334 ;lock.c:112: } while (i_proc != CURRENT_PROC());
+                            335 ;	genCmpEq
+                            336 ;	AOP_STK for _lock_wakeup_i_proc_1_1
+                            337 ; genCmpEq: left 2, right 2, result 0
+   0153 FD 21r00s00         338 	ld	iy,#_proc_current
+   0157 FD 7E 00            339 	ld	a,0(iy)
+   015A DD BE FE            340 	cp	-2(ix)
+   015D C2r69s01            341 	jp	nz,00111$
+   0160 FD 7E 01            342 	ld	a,1(iy)
+   0163 DD BE FF            343 	cp	-1(ix)
+   0166 CAr6Cs01            344 	jp	z,00112$
+   0169                     345 00111$:
+   0169 C3r09s01            346 	jp	00103$
+   016C                     347 00112$:
+                            348 ;	genLabel
+   016C                     349 00106$:
+                            350 ;	genEndFunction
+   016C DD F9               351 	ld	sp,ix
+   016E DD E1               352 	pop	ix
+   0170 C9                  353 	ret
+   0171                     354 _lock_wakeup_end::
+                            355 ;lock.c:120: lock_unref (lock_t *lockp)
+                            356 ;	genLabel
+                            357 ;	genFunction
+                            358 ;	---------------------------------
+                            359 ; Function lock_unref
+                            360 ; ---------------------------------
+   0171                     361 _lock_unref_start::
+   0171                     362 _lock_unref:
+   0171 DD E5               363 	push	ix
+   0173 DD 21 00 00         364 	ld	ix,#0
+   0177 DD 39               365 	add	ix,sp
+                            366 ;lock.c:126: if (lockp == NULL)
+                            367 ;	genAssign
+                            368 ;	AOP_STK for 
+   0179 DD 4E 04            369 	ld	c,4(ix)
+   017C DD 46 05            370 	ld	b,5(ix)
+                            371 ;	genCmpEq
+                            372 ; genCmpEq: left 2, right 2, result 0
+   017F 79                  373 	ld	a,c
+   0180 B0                  374 	or	a,b
+   0181 CAr87s01            375 	jp	z,00113$
+   0184                     376 00112$:
+   0184 C3r91s01            377 	jp	00102$
+   0187                     378 00113$:
+                            379 ;lock.c:127: panic ("lock_unref(): NULL ptr arg");
+                            380 ;	genIpush
+                            381 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 1 deSending: 0
+   0187 C5                  382 	push	bc
+   0188 21rB2s01            383 	ld	hl,#__str_1
+   018B E5                  384 	push	hl
+                            385 ;	genCall
+   018C CDr00s00            386 	call	_panic
+   018F F1                  387 	pop	af
+   0190 C1                  388 	pop	bc
+                            389 ;	genLabel
+   0191                     390 00102$:
+                            391 ;lock.c:134: if (*lockp == 0) {
+                            392 ;	genPointerGet
+   0191 0A                  393 	ld	a,(bc)
+                            394 ;	genIfx
+   0192 B7                  395 	or	a,a
+   0193 C2rA0s01            396 	jp	nz,00104$
+                            397 ;lock.c:136: panic ("Lock underflow.");
+                            398 ;	genIpush
+                            399 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 1 deSending: 0
+   0196 C5                  400 	push	bc
+   0197 21rCDs01            401 	ld	hl,#__str_2
+   019A E5                  402 	push	hl
+                            403 ;	genCall
+   019B CDr00s00            404 	call	_panic
+   019E F1                  405 	pop	af
+   019F C1                  406 	pop	bc
+                            407 ;	genLabel
+   01A0                     408 00104$:
+                            409 ;lock.c:141: (*lockp)--;
+                            410 ;	genPointerGet
+   01A0 0A                  411 	ld	a,(bc)
+   01A1 5F                  412 	ld	e,a
+                            413 ;	genMinus
+   01A2 1D                  414 	dec	e
+                            415 ;	genAssign (pointer)
+                            416 ;	isBitvar = 0
+   01A3 7B                  417 	ld	a,e
+   01A4 02                  418 	ld	(bc),a
+                            419 ;lock.c:144: if (*lockp != 0)
+                            420 ;	genCmpEq
+                            421 ; genCmpEq: left 1, right 1, result 0
+   01A5 7B                  422 	ld	a,e
+   01A6 B7                  423 	or	a,a
+   01A7 CArAFs01            424 	jp	z,00107$
+   01AA                     425 00114$:
+                            426 ;lock.c:145: lock_wakeup (lockp);
+                            427 ;	genIpush
+                            428 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   01AA C5                  429 	push	bc
+                            430 ;	genCall
+   01AB CDrF3s00            431 	call	_lock_wakeup
+   01AE F1                  432 	pop	af
+                            433 ;	genLabel
+   01AF                     434 00107$:
+                            435 ;	genEndFunction
+   01AF DD E1               436 	pop	ix
+   01B1 C9                  437 	ret
+   01B2                     438 _lock_unref_end::
+   01B2                     439 __str_1:
+   01B2 6C 6F 63 6B 5F 75   440 	.ascii "lock_unref(): NULL ptr arg"
+        6E 72 65 66 28 29
+        3A 20 4E 55 4C 4C
+        20 70 74 72 20 61
+        72 67
+   01CC 00                  441 	.db 0x00
+   01CD                     442 __str_2:
+   01CD 4C 6F 63 6B 20 75   443 	.ascii "Lock underflow."
+        6E 64 65 72 66 6C
+        6F 77 2E
+   01DC 00                  444 	.db 0x00
+                            445 ;lock.c:151: lock_read_ref (struct rwlock_t *lockp)
+                            446 ;	genLabel
+                            447 ;	genFunction
+                            448 ;	---------------------------------
+                            449 ; Function lock_read_ref
+                            450 ; ---------------------------------
+   01DD                     451 _lock_read_ref_start::
+   01DD                     452 _lock_read_ref:
+   01DD DD E5               453 	push	ix
+   01DF DD 21 00 00         454 	ld	ix,#0
+   01E3 DD 39               455 	add	ix,sp
+   01E5 21 FE FF            456 	ld	hl,#-2
+   01E8 39                  457 	add	hl,sp
+   01E9 F9                  458 	ld	sp,hl
+                            459 ;lock.c:158: while (1) {
+                            460 ;	genAssign
+                            461 ;	AOP_STK for 
+                            462 ;	AOP_STK for _lock_read_ref_sloc0_1_0
+   01EA DD 7E 04            463 	ld	a,4(ix)
+   01ED DD 77 FE            464 	ld	-2(ix),a
+   01F0 DD 7E 05            465 	ld	a,5(ix)
+   01F3 DD 77 FF            466 	ld	-1(ix),a
+                            467 ;	genPlus
+                            468 ;	AOP_STK for _lock_read_ref_sloc0_1_0
+                            469 ;	genPlusIncr
+   01F6 DD 5E FE            470 	ld	e,-2(ix)
+   01F9 DD 56 FF            471 	ld	d,-1(ix)
+   01FC 13                  472 	inc	de
+                            473 ;	genLabel
+   01FD                     474 00104$:
+                            475 ;lock.c:160: if (!lockp->lock) {
+                            476 ;	genPointerGet
+   01FD 1A                  477 	ld	a,(de)
+                            478 ;	genIfx
+   01FE B7                  479 	or	a,a
+   01FF C2r16s02            480 	jp	nz,00102$
+                            481 ;lock.c:161: lockp->passed++;
+                            482 ;	genPointerGet
+                            483 ;	AOP_STK for _lock_read_ref_sloc0_1_0
+   0202 DD 6E FE            484 	ld	l,-2(ix)
+   0205 DD 66 FF            485 	ld	h,-1(ix)
+   0208 4E                  486 	ld	c,(hl)
+                            487 ;	genPlus
+                            488 ;	genPlusIncr
+                            489 ;	Can't optimise plus by inc, falling back to the normal way
+   0209 79                  490 	ld	a,c
+   020A C6 01               491 	add	a,#0x01
+                            492 ;	genAssign (pointer)
+                            493 ;	AOP_STK for _lock_read_ref_sloc0_1_0
+                            494 ;	isBitvar = 0
+   020C DD 6E FE            495 	ld	l,-2(ix)
+   020F DD 66 FF            496 	ld	h,-1(ix)
+   0212 77                  497 	ld	(hl),a
+                            498 ;lock.c:162: break;
+                            499 ;	genGoto
+   0213 C3r2Es02            500 	jp	00106$
+                            501 ;	genLabel
+   0216                     502 00102$:
+                            503 ;lock.c:166: lock_ref (&lockp->lock);
+                            504 ;	genIpush
+                            505 ; _saveRegsForCall: sendSetSize: 0 deInUse: 1 bcInUse: 0 deSending: 0
+   0216 D5                  506 	push	de
+   0217 D5                  507 	push	de
+                            508 ;	genCall
+   0218 CDrBDs00            509 	call	_lock_ref
+   021B F1                  510 	pop	af
+   021C D1                  511 	pop	de
+                            512 ;lock.c:167: lock_unref (&lockp->lock);
+                            513 ;	genPlus
+                            514 ;	AOP_STK for _lock_read_ref_sloc0_1_0
+                            515 ;	genPlusIncr
+   021D DD 4E FE            516 	ld	c,-2(ix)
+   0220 DD 46 FF            517 	ld	b,-1(ix)
+   0223 03                  518 	inc	bc
+                            519 ;	genIpush
+                            520 ; _saveRegsForCall: sendSetSize: 0 deInUse: 1 bcInUse: 0 deSending: 0
+   0224 D5                  521 	push	de
+   0225 C5                  522 	push	bc
+                            523 ;	genCall
+   0226 CDr71s01            524 	call	_lock_unref
+   0229 F1                  525 	pop	af
+   022A D1                  526 	pop	de
+                            527 ;	genGoto
+   022B C3rFDs01            528 	jp	00104$
+                            529 ;	genLabel
+   022E                     530 00106$:
+                            531 ;	genEndFunction
+   022E DD F9               532 	ld	sp,ix
+   0230 DD E1               533 	pop	ix
+   0232 C9                  534 	ret
+   0233                     535 _lock_read_ref_end::
+                            536 ;lock.c:175: lock_write_ref (struct rwlock_t *lockp)
+                            537 ;	genLabel
+                            538 ;	genFunction
+                            539 ;	---------------------------------
+                            540 ; Function lock_write_ref
+                            541 ; ---------------------------------
+   0233                     542 _lock_write_ref_start::
+   0233                     543 _lock_write_ref:
+   0233 DD E5               544 	push	ix
+   0235 DD 21 00 00         545 	ld	ix,#0
+   0239 DD 39               546 	add	ix,sp
+   023B 21 FE FF            547 	ld	hl,#-2
+   023E 39                  548 	add	hl,sp
+   023F F9                  549 	ld	sp,hl
+                            550 ;lock.c:182: if (lockp->passed) {
+                            551 ;	genAssign
+                            552 ;	AOP_STK for 
+   0240 DD 4E 04            553 	ld	c,4(ix)
+   0243 DD 46 05            554 	ld	b,5(ix)
+                            555 ;	genPointerGet
+   0246 0A                  556 	ld	a,(bc)
+                            557 ;	genIfx
+   0247 B7                  558 	or	a,a
+   0248 CAr95s02            559 	jp	z,00102$
+                            560 ;lock.c:183: lockp->lock++;
+                            561 ;	genPlus
+                            562 ;	AOP_STK for _lock_write_ref_sloc0_1_0
+                            563 ;	genPlusIncr
+                            564 ;	Can't optimise plus by inc, falling back to the normal way
+   024B 79                  565 	ld	a,c
+   024C C6 01               566 	add	a,#0x01
+   024E DD 77 FE            567 	ld	-2(ix),a
+   0251 78                  568 	ld	a,b
+   0252 CE 00               569 	adc	a,#0x00
+   0254 DD 77 FF            570 	ld	-1(ix),a
+                            571 ;	genPointerGet
+                            572 ;	AOP_STK for _lock_write_ref_sloc0_1_0
+   0257 DD 6E FE            573 	ld	l,-2(ix)
+   025A DD 66 FF            574 	ld	h,-1(ix)
+   025D 5E                  575 	ld	e,(hl)
+                            576 ;	genPlus
+                            577 ;	genPlusIncr
+                            578 ;	Can't optimise plus by inc, falling back to the normal way
+   025E 7B                  579 	ld	a,e
+   025F C6 01               580 	add	a,#0x01
+                            581 ;	genAssign (pointer)
+                            582 ;	AOP_STK for _lock_write_ref_sloc0_1_0
+                            583 ;	isBitvar = 0
+   0261 DD 6E FE            584 	ld	l,-2(ix)
+   0264 DD 66 FF            585 	ld	h,-1(ix)
+   0267 77                  586 	ld	(hl),a
+                            587 ;lock.c:184: lock_ref (&lockp->lock);
+                            588 ;	genIpush
+                            589 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 1 deSending: 0
+   0268 C5                  590 	push	bc
+                            591 ;	AOP_STK for _lock_write_ref_sloc0_1_0
+   0269 DD 6E FE            592 	ld	l,-2(ix)
+   026C DD 66 FF            593 	ld	h,-1(ix)
+   026F E5                  594 	push	hl
+                            595 ;	genCall
+   0270 CDrBDs00            596 	call	_lock_ref
+   0273 F1                  597 	pop	af
+   0274 C1                  598 	pop	bc
+                            599 ;lock.c:185: lockp->lock--;
+                            600 ;	genPlus
+                            601 ;	AOP_STK for _lock_write_ref_sloc0_1_0
+                            602 ;	genPlusIncr
+                            603 ;	Can't optimise plus by inc, falling back to the normal way
+   0275 79                  604 	ld	a,c
+   0276 C6 01               605 	add	a,#0x01
+   0278 DD 77 FE            606 	ld	-2(ix),a
+   027B 78                  607 	ld	a,b
+   027C CE 00               608 	adc	a,#0x00
+   027E DD 77 FF            609 	ld	-1(ix),a
+                            610 ;	genPointerGet
+                            611 ;	AOP_STK for _lock_write_ref_sloc0_1_0
+   0281 DD 6E FE            612 	ld	l,-2(ix)
+   0284 DD 66 FF            613 	ld	h,-1(ix)
+   0287 5E                  614 	ld	e,(hl)
+                            615 ;	genMinus
+   0288 7B                  616 	ld	a,e
+   0289 C6 FF               617 	add	a,#0xFF
+                            618 ;	genAssign (pointer)
+                            619 ;	AOP_STK for _lock_write_ref_sloc0_1_0
+                            620 ;	isBitvar = 0
+   028B DD 6E FE            621 	ld	l,-2(ix)
+   028E DD 66 FF            622 	ld	h,-1(ix)
+   0291 77                  623 	ld	(hl),a
+                            624 ;	genGoto
+   0292 C3r9Bs02            625 	jp	00104$
+                            626 ;	genLabel
+   0295                     627 00102$:
+                            628 ;lock.c:187: lock_ref (&lockp->lock);
+                            629 ;	genPlus
+                            630 ;	genPlusIncr
+   0295 03                  631 	inc	bc
+                            632 ;	genIpush
+                            633 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   0296 C5                  634 	push	bc
+                            635 ;	genCall
+   0297 CDrBDs00            636 	call	_lock_ref
+   029A F1                  637 	pop	af
+                            638 ;	genLabel
+   029B                     639 00104$:
+                            640 ;	genEndFunction
+   029B DD F9               641 	ld	sp,ix
+   029D DD E1               642 	pop	ix
+   029F C9                  643 	ret
+   02A0                     644 _lock_write_ref_end::
+                            645 ;lock.c:196: lock_read_unref (struct rwlock_t *lockp)
+                            646 ;	genLabel
+                            647 ;	genFunction
+                            648 ;	---------------------------------
+                            649 ; Function lock_read_unref
+                            650 ; ---------------------------------
+   02A0                     651 _lock_read_unref_start::
+   02A0                     652 _lock_read_unref:
+   02A0 DD E5               653 	push	ix
+   02A2 DD 21 00 00         654 	ld	ix,#0
+   02A6 DD 39               655 	add	ix,sp
+                            656 ;lock.c:202: if (lockp == NULL)
+                            657 ;	genCmpEq
+                            658 ;	AOP_STK for 
+                            659 ; genCmpEq: left 2, right 2, result 0
+   02A8 DD 7E 04            660 	ld	a,4(ix)
+   02AB DD B6 05            661 	or	a,5(ix)
+   02AE CArB4s02            662 	jp	z,00115$
+   02B1                     663 00114$:
+   02B1 C3rBCs02            664 	jp	00102$
+   02B4                     665 00115$:
+                            666 ;lock.c:203: panic ("lock_read_unref(): NULL ptr arg");
+                            667 ;	genIpush
+                            668 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   02B4 21rE8s02            669 	ld	hl,#__str_3
+   02B7 E5                  670 	push	hl
+                            671 ;	genCall
+   02B8 CDr00s00            672 	call	_panic
+   02BB F1                  673 	pop	af
+                            674 ;	genLabel
+   02BC                     675 00102$:
+                            676 ;lock.c:210: if (lockp->passed == 0) {
+                            677 ;	genAssign
+                            678 ;	AOP_STK for 
+   02BC DD 4E 04            679 	ld	c,4(ix)
+   02BF DD 46 05            680 	ld	b,5(ix)
+                            681 ;	genPointerGet
+   02C2 0A                  682 	ld	a,(bc)
+                            683 ;	genIfx
+   02C3 B7                  684 	or	a,a
+   02C4 C2rD1s02            685 	jp	nz,00104$
+                            686 ;lock.c:212: panic ("Read lock underflow.");
+                            687 ;	genIpush
+                            688 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 1 deSending: 0
+   02C7 C5                  689 	push	bc
+   02C8 21r08s03            690 	ld	hl,#__str_4
+   02CB E5                  691 	push	hl
+                            692 ;	genCall
+   02CC CDr00s00            693 	call	_panic
+   02CF F1                  694 	pop	af
+   02D0 C1                  695 	pop	bc
+                            696 ;	genLabel
+   02D1                     697 00104$:
+                            698 ;lock.c:216: if ((!--lockp->passed) && (lockp->lock))
+                            699 ;	genPointerGet
+   02D1 0A                  700 	ld	a,(bc)
+                            701 ;	genMinus
+   02D2 5F                  702 	ld	e,a
+   02D3 C6 FF               703 	add	a,#0xFF
+                            704 ;	genAssign (pointer)
+                            705 ;	isBitvar = 0
+   02D5 02                  706 	ld	(bc),a
+                            707 ;	genIfx
+   02D6 B7                  708 	or	a,a
+   02D7 C2rE5s02            709 	jp	nz,00108$
+                            710 ;	genPlus
+                            711 ;	genPlusIncr
+   02DA 03                  712 	inc	bc
+                            713 ;	genPointerGet
+   02DB 0A                  714 	ld	a,(bc)
+                            715 ;	genIfx
+   02DC B7                  716 	or	a,a
+   02DD CArE5s02            717 	jp	z,00108$
+                            718 ;lock.c:217: lock_wakeup (&lockp->lock);
+                            719 ;	genIpush
+                            720 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   02E0 C5                  721 	push	bc
+                            722 ;	genCall
+   02E1 CDrF3s00            723 	call	_lock_wakeup
+   02E4 F1                  724 	pop	af
+                            725 ;	genLabel
+   02E5                     726 00108$:
+                            727 ;	genEndFunction
+   02E5 DD E1               728 	pop	ix
+   02E7 C9                  729 	ret
+   02E8                     730 _lock_read_unref_end::
+   02E8                     731 __str_3:
+   02E8 6C 6F 63 6B 5F 72   732 	.ascii "lock_read_unref(): NULL ptr arg"
+        65 61 64 5F 75 6E
+        72 65 66 28 29 3A
+        20 4E 55 4C 4C 20
+        70 74 72 20 61 72
+        67
+   0307 00                  733 	.db 0x00
+   0308                     734 __str_4:
+   0308 52 65 61 64 20 6C   735 	.ascii "Read lock underflow."
+        6F 63 6B 20 75 6E
+        64 65 72 66 6C 6F
+        77 2E
+   031C 00                  736 	.db 0x00
+                            737 	.area _CODE

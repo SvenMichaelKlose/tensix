@@ -1,0 +1,128 @@
+tensix operating system project documentation
+Copyright (C) 2004, 2005 Sven Klose <pixel@copei.de>
+
+I/O system
+==========
+
+Overview
+--------
+
+The I/O system allows processes to communicate with each other through a
+generalised interface: the virtual file system. Processes and drivers
+place virtual files or directories in a filesystem tree to provide a
+communication end-point for all other processes. Kernel drivers use this
+mechanism to provide services like secondary storage, networking or
+terminals. The I/O system source codes reside in directory 'kern/io'.
+
+Files and directories
+---------------------
+
+Files are pieces of arbitrary information on secondary storage outside
+main memory. Files have names and are collected into directories which
+hold the file names together with other useful information. Within a directory,
+all file names must differ to make files clearly identifiable.
+Files can be directories at the same time. File sizes are maintained in
+numbers of bytes. They're lengthened automatically during writes if required
+and may be shortened explicitly.
+
+Identifying files
+-----------------
+
+Files are identified by their path-name, which cotains directory names that
+lead to the file (the path) followed the file's name, all separated by slashes
+('/'). If the path name begins with a slash, the starting point is
+the root directory. Otherwise, the 'working directory' of the process, which
+opens the file, is used. A directory name consisting of two dots '..'
+denotes the parent directory of the preceeding directory in the path.
+
+Accessing files
+---------------
+
+Files must be opened before their contents can be accessed and should be
+closed after use.
+Access to files is always block oriented. Blocks have a fixed size which is
+determined by the drivers that provides file. File blocks, called 'buffers',
+are mapped to memory. Only one copy of a buffer is held in memory at a time
+and may be shared among many processes.
+Buffers are only written to disk after they were marked es being 'dirty'.
+
+File sizes are maintained in numbers of bytes. At file ends buffers may be
+shorter than the default size. Growing the last buffer of a file affects
+the overall file size. Files are also lengthened if new blocks are prepended.
+
+I/O system components
+---------------------
+
+The I/O system is conceptually split into several components. The system call
+interface (fs.c) provides the functions available to user processes.
+Its purpose is to check function arguments, keep track of the resources used
+per process and to call non-process related services the other components
+provide.
+
+The namespace component handles path and file name lookups (namespace.c).
+
+The object component manages files and directories with generic
+representations and algorithms. It serves as a facade to the more specific
+drivers.
+
+The buffer component is responsible for mapping file blocks to memory.
+
+Two kernel processes (traditionally called daemons) provide file-to-file
+transfers (iod.c) and delayed background writes (syncer.c).
+
+Without drivers for filesystems and secondary storage, the virtual
+filesystem isn't usable, because unused data is dismissed if memory gets low.
+
+System call interface and Per-process resource management
+---------------------------------------------------------
+
+If a process is created, tables are dynamically allocated to keep track of
+the files and directories the process opened for the time it exists.
+The number of open resources per process is limited by those tables' sizes.
+When a process exits, all its open resources are closed automatically by the
+kernel. Reference counts are used to determine if a ressource is currently
+being used.
+
+Files may be opened with the open() system call and returns a pointer to the
+files' kernel object representation, which must not be accessed by user
+processes. The pointer must then be used with all file content related
+services desired. close() closes a file. Files may be created with the
+create() system call or removed using unlink(). create() also opens the file.
+Files can only be unlinked if not used by any process.
+
+dir_open() opens an opened file as a directory file, returning a pointer to
+the directory's kernel representation. By calling obj_dir_read() all
+directory entries may be read sequentially. It returns a pointer to a kernel
+directory entry representation. dir_close() closes an opened directory.
+
+bref() maps a file block to memory, returning a pointer to the kernel's 
+buffer representation. The process may then read or write to the data
+area specified in the buffer structure.
+bunref() deassociates the buffer from the process. bdirty() marks
+a buffer as being dirty. It will be written to secondary storage by the
+syncer daemon if it is not used by any process anymore. bwrite() causes the
+buffer to be written immediately. bsend() does the same but also calls
+bunref().
+
+All opened ressources should be closed as soon as possible to keep as much
+of the usually limited resources available as possible.
+
+Drivers
+-------
+
+Drivers introduce object classes at boot time. An object class provides
+a set of file and directory operations that cannot be generalized by the
+I/O components as well as general information about its file's behaviours.
+Driver classes are placed into the root directory.
+Object class files may be 'duplicated' using the dup() system call to get a
+configured instance of the driver which may be placed anywhere in the virtual
+filesystem. Some drivers may provide only a single configured instance from
+the start.
+
+Buffer caching
+--------------
+
+Buffers remain in memory even if they are not used any longer, enabling
+their immediate reuse without need for slow access to secondary storage.
+If memory becomes low, all unused buffers are removed at once. This
+strategy reduces memory fragmentation.

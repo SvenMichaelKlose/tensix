@@ -1,0 +1,9 @@
+dup - Duplicate an object
+
+Syntax: dup SOURCE_FILE DESTINATION_DIR DESTINATION_NAME
+
+This command duplicates object SOURCE_FILE to a new object named
+DESTINATION_NAME in directory DESTINATION_DIR. The new object will belong
+to a new subclass which is also created by 'dup'.
+
+The content and purpose of the new object depends on its class.

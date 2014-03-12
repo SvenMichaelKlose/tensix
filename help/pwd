@@ -1,0 +1,5 @@
+pwd - Print working directory
+
+Syntax: pwd
+
+Prints the absolute path to the current working directory.

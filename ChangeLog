@@ -1,0 +1,854 @@
+2006-10-22 23:44  pixel
+
+	* /conf/generic.h:
+	  Included
+	  new
+	  memory
+	  filesystem.
+
+2006-10-22 23:42  pixel
+
+	* /fs/memfs/memfs.c:
+	  Completed
+	  memory
+	  filesystem
+	  driver.
+
+2006-10-22 23:41  pixel
+
+	* /fs/holographicfs/holographicfs.c:
+	  Fixed
+	  type
+	  cast.
+
+2006-10-22 23:41  pixel
+
+	* /builtin/mkfs.c,
+	  /builtin/sh.c:
+	  Added
+	  neccessarz
+	  headers.
+
+2006-10-22 23:40  pixel
+
+	* /include/dirent.h,
+	  /include/memfs.h,
+	  /include/obj.h:
+	  Cleanup.
+
+2006-10-22 23:38  pixel
+
+	* /include/dir.h:
+	  Fixed
+	  generic
+	  pointer
+	  to
+	  next
+	  directory.
+
+2006-10-22 23:37  pixel
+
+	* /kern/io/obj_ops.c:
+	  obj_io:
+	  Print
+	  more
+	  verbose
+	  debugging
+	  message.
+
+2006-10-22 23:36  pixel
+
+	* /kern/proc/proc.c:
+	  Removed
+	  unused
+	  code.
+
+2006-10-22 23:36  pixel
+
+	* /kern/io/fs.c:
+	  fs_proc_kill():
+	  Path
+	  working
+	  directory
+	  unreferenced
+	  twice
+	  -
+	  fixed.
+
+2006-10-22 23:34  pixel
+
+	* /include/buf.h,
+	  /include/fs.h:
+	  Moved
+	  syscall
+	  decls
+	  to
+	  fs.h.
+
+2006-10-22 19:06  pixel
+
+	* /fs/dfs/dfs.c,
+	  /fs/memfs/memfs.c,
+	  /fs/nixfs/nixfs.c,
+	  /kern/io/libbuf.c,
+	  /kern/io/syncer.c:
+	  Moved
+	  system
+	  call
+	  declarations
+	  into
+	  fs.h.
+
+2006-10-22 19:02  pixel
+
+	* /include/buf.h,
+	  /kern/io/buf.c,
+	  /kern/io/fs.c:
+	  Moved
+	  system
+	  calls
+	  into
+	  fs.c.
+
+2006-10-21 00:26  pixel
+
+	* /doc/proposals,
+	  /doc/proposals/ip.txt:
+	  Added
+	  proposal
+	  directory.
+
+2006-10-19 04:23  pixel
+
+	* /tests/tests.c:
+	  Re-enabled
+	  boot
+	  tests.
+
+2006-10-19 04:20  pixel
+
+	* /arch/cpc,
+	  /arch/cpc/config.h,
+	  /arch/makefile,
+	  /arch/unix/tapdev.c,
+	  /builtin/mkfs.c,
+	  /builtin/sh.c,
+	  /contrib/dev/uip/uip.c,
+	  /dev/makefile,
+	  /fs/dfs/dfs.c,
+	  /fs/memfs/memfs.c,
+	  /fs/nixfs/nixfs.c,
+	  /include/array.h,
+	  /include/buf.h,
+	  /include/dirent.h,
+	  /include/fs.h,
+	  /include/lock.h,
+	  /include/memfs.h,
+	  /include/obj.h,
+	  /include/pool.h,
+	  /include/proc.h,
+	  /include/queue.h,
+	  /kern/io/buf.c,
+	  /kern/io/fs.c,
+	  /kern/io/iod.c,
+	  /kern/io/obj.c,
+	  /kern/io/obj_ops.c,
+	  /kern/mem/mem.c,
+	  /kern/mem/mem_intern.h,
+	  /lib/array.c,
+	  /make.sh,
+	  /tests/tests.c:
+	  Added
+	  SDCC
+	  compiler
+	  support. Added
+	  Amstrad
+	  CPC
+	  architecture
+	  framework. Fixed
+	  warnings
+	  for
+	  gcc
+	  with
+	  optimization
+	  option
+	  '-0'.
+
+2006-10-17 18:22  pixel
+
+	* /conf/generic.h,
+	  /tests/tests.c:
+	  MEM_TEST_STRESS:
+	  Compile-time
+	  option
+	  fixed
+	  and
+	  switched
+	  off
+	  by
+	  default.
+
+2006-10-17 03:13  pixel
+
+	* /fs/wrapfs/wrapfs_wrap.c.on:
+	  
+
+2006-10-17 03:06  pixel
+
+	* /include/queue.h:
+	  Removed
+	  deprecated
+	  type
+	  cast
+	  of
+	  lvalue.
+
+2006-10-17 03:03  pixel
+
+	* /kern/proc/proc.c:
+	  proc_kill():
+	  Shut
+	  down
+	  if
+	  no
+	  processes
+	  are
+	  running.
+
+2006-10-17 02:56  pixel
+
+	* /README,
+	  /arch/i86/___crt0.S,
+	  /arch/i86/config.h,
+	  /arch/i86/drivers/con.c,
+	  /arch/i86/drivers/con_bios.S,
+	  /arch/i86/drivers/fd_bios.S,
+	  /arch/i86/machdep.c,
+	  /arch/i86/makefile,
+	  /arch/i86/switch.S,
+	  /arch/makefile,
+	  /arch/unix/con_wrapper.c,
+	  /arch/unix/config.h,
+	  /arch/unix/disk.c,
+	  /arch/unix/disk_wrapper.c,
+	  /arch/unix/eth.c,
+	  /arch/unix/machdep_wrapper.c,
+	  /arch/unix/makefile,
+	  /builtin/mkfs.c,
+	  /builtin/mkfs.h,
+	  /builtin/sh.c,
+	  /conf/generic-small.h,
+	  /conf/generic.h,
+	  /contrib/dev/makefile,
+	  /contrib/dev/uip/makefile,
+	  /contrib/dev/uip/uipobj.c,
+	  /contrib/dev/uip/uipobj.h,
+	  /contrib/makefile,
+	  /dev/con/con.c,
+	  /dev/makefile,
+	  /doc/drivers/ip.txt,
+	  /doc/drivers/terminal.txt,
+	  /doc/intro.txt,
+	  /doc/kernel/io.txt,
+	  /doc/kernel/iod.txt,
+	  /doc/kernel/syscalls.txt,
+	  /fs/dfs/dfs.c,
+	  /fs/holographicfs/holographicfs.c,
+	  /fs/makefile,
+	  /fs/memfs/memfs.c,
+	  /fs/nixfs/nixfs.c,
+	  /fs/wrapfs/makefile,
+	  /fs/wrapfs/wrapfs.c,
+	  /fs/wrapfs/wrapfs_wrap.c,
+	  /fs/wrapfs/wrapfs_wrap.c.on,
+	  /help/intro,
+	  /include/array.h,
+	  /include/bitmap.h,
+	  /include/buf.h,
+	  /include/con.h,
+	  /include/config.h,
+	  /include/config_deps.h,
+	  /include/config_drivers.h,
+	  /include/crc.h,
+	  /include/crt0.h,
+	  /include/dfs.h,
+	  /include/dir.h,
+	  /include/dirent.h,
+	  /include/disk.h,
+	  /include/error.h,
+	  /include/eth.h,
+	  /include/fs.h,
+	  /include/holographicfs.h,
+	  /include/init.h,
+	  /include/iod.h,
+	  /include/libbuf.h,
+	  /include/libc.h,
+	  /include/lock.h,
+	  /include/machdep.h,
+	  /include/main.h,
+	  /include/mem.h,
+	  /include/memfs.h,
+	  /include/namespace.h,
+	  /include/nixfs.h,
+	  /include/obj.h,
+	  /include/obj_intern.h,
+	  /include/pool.h,
+	  /include/proc.h,
+	  /include/queue.h,
+	  /include/sh.h,
+	  /include/string.h,
+	  /include/syncer.h,
+	  /include/tests.h,
+	  /include/types.h,
+	  /include/version.h,
+	  /include/wrapfs.h,
+	  /include/xxx.h,
+	  /kern/boot/init.c,
+	  /kern/boot/main.c,
+	  /kern/io/buf.c,
+	  /kern/io/fs.c,
+	  /kern/io/iod.c,
+	  /kern/io/libbuf.c,
+	  /kern/io/namespace.c,
+	  /kern/io/obj.c,
+	  /kern/io/obj_class.c,
+	  /kern/io/obj_dir.c,
+	  /kern/io/obj_model.c,
+	  /kern/io/obj_ops.c,
+	  /kern/io/syncer.c,
+	  /kern/machdep/machdep.c,
+	  /kern/machdep/makefile,
+	  /kern/makefile,
+	  /kern/mem/mem.c,
+	  /kern/mem/mem_diag.c,
+	  /kern/mem/mem_dump.c,
+	  /kern/mem/mem_intern.h,
+	  /kern/mem/mem_test.c,
+	  /kern/mem/pool.c,
+	  /kern/proc/lock.c,
+	  /kern/proc/proc.c,
+	  /lib/array.c,
+	  /lib/bitmap.c,
+	  /lib/crc.c,
+	  /lib/klibc.c,
+	  /lib/libc.c,
+	  /lib/queue.c,
+	  /lib/string.c,
+	  /lib/xxx.c,
+	  /make.sh,
+	  /mk/config.mk,
+	  /mk/main.mk,
+	  /tests/tests.c:
+	  Project
+	  renamed
+	  from
+	  "NIX"
+	  to
+	  "TENSIX".
+	  Thanks
+	  to
+	  Mirko
+	  Fichtner
+	  for
+	  this
+	  great
+	  idea!
+
+2006-10-14 13:45  pixel
+
+	* /kern/boot/init.c:
+	  Print
+	  intro
+	  text
+	  after
+	  boot.
+
+2006-03-15 20:17  pixel
+
+	* /conf/generic.h:
+	  Don't
+	  include
+	  the
+	  tap
+	  ethernet
+	  driver
+	  by
+	  default.
+
+2006-03-15 20:16  pixel
+
+	* /include/config.h:
+	  Update
+	  copyright
+	  info.
+
+2006-03-08 21:53  pixel
+
+	* /make.sh:
+	  BCC
+	  and
+	  SDCC
+	  compilers
+	  not
+	  supported
+	  anymore.
+
+2005-06-11 15:46  pixel
+
+	* /arch/i86/___crt0.S,
+	  /arch/i86/config.h,
+	  /arch/i86/drivers/con.c,
+	  /arch/i86/drivers/con_bios.S,
+	  /arch/i86/drivers/fd_bios.S,
+	  /arch/i86/machdep.c,
+	  /arch/i86/makefile,
+	  /arch/i86/switch.S,
+	  /arch/unix/con_wrapper.c,
+	  /arch/unix/config.h,
+	  /arch/unix/disk.c,
+	  /arch/unix/disk_wrapper.c,
+	  /arch/unix/eth.c,
+	  /arch/unix/machdep_wrapper.c,
+	  /arch/unix/makefile,
+	  /builtin/mkfs.c,
+	  /builtin/sh.c,
+	  /conf/README,
+	  /conf/boot.h,
+	  /conf/unix.h,
+	  /contrib/dev/uip/makefile,
+	  /contrib/dev/uip/uipobj.c,
+	  /contrib/dev/uip/uipobj.h,
+	  /contrib/makefile,
+	  /dev/con/con.c,
+	  /dev/makefile,
+	  /fs/dfs/dfs.c,
+	  /fs/holographicfs/README,
+	  /fs/holographicfs/holographicfs.c,
+	  /fs/makefile,
+	  /fs/memfs/memfs.c,
+	  /fs/nixfs/nixfs.c,
+	  /fs/wrapfs/makefile,
+	  /fs/wrapfs/wrapfs.c,
+	  /fs/wrapfs/wrapfs_wrap.c,
+	  /fs/wrapfs/wrapfs_wrap.c.on,
+	  /include/array.h,
+	  /include/bitmap.h,
+	  /include/buf.h,
+	  /include/con.h,
+	  /include/config.h,
+	  /include/config_deps.h,
+	  /include/config_drivers.h,
+	  /include/crc.h,
+	  /include/crt0.h,
+	  /include/dfs.h,
+	  /include/dir.h,
+	  /include/dirent.h,
+	  /include/disk.h,
+	  /include/error.h,
+	  /include/eth.h,
+	  /include/fs.h,
+	  /include/holographicfs.h,
+	  /include/init.h,
+	  /include/iod.h,
+	  /include/libbuf.h,
+	  /include/libc.h,
+	  /include/lock.h,
+	  /include/machdep.h,
+	  /include/main.h,
+	  /include/mem.h,
+	  /include/memfs.h,
+	  /include/namespace.h,
+	  /include/nixfs.h,
+	  /include/obj.h,
+	  /include/obj_intern.h,
+	  /include/pool.h,
+	  /include/proc.h,
+	  /include/queue.h,
+	  /include/sh.h,
+	  /include/string.h,
+	  /include/syncer.h,
+	  /include/tests.h,
+	  /include/types.h,
+	  /include/version.h,
+	  /include/wrapfs.h,
+	  /include/xxx.h,
+	  /kern/boot/init.c,
+	  /kern/boot/main.c,
+	  /kern/io/buf.c,
+	  /kern/io/fs.c,
+	  /kern/io/iod.c,
+	  /kern/io/libbuf.c,
+	  /kern/io/namespace.c,
+	  /kern/io/obj.c,
+	  /kern/io/obj_class.c,
+	  /kern/io/obj_dir.c,
+	  /kern/io/obj_model.c,
+	  /kern/io/obj_ops.c,
+	  /kern/io/syncer.c,
+	  /kern/machdep/machdep.c,
+	  /kern/mem/mem.c,
+	  /kern/mem/mem_diag.c,
+	  /kern/mem/mem_dump.c,
+	  /kern/mem/mem_intern.h,
+	  /kern/mem/pool.c,
+	  /kern/proc/lock.c,
+	  /kern/proc/proc.c,
+	  /lib/array.c,
+	  /lib/bitmap.c,
+	  /lib/crc.c,
+	  /lib/klibc.c,
+	  /lib/libc.c,
+	  /lib/queue.c,
+	  /lib/string.c,
+	  /lib/xxx.c,
+	  /make.sh,
+	  /mk/main.mk,
+	  /tests/tests.c:
+	  Headers
+	  updated.
+
+2005-06-08 13:12  pixel
+
+	* /arch/generic:
+	  
+
+2005-06-07 21:26  pixel
+
+	* /README,
+	  /arch,
+	  /builtin,
+	  /conf,
+	  /contrib,
+	  /dev,
+	  /fs,
+	  /help,
+	  /include,
+	  /include/config_drivers.h,
+	  /kern,
+	  /lib,
+	  /make.sh,
+	  /sys,
+	  /tests:
+	  Packag
+	  split.
+	  No
+	  sys
+	  directory
+	  required.
+
+2005-06-07 21:20  pixel
+
+	* /make.sh:
+	  
+
+2005-06-07 21:16  pixel
+
+	* /README:
+	  
+
+2005-06-07 21:15  pixel
+
+	* /sys/README:
+	  
+
+2005-06-07 21:12  pixel
+
+	* /README,
+	  /doc/intro.txt:
+	  
+
+2005-06-07 21:11  pixel
+
+	* /lib:
+	  C
+	  stream
+	  library
+	  not
+	  reqiured
+	  anymore
+	  in
+	  favor
+	  of
+	  LISP.
+
+2005-06-07 18:08  pixel
+
+	* /doc/kernel/syscalls.txt:
+	  
+
+2005-06-07 17:52  pixel
+
+	* /doc/drivers/ip.txt,
+	  /doc/drivers/terminal.txt,
+	  /doc/io.txt,
+	  /doc/iod.txt,
+	  /doc/ip.txt,
+	  /doc/kernel/io.txt,
+	  /doc/kernel/iod.txt,
+	  /doc/kernel/syscalls.txt,
+	  /doc/syscalls.txt,
+	  /doc/terminal.txt:
+	  
+
+2005-06-07 17:50  pixel
+
+	* /doc/drivers,
+	  /doc/intro.txt,
+	  /doc/io.txt,
+	  /doc/iod.txt,
+	  /doc/ip.txt,
+	  /doc/kernel,
+	  /doc/syscalls.txt,
+	  /doc/terminal.txt:
+	  
+
+2005-06-07 14:40  root
+
+	* /sys/include/config_drivers.h:
+	  Enable
+	  unix
+	  ethernet
+	  device.
+
+2005-06-07 14:18  pixel
+
+	* /doc/overview.txt,
+	  /doc/sections.txt,
+	  /doc/tree.txt:
+	  
+
+2005-06-07 14:17  pixel
+
+	* /doc/intro.txt,
+	  /doc/iod.txt:
+	  
+
+2005-06-07 14:16  pixel
+
+	* /sys/include/mem.h,
+	  /sys/kern/mem/mem.c,
+	  /sys/kern/mem/mem_intern.h:
+	  Moved
+	  page
+	  map
+	  to
+	  emulated
+	  memory.
+
+2005-06-07 14:15  pixel
+
+	* /sys/builtin/sh.c,
+	  /sys/include/iod.h,
+	  /sys/kern/io/iod.c:
+	  Renamed
+	  macros
+	  and
+	  cleaned
+	  up
+	  code.
+
+2005-05-27 03:22  pixel
+
+	* /README,
+	  /doc,
+	  /doc/intro.txt,
+	  /doc/io.txt,
+	  /doc/iod.txt,
+	  /doc/ip.txt,
+	  /doc/overview.txt,
+	  /doc/sections.txt,
+	  /doc/syscalls.txt,
+	  /doc/terminal.txt,
+	  /doc/tree.txt,
+	  /lib,
+	  /lib/str,
+	  /lib/str/libstr.c,
+	  /lib/str/libstr.h,
+	  /lib/str/libstr.txt,
+	  /make.sh,
+	  /mk,
+	  /mk/config.mk,
+	  /mk/main.mk,
+	  /sys,
+	  /sys/README,
+	  /sys/arch,
+	  /sys/arch/generic,
+	  /sys/arch/generic/machdep.c,
+	  /sys/arch/i86,
+	  /sys/arch/i86/___crt0.S,
+	  /sys/arch/i86/bcc,
+	  /sys/arch/i86/bcc/__ldivmod.c,
+	  /sys/arch/i86/bcc/bcc_bsw.c,
+	  /sys/arch/i86/bcc/bcc_int.c,
+	  /sys/arch/i86/bcc/bcc_io.c,
+	  /sys/arch/i86/bcc/bcc_long.c,
+	  /sys/arch/i86/bcc/ldiv.c,
+	  /sys/arch/i86/config.h,
+	  /sys/arch/i86/drivers,
+	  /sys/arch/i86/drivers/con.c,
+	  /sys/arch/i86/drivers/con_bios.S,
+	  /sys/arch/i86/drivers/fd_bios.S,
+	  /sys/arch/i86/machdep.c,
+	  /sys/arch/i86/makefile,
+	  /sys/arch/i86/switch.S,
+	  /sys/arch/makefile,
+	  /sys/arch/unix,
+	  /sys/arch/unix/con_wrapper.c,
+	  /sys/arch/unix/config.h,
+	  /sys/arch/unix/disk.c,
+	  /sys/arch/unix/disk_wrapper.c,
+	  /sys/arch/unix/eth.c,
+	  /sys/arch/unix/machdep_wrapper.c,
+	  /sys/arch/unix/makefile,
+	  /sys/arch/unix/tapdev.c,
+	  /sys/arch/unix/tapdev.h,
+	  /sys/arch/unix/uip_arch.c,
+	  /sys/arch/unix/uip_arch.h,
+	  /sys/builtin,
+	  /sys/builtin/mkfs.c,
+	  /sys/builtin/mkfs.h,
+	  /sys/builtin/sh.c,
+	  /sys/conf,
+	  /sys/conf/README,
+	  /sys/conf/boot.h,
+	  /sys/conf/generic-small.h,
+	  /sys/conf/generic.h,
+	  /sys/conf/unix.h,
+	  /sys/contrib,
+	  /sys/contrib/dev,
+	  /sys/contrib/dev/makefile,
+	  /sys/contrib/dev/uip,
+	  /sys/contrib/dev/uip/makefile,
+	  /sys/contrib/dev/uip/uip.c,
+	  /sys/contrib/dev/uip/uipobj.c,
+	  /sys/contrib/dev/uip/uipobj.h,
+	  /sys/contrib/dev/uip/uipopt.h,
+	  /sys/contrib/makefile,
+	  /sys/dev,
+	  /sys/dev/con,
+	  /sys/dev/con/con.c,
+	  /sys/dev/makefile,
+	  /sys/fs,
+	  /sys/fs/dfs,
+	  /sys/fs/dfs/dfs.c,
+	  /sys/fs/holographicfs,
+	  /sys/fs/holographicfs/README,
+	  /sys/fs/holographicfs/holographicfs.c,
+	  /sys/fs/makefile,
+	  /sys/fs/memfs,
+	  /sys/fs/memfs/memfs.c,
+	  /sys/fs/nixfs,
+	  /sys/fs/nixfs/nixfs.c,
+	  /sys/fs/wrapfs,
+	  /sys/fs/wrapfs/makefile,
+	  /sys/fs/wrapfs/wrapfs.c,
+	  /sys/fs/wrapfs/wrapfs_wrap.c,
+	  /sys/fs/wrapfs/wrapfs_wrap.c.on,
+	  /sys/help,
+	  /sys/help/cd,
+	  /sys/help/create,
+	  /sys/help/dup,
+	  /sys/help/exit,
+	  /sys/help/forget,
+	  /sys/help/help,
+	  /sys/help/info,
+	  /sys/help/intro,
+	  /sys/help/io,
+	  /sys/help/ls,
+	  /sys/help/memmap,
+	  /sys/help/mkdir,
+	  /sys/help/mkfs,
+	  /sys/help/objstat,
+	  /sys/help/ps,
+	  /sys/help/pwd,
+	  /sys/help/rm,
+	  /sys/help/sh,
+	  /sys/help/wrapfs,
+	  /sys/include,
+	  /sys/include/array.h,
+	  /sys/include/bitmap.h,
+	  /sys/include/buf.h,
+	  /sys/include/con.h,
+	  /sys/include/config.h,
+	  /sys/include/config_deps.h,
+	  /sys/include/config_drivers.h,
+	  /sys/include/crc.h,
+	  /sys/include/crt0.h,
+	  /sys/include/dfs.h,
+	  /sys/include/dir.h,
+	  /sys/include/dirent.h,
+	  /sys/include/disk.h,
+	  /sys/include/error.h,
+	  /sys/include/eth.h,
+	  /sys/include/fs.h,
+	  /sys/include/holographicfs.h,
+	  /sys/include/init.h,
+	  /sys/include/iod.h,
+	  /sys/include/libbuf.h,
+	  /sys/include/libc.h,
+	  /sys/include/lock.h,
+	  /sys/include/machdep.h,
+	  /sys/include/main.h,
+	  /sys/include/mem.h,
+	  /sys/include/memfs.h,
+	  /sys/include/namespace.h,
+	  /sys/include/nixfs.h,
+	  /sys/include/obj.h,
+	  /sys/include/obj_intern.h,
+	  /sys/include/pool.h,
+	  /sys/include/proc.h,
+	  /sys/include/queue.h,
+	  /sys/include/sh.h,
+	  /sys/include/string.h,
+	  /sys/include/syncer.h,
+	  /sys/include/tests.h,
+	  /sys/include/types.h,
+	  /sys/include/uip.h,
+	  /sys/include/version.h,
+	  /sys/include/wrapfs.h,
+	  /sys/include/xxx.h,
+	  /sys/kern,
+	  /sys/kern/boot,
+	  /sys/kern/boot/init.c,
+	  /sys/kern/boot/main.c,
+	  /sys/kern/io,
+	  /sys/kern/io/buf.c,
+	  /sys/kern/io/fs.c,
+	  /sys/kern/io/iod.c,
+	  /sys/kern/io/libbuf.c,
+	  /sys/kern/io/namespace.c,
+	  /sys/kern/io/obj.c,
+	  /sys/kern/io/obj_class.c,
+	  /sys/kern/io/obj_dir.c,
+	  /sys/kern/io/obj_model.c,
+	  /sys/kern/io/obj_ops.c,
+	  /sys/kern/io/syncer.c,
+	  /sys/kern/machdep,
+	  /sys/kern/machdep/machdep.c,
+	  /sys/kern/machdep/makefile,
+	  /sys/kern/makefile,
+	  /sys/kern/mem,
+	  /sys/kern/mem/mem.c,
+	  /sys/kern/mem/mem_diag.c,
+	  /sys/kern/mem/mem_dump.c,
+	  /sys/kern/mem/mem_intern.h,
+	  /sys/kern/mem/mem_test.c,
+	  /sys/kern/mem/pool.c,
+	  /sys/kern/proc,
+	  /sys/kern/proc/lock.c,
+	  /sys/kern/proc/proc.c,
+	  /sys/lib,
+	  /sys/lib/array.c,
+	  /sys/lib/bitmap.c,
+	  /sys/lib/crc.c,
+	  /sys/lib/klibc.c,
+	  /sys/lib/libc.c,
+	  /sys/lib/queue.c,
+	  /sys/lib/string.c,
+	  /sys/lib/xxx.c,
+	  /sys/make.sh,
+	  /sys/tests,
+	  /sys/tests/tests.c:
+	  Initial
+	  import.
+

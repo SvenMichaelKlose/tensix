@@ -1,0 +1,5 @@
+rm - Remove a file.
+
+Syntax: rm FILENAME
+
+The removed file is unrecoverable by the system tools.

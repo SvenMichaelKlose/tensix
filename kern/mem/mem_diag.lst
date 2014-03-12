@@ -1,0 +1,603 @@
+                              1 ;--------------------------------------------------------
+                              2 ; File Created by SDCC : FreeWare ANSI-C Compiler
+                              3 ; Version 2.6.0 #4309 (Oct 17 2006)
+                              4 ; This file generated Thu Oct 19 04:08:17 2006
+                              5 ;--------------------------------------------------------
+                              6 	.module mem_diag
+                              7 	.optsdcc -mz80
+                              8 	
+                              9 ;--------------------------------------------------------
+                             10 ; Public variables in this module
+                             11 ;--------------------------------------------------------
+                             12 	.globl _mem_boundary_frag
+                             13 	.globl _mem_boundary_page
+                             14 	.globl _mem_boundary
+                             15 ;--------------------------------------------------------
+                             16 ; special function registers
+                             17 ;--------------------------------------------------------
+                             18 ;--------------------------------------------------------
+                             19 ;  ram data
+                             20 ;--------------------------------------------------------
+                             21 	.area _DATA
+                             22 ;--------------------------------------------------------
+                             23 ; overlayable items in  ram 
+                             24 ;--------------------------------------------------------
+                             25 	.area _OVERLAY
+                             26 ;--------------------------------------------------------
+                             27 ; external initialized ram data
+                             28 ;--------------------------------------------------------
+                             29 ;--------------------------------------------------------
+                             30 ; global & static initialisations
+                             31 ;--------------------------------------------------------
+                             32 	.area _HOME
+                             33 	.area _GSINIT
+                             34 	.area _GSFINAL
+                             35 	.area _GSINIT
+                             36 ;--------------------------------------------------------
+                             37 ; Home
+                             38 ;--------------------------------------------------------
+                             39 	.area _HOME
+                             40 	.area _CODE
+                             41 ;--------------------------------------------------------
+                             42 ; code
+                             43 ;--------------------------------------------------------
+                             44 	.area _CODE
+                             45 ;mem_diag.c:26: mem_boundary_page (pagenum_t parea, pagenum_t pptr, char *msg)
+                             46 ;	genLabel
+                             47 ;	genFunction
+                             48 ;	---------------------------------
+                             49 ; Function mem_boundary_page
+                             50 ; ---------------------------------
+   0000                      51 _mem_boundary_page_start::
+   0000                      52 _mem_boundary_page:
+   0000 DD E5                53 	push	ix
+   0002 DD 21 00 00          54 	ld	ix,#0
+   0006 DD 39                55 	add	ix,sp
+   0008 21 FF FF             56 	ld	hl,#-1
+   000B 39                   57 	add	hl,sp
+   000C F9                   58 	ld	sp,hl
+                             59 ;mem_diag.c:28: pagenum_t  p = parea;
+                             60 ;	genAssign
+                             61 ;	AOP_STK for 
+                             62 ;	AOP_STK for _mem_boundary_page_p_1_1
+   000D DD 7E 04             63 	ld	a,4(ix)
+   0010 DD 77 FF             64 	ld	-1(ix),a
+                             65 ;mem_diag.c:31: if (PAGE_USED(p) == FALSE)
+                             66 ;	genRightShift
+                             67 ;	AOP_STK for _mem_boundary_page_p_1_1
+   0013 DD 46 FF             68 	ld	b,-1(ix)
+   0016 CB 38                69 	srl	b
+   0018 CB 38                70 	srl	b
+   001A CB 38                71 	srl	b
+                             72 ;	genPlus
+                             73 ;	Can't optimise plus by inc, falling back to the normal way
+   001C FD 21r00s00          74 	ld	iy,#_page_map
+   0020 FD 7E 00             75 	ld	a,0(iy)
+   0023 80                   76 	add	a,b
+   0024 47                   77 	ld	b,a
+   0025 FD 7E 01             78 	ld	a,1(iy)
+   0028 CE 00                79 	adc	a,#0x00
+   002A 5F                   80 	ld	e,a
+                             81 ;	genPointerGet
+   002B 68                   82 	ld	l,b
+   002C 63                   83 	ld	h,e
+   002D 46                   84 	ld	b,(hl)
+                             85 ;	genAnd
+                             86 ;	AOP_STK for _mem_boundary_page_p_1_1
+   002E DD 7E FF             87 	ld	a,-1(ix)
+   0031 E6 07                88 	and	a,#0x07
+                             89 ;	genLeftShift
+   0033 5F                   90 	ld	e,a
+   0034 3C                   91 	inc	a
+   0035 F5                   92 	push	af
+   0036 1E 01                93 	ld	e,#0x01
+   0038 16 00                94 	ld	d,#0x00
+   003A F1                   95 	pop	af
+   003B C3r42s00             96 	jp	00121$
+   003E                      97 00120$:
+   003E CB 23                98 	sla	e
+   0040 CB 12                99 	rl	d
+   0042                     100 00121$:
+   0042 3D                  101 	dec	a
+   0043 C2r3Es00            102 	jp	nz,00120$
+                            103 ;	genCast
+                            104 ; Removed redundent load
+   0046 0E 00               105 	ld	c,#0x00
+                            106 ;	genAnd
+   0048 7B                  107 	ld	a,e
+   0049 A0                  108 	and	a,b
+   004A 5F                  109 	ld	e,a
+   004B 7A                  110 	ld	a,d
+   004C A1                  111 	and	a,c
+   004D 57                  112 	ld	d,a
+                            113 ;	genIfx
+   004E 7B                  114 	ld	a,e
+   004F B2                  115 	or	a,d
+   0050 C2r5Bs00            116 	jp	nz,00102$
+                            117 ;mem_diag.c:32: panic ("%s: page not in use.");
+                            118 ;	genIpush
+                            119 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   0053 21rC5s00            120 	ld	hl,#__str_0
+   0056 E5                  121 	push	hl
+                            122 ;	genCall
+   0057 CDr00s00            123 	call	_panic
+   005A F1                  124 	pop	af
+                            125 ;	genLabel
+   005B                     126 00102$:
+                            127 ;mem_diag.c:35: if (PAGE_LOCKED(p - 1) == 0 && PAGE_CONT(p - 1) != 0)
+                            128 ;	genCast
+                            129 ;	AOP_STK for _mem_boundary_page_p_1_1
+   005B DD 4E FF            130 	ld	c,-1(ix)
+   005E 06 00               131 	ld	b,#0x00
+                            132 ;	genMinus
+   0060 0B                  133 	dec	bc
+                            134 ;	genPlus
+                            135 ;	Can't optimise plus by inc, falling back to the normal way
+   0061 FD 21r00s00         136 	ld	iy,#_page_list
+   0065 FD 7E 00            137 	ld	a,0(iy)
+   0068 81                  138 	add	a,c
+   0069 4F                  139 	ld	c,a
+   006A FD 7E 01            140 	ld	a,1(iy)
+   006D 88                  141 	adc	a,b
+   006E 47                  142 	ld	b,a
+                            143 ;	genPointerGet
+   006F 0A                  144 	ld	a,(bc)
+                            145 ;	genAnd
+   0070 4F                  146 	ld	c,a
+   0071 E6 04               147 	and	a,#0x04
+                            148 ;	genIfx
+   0073 47                  149 	ld	b,a
+   0074 B7                  150 	or	a,a
+   0075 CAr81s00            151 	jp	z,00105$
+                            152 ;	genAnd
+   0078 79                  153 	ld	a,c
+   0079 E6 03               154 	and	a,#0x03
+   007B CAr81s00            155 	jp	z,00123$
+   007E                     156 00122$:
+   007E C3r8Es00            157 	jp	00118$
+   0081                     158 00123$:
+                            159 ;	genLabel
+   0081                     160 00105$:
+                            161 ;	genCmpEq
+                            162 ; genCmpEq: left 1, right 1, result 0
+   0081 78                  163 	ld	a,b
+   0082 B7                  164 	or	a,a
+   0083 CAr8Es00            165 	jp	z,00118$
+   0086                     166 00124$:
+                            167 ;mem_diag.c:36: panic ("%s: no page start.");
+                            168 ;	genIpush
+                            169 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   0086 21rDAs00            170 	ld	hl,#__str_1
+   0089 E5                  171 	push	hl
+                            172 ;	genCall
+   008A CDr00s00            173 	call	_panic
+   008D F1                  174 	pop	af
+                            175 ;mem_diag.c:39: do {
+                            176 ;	genLabel
+   008E                     177 00118$:
+                            178 ;	genAssign
+                            179 ;	AOP_STK for _mem_boundary_page_p_1_1
+   008E DD 4E FF            180 	ld	c,-1(ix)
+                            181 ;	genLabel
+   0091                     182 00108$:
+                            183 ;mem_diag.c:40: cont = PAGE_CONT(p);
+                            184 ;	genPlus
+                            185 ;	Can't optimise plus by inc, falling back to the normal way
+   0091 FD 21r00s00         186 	ld	iy,#_page_list
+   0095 FD 7E 00            187 	ld	a,0(iy)
+   0098 81                  188 	add	a,c
+   0099 5F                  189 	ld	e,a
+   009A FD 7E 01            190 	ld	a,1(iy)
+   009D CE 00               191 	adc	a,#0x00
+   009F 57                  192 	ld	d,a
+                            193 ;	genPointerGet
+   00A0 1A                  194 	ld	a,(de)
+                            195 ;	genAnd
+   00A1 47                  196 	ld	b,a
+   00A2 E6 04               197 	and	a,#0x04
+   00A4 47                  198 	ld	b,a
+                            199 ;mem_diag.c:41: if (p == pptr)
+                            200 ;	genCmpEq
+                            201 ;	AOP_STK for 
+                            202 ; genCmpEq: left 1, right 1, result 0
+   00A5 DD 7E 05            203 	ld	a,5(ix)
+   00A8 B9                  204 	cp	c
+   00A9 CArAFs00            205 	jp	z,00126$
+   00AC                     206 00125$:
+   00AC C3rB2s00            207 	jp	00107$
+   00AF                     208 00126$:
+                            209 ;mem_diag.c:42: return;
+                            210 ;	genRet
+   00AF C3rC0s00            211 	jp	00112$
+                            212 ;	genLabel
+   00B2                     213 00107$:
+                            214 ;mem_diag.c:43: p++; /* Next page. */
+                            215 ;	genPlus
+                            216 ;	genPlusIncr
+                            217 ; Removed redundent load
+   00B2 0C                  218 	inc	c
+                            219 ;mem_diag.c:44: } while (cont); /* Continued by next. */
+                            220 ;	genIfx
+   00B3 AF                  221 	xor	a,a
+   00B4 B0                  222 	or	a,b
+   00B5 C2r91s00            223 	jp	nz,00108$
+                            224 ;mem_diag.c:46: panic ("%s: ptr outside page area.");
+                            225 ;	genIpush
+                            226 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   00B8 21rEDs00            227 	ld	hl,#__str_2
+   00BB E5                  228 	push	hl
+                            229 ;	genCall
+   00BC CDr00s00            230 	call	_panic
+   00BF F1                  231 	pop	af
+                            232 ;	genLabel
+   00C0                     233 00112$:
+                            234 ;	genEndFunction
+   00C0 DD F9               235 	ld	sp,ix
+   00C2 DD E1               236 	pop	ix
+   00C4 C9                  237 	ret
+   00C5                     238 _mem_boundary_page_end::
+   00C5                     239 __str_0:
+   00C5 25 73 3A 20 70 61   240 	.ascii "%s: page not in use."
+        67 65 20 6E 6F 74
+        20 69 6E 20 75 73
+        65 2E
+   00D9 00                  241 	.db 0x00
+   00DA                     242 __str_1:
+   00DA 25 73 3A 20 6E 6F   243 	.ascii "%s: no page start."
+        20 70 61 67 65 20
+        73 74 61 72 74 2E
+   00EC 00                  244 	.db 0x00
+   00ED                     245 __str_2:
+   00ED 25 73 3A 20 70 74   246 	.ascii "%s: ptr outside page area."
+        72 20 6F 75 74 73
+        69 64 65 20 70 61
+        67 65 20 61 72 65
+        61 2E
+   0107 00                  247 	.db 0x00
+                            248 ;mem_diag.c:51: mem_boundary_frag (void *area, pagenum_t parea, void *ptr, pagenum_t pptr, char *msg)
+                            249 ;	genLabel
+                            250 ;	genFunction
+                            251 ;	---------------------------------
+                            252 ; Function mem_boundary_frag
+                            253 ; ---------------------------------
+   0108                     254 _mem_boundary_frag_start::
+   0108                     255 _mem_boundary_frag:
+   0108 DD E5               256 	push	ix
+   010A DD 21 00 00         257 	ld	ix,#0
+   010E DD 39               258 	add	ix,sp
+   0110 21 FC FF            259 	ld	hl,#-4
+   0113 39                  260 	add	hl,sp
+   0114 F9                  261 	ld	sp,hl
+                            262 ;mem_diag.c:53: size_t fsize = FRAGSIZE(pptr);
+                            263 ;	genPlus
+                            264 ;	AOP_STK for 
+                            265 ;	Can't optimise plus by inc, falling back to the normal way
+   0115 FD 21r00s00         266 	ld	iy,#_page_list
+   0119 FD 7E 00            267 	ld	a,0(iy)
+   011C DD 86 09            268 	add	a,9(ix)
+   011F 4F                  269 	ld	c,a
+   0120 FD 7E 01            270 	ld	a,1(iy)
+   0123 CE 00               271 	adc	a,#0x00
+   0125 47                  272 	ld	b,a
+                            273 ;	genPointerGet
+   0126 0A                  274 	ld	a,(bc)
+                            275 ;	genAnd
+   0127 4F                  276 	ld	c,a
+   0128 E6 03               277 	and	a,#0x03
+                            278 ;	genRightShift
+   012A 4F                  279 	ld	c,a
+   012B 3C                  280 	inc	a
+                            281 ;	AOP_STK for _mem_boundary_frag_fsize_1_1
+   012C F5                  282 	push	af
+   012D DD 36 FE 00         283 	ld	-2(ix),#0x00
+   0131 DD 36 FF 01         284 	ld	-1(ix),#0x01
+   0135 F1                  285 	pop	af
+   0136 C3r41s01            286 	jp	00113$
+   0139                     287 00112$:
+   0139 DD CB FF 3E         288 	srl	-1(ix)
+   013D DD CB FE 1E         289 	rr	-2(ix)
+   0141                     290 00113$:
+   0141 3D                  291 	dec	a
+   0142 C2r39s01            292 	jp	nz,00112$
+                            293 ;mem_diag.c:55: if (parea != pptr)
+                            294 ;	genCmpEq
+                            295 ;	AOP_STK for 
+                            296 ;	AOP_STK for 
+                            297 ; genCmpEq: left 1, right 1, result 0
+   0145 DD 7E 09            298 	ld	a,9(ix)
+   0148 DD BE 06            299 	cp	6(ix)
+   014B CAr56s01            300 	jp	z,00102$
+   014E                     301 00114$:
+                            302 ;mem_diag.c:56: panic ("%s: ptr outside frag page");
+                            303 ;	genIpush
+                            304 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   014E 21rDAs01            305 	ld	hl,#__str_3
+   0151 E5                  306 	push	hl
+                            307 ;	genCall
+   0152 CDr00s00            308 	call	_panic
+   0155 F1                  309 	pop	af
+                            310 ;	genLabel
+   0156                     311 00102$:
+                            312 ;mem_diag.c:58: if (IS_ILLEGAL_FRAG(area))
+                            313 ;	genCast
+                            314 ;	AOP_STK for 
+   0156 DD 5E 04            315 	ld	e,4(ix)
+   0159 DD 56 05            316 	ld	d,5(ix)
+                            317 ;	genCast
+   015C 0Er00               318 	ld	c,#<_ram
+   015E 06s00               319 	ld	b,#>_ram
+                            320 ;	genMinus
+   0160 7B                  321 	ld	a,e
+   0161 91                  322 	sub	a,c
+   0162 4F                  323 	ld	c,a
+   0163 7A                  324 	ld	a,d
+   0164 98                  325 	sbc	a,b
+   0165 47                  326 	ld	b,a
+                            327 ;	genCast
+                            328 ;	genCast
+                            329 ;	AOP_STK for _mem_boundary_frag_sloc0_1_0
+   0166 DD 71 FC            330 	ld	-4(ix),c
+   0169 DD 70 FD            331 	ld	-3(ix),b
+                            332 ;	genCast
+   016C 0Er00               333 	ld	c,#<_ram
+   016E 06s00               334 	ld	b,#>_ram
+                            335 ;	genMinus
+   0170 7B                  336 	ld	a,e
+   0171 91                  337 	sub	a,c
+   0172 4F                  338 	ld	c,a
+   0173 7A                  339 	ld	a,d
+   0174 98                  340 	sbc	a,b
+   0175 47                  341 	ld	b,a
+                            342 ;	genCast
+                            343 ;	genCast
+                            344 ;	genRightShift
+   0176 48                  345 	ld	c,b
+   0177 06 00               346 	ld	b,#0x00
+                            347 ;	genPlus
+                            348 ;	Can't optimise plus by inc, falling back to the normal way
+   0179 FD 21r00s00         349 	ld	iy,#_page_list
+   017D FD 7E 00            350 	ld	a,0(iy)
+   0180 81                  351 	add	a,c
+   0181 4F                  352 	ld	c,a
+   0182 FD 7E 01            353 	ld	a,1(iy)
+   0185 88                  354 	adc	a,b
+   0186 47                  355 	ld	b,a
+                            356 ;	genPointerGet
+   0187 0A                  357 	ld	a,(bc)
+                            358 ;	genAnd
+   0188 4F                  359 	ld	c,a
+   0189 E6 03               360 	and	a,#0x03
+                            361 ;	genRightShift
+   018B 4F                  362 	ld	c,a
+   018C 3C                  363 	inc	a
+   018D F5                  364 	push	af
+   018E 0E 00               365 	ld	c,#0x00
+   0190 06 01               366 	ld	b,#0x01
+   0192 F1                  367 	pop	af
+   0193 C3r9As01            368 	jp	00116$
+   0196                     369 00115$:
+   0196 CB 28               370 	sra	b
+   0198 CB 19               371 	rr	c
+   019A                     372 00116$:
+   019A 3D                  373 	dec	a
+   019B C2r96s01            374 	jp	nz,00115$
+                            375 ;	genMinus
+   019E 0B                  376 	dec	bc
+                            377 ;	genAnd
+                            378 ;	AOP_STK for _mem_boundary_frag_sloc0_1_0
+   019F 79                  379 	ld	a,c
+   01A0 DD A6 FC            380 	and	a,-4(ix)
+   01A3 4F                  381 	ld	c,a
+   01A4 78                  382 	ld	a,b
+   01A5 DD A6 FD            383 	and	a,-3(ix)
+   01A8 47                  384 	ld	b,a
+                            385 ;	genIfx
+   01A9 79                  386 	ld	a,c
+   01AA B0                  387 	or	a,b
+   01AB CArB8s01            388 	jp	z,00104$
+                            389 ;mem_diag.c:59: panic ("%s: no frag  start");
+                            390 ;	genIpush
+                            391 ; _saveRegsForCall: sendSetSize: 0 deInUse: 1 bcInUse: 0 deSending: 0
+   01AE D5                  392 	push	de
+   01AF 21rF4s01            393 	ld	hl,#__str_4
+   01B2 E5                  394 	push	hl
+                            395 ;	genCall
+   01B3 CDr00s00            396 	call	_panic
+   01B6 F1                  397 	pop	af
+   01B7 D1                  398 	pop	de
+                            399 ;	genLabel
+   01B8                     400 00104$:
+                            401 ;mem_diag.c:61: if (ptr > POINTER_ADD(area, fsize))
+                            402 ;	genPlus
+                            403 ;	AOP_STK for _mem_boundary_frag_fsize_1_1
+                            404 ;	Can't optimise plus by inc, falling back to the normal way
+   01B8 7B                  405 	ld	a,e
+   01B9 DD 86 FE            406 	add	a,-2(ix)
+   01BC 4F                  407 	ld	c,a
+   01BD 7A                  408 	ld	a,d
+   01BE DD 8E FF            409 	adc	a,-1(ix)
+   01C1 47                  410 	ld	b,a
+                            411 ;	genCast
+                            412 ;	genCmpGt
+                            413 ;	AOP_STK for 
+   01C2 79                  414 	ld	a,c
+   01C3 DD 96 07            415 	sub	a,7(ix)
+   01C6 78                  416 	ld	a,b
+   01C7 DD 9E 08            417 	sbc	a,8(ix)
+   01CA F2rD5s01            418 	jp	p,00107$
+                            419 ;mem_diag.c:62: panic ("%s: ptr outside frag area");
+                            420 ;	genIpush
+                            421 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+   01CD 21r07s02            422 	ld	hl,#__str_5
+   01D0 E5                  423 	push	hl
+                            424 ;	genCall
+   01D1 CDr00s00            425 	call	_panic
+   01D4 F1                  426 	pop	af
+                            427 ;	genLabel
+   01D5                     428 00107$:
+                            429 ;	genEndFunction
+   01D5 DD F9               430 	ld	sp,ix
+   01D7 DD E1               431 	pop	ix
+   01D9 C9                  432 	ret
+   01DA                     433 _mem_boundary_frag_end::
+   01DA                     434 __str_3:
+   01DA 25 73 3A 20 70 74   435 	.ascii "%s: ptr outside frag page"
+        72 20 6F 75 74 73
+        69 64 65 20 66 72
+        61 67 20 70 61 67
+        65
+   01F3 00                  436 	.db 0x00
+   01F4                     437 __str_4:
+   01F4 25 73 3A 20 6E 6F   438 	.ascii "%s: no frag  start"
+        20 66 72 61 67 20
+        20 73 74 61 72 74
+   0206 00                  439 	.db 0x00
+   0207                     440 __str_5:
+   0207 25 73 3A 20 70 74   441 	.ascii "%s: ptr outside frag area"
+        72 20 6F 75 74 73
+        69 64 65 20 66 72
+        61 67 20 61 72 65
+        61
+   0220 00                  442 	.db 0x00
+                            443 ;mem_diag.c:66: mem_boundary (void *area, void *ptr, char *msg)
+                            444 ;	genLabel
+                            445 ;	genFunction
+                            446 ;	---------------------------------
+                            447 ; Function mem_boundary
+                            448 ; ---------------------------------
+   0221                     449 _mem_boundary_start::
+   0221                     450 _mem_boundary:
+   0221 DD E5               451 	push	ix
+   0223 DD 21 00 00         452 	ld	ix,#0
+   0227 DD 39               453 	add	ix,sp
+   0229 21 FF FF            454 	ld	hl,#-1
+   022C 39                  455 	add	hl,sp
+   022D F9                  456 	ld	sp,hl
+                            457 ;mem_diag.c:68: pagenum_t parea = ADDR2PAGE(area);
+                            458 ;	genCast
+                            459 ;	AOP_STK for 
+   022E DD 4E 04            460 	ld	c,4(ix)
+   0231 DD 46 05            461 	ld	b,5(ix)
+                            462 ;	genCast
+   0234 1Er00               463 	ld	e,#<_ram
+   0236 16s00               464 	ld	d,#>_ram
+                            465 ;	genMinus
+   0238 79                  466 	ld	a,c
+   0239 93                  467 	sub	a,e
+   023A 4F                  468 	ld	c,a
+   023B 78                  469 	ld	a,b
+   023C 9A                  470 	sbc	a,d
+   023D 47                  471 	ld	b,a
+                            472 ;	genCast
+                            473 ;	genCast
+                            474 ;	genRightShift
+   023E 48                  475 	ld	c,b
+   023F 06 00               476 	ld	b,#0x00
+                            477 ;	genCast
+                            478 ;	AOP_STK for _mem_boundary_parea_1_1
+   0241 DD 71 FF            479 	ld	-1(ix),c
+                            480 ;mem_diag.c:69: pagenum_t pptr = ADDR2PAGE(ptr);
+                            481 ;	genCast
+                            482 ;	AOP_STK for 
+   0244 DD 5E 06            483 	ld	e,6(ix)
+   0247 DD 56 07            484 	ld	d,7(ix)
+                            485 ;	genCast
+   024A 06r00               486 	ld	b,#<_ram
+   024C 0Es00               487 	ld	c,#>_ram
+                            488 ;	genMinus
+   024E 7B                  489 	ld	a,e
+   024F 90                  490 	sub	a,b
+   0250 47                  491 	ld	b,a
+   0251 7A                  492 	ld	a,d
+   0252 99                  493 	sbc	a,c
+   0253 4F                  494 	ld	c,a
+                            495 ;	genCast
+                            496 ;	genCast
+                            497 ;	genRightShift
+   0254 41                  498 	ld	b,c
+   0255 0E 00               499 	ld	c,#0x00
+                            500 ;	genCast
+   0257 48                  501 	ld	c,b
+                            502 ;mem_diag.c:72: if (FRAGLOG(pptr) == 0)    /* Fragment size in page info? */
+                            503 ;	genPlus
+                            504 ;	Can't optimise plus by inc, falling back to the normal way
+   0258 FD 21r00s00         505 	ld	iy,#_page_list
+   025C FD 7E 00            506 	ld	a,0(iy)
+   025F 81                  507 	add	a,c
+   0260 5F                  508 	ld	e,a
+   0261 FD 7E 01            509 	ld	a,1(iy)
+   0264 CE 00               510 	adc	a,#0x00
+   0266 57                  511 	ld	d,a
+                            512 ;	genPointerGet
+   0267 1A                  513 	ld	a,(de)
+                            514 ;	genAnd
+   0268 47                  515 	ld	b,a
+   0269 E6 03               516 	and	a,#0x03
+   026B CAr71s02            517 	jp	z,00108$
+   026E                     518 00107$:
+   026E C3r88s02            519 	jp	00102$
+   0271                     520 00108$:
+                            521 ;mem_diag.c:73: mem_boundary_page (parea, pptr, msg);
+                            522 ;	genIpush
+                            523 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+                            524 ;	AOP_STK for 
+   0271 DD 6E 08            525 	ld	l,8(ix)
+   0274 DD 66 09            526 	ld	h,9(ix)
+   0277 E5                  527 	push	hl
+                            528 ;	genIpush
+   0278 79                  529 	ld	a,c
+   0279 F5                  530 	push	af
+   027A 33                  531 	inc	sp
+                            532 ;	genIpush
+                            533 ;	AOP_STK for _mem_boundary_parea_1_1
+   027B DD 7E FF            534 	ld	a,-1(ix)
+   027E F5                  535 	push	af
+   027F 33                  536 	inc	sp
+                            537 ;	genCall
+   0280 CDr00s00            538 	call	_mem_boundary_page
+   0283 F1                  539 	pop	af
+   0284 F1                  540 	pop	af
+                            541 ;	genGoto
+   0285 C3rACs02            542 	jp	00104$
+                            543 ;	genLabel
+   0288                     544 00102$:
+                            545 ;mem_diag.c:75: mem_boundary_frag (area, parea, ptr, pptr, msg);
+                            546 ;	genIpush
+                            547 ; _saveRegsForCall: sendSetSize: 0 deInUse: 0 bcInUse: 0 deSending: 0
+                            548 ;	AOP_STK for 
+   0288 DD 6E 08            549 	ld	l,8(ix)
+   028B DD 66 09            550 	ld	h,9(ix)
+   028E E5                  551 	push	hl
+                            552 ;	genIpush
+   028F 79                  553 	ld	a,c
+   0290 F5                  554 	push	af
+   0291 33                  555 	inc	sp
+                            556 ;	genIpush
+                            557 ;	AOP_STK for 
+   0292 DD 6E 06            558 	ld	l,6(ix)
+   0295 DD 66 07            559 	ld	h,7(ix)
+   0298 E5                  560 	push	hl
+                            561 ;	genIpush
+                            562 ;	AOP_STK for _mem_boundary_parea_1_1
+   0299 DD 7E FF            563 	ld	a,-1(ix)
+   029C F5                  564 	push	af
+   029D 33                  565 	inc	sp
+                            566 ;	genIpush
+                            567 ;	AOP_STK for 
+   029E DD 6E 04            568 	ld	l,4(ix)
+   02A1 DD 66 05            569 	ld	h,5(ix)
+   02A4 E5                  570 	push	hl
+                            571 ;	genCall
+   02A5 CDr08s01            572 	call	_mem_boundary_frag
+   02A8 F1                  573 	pop	af
+   02A9 F1                  574 	pop	af
+   02AA F1                  575 	pop	af
+   02AB F1                  576 	pop	af
+                            577 ;	genLabel
+   02AC                     578 00104$:
+                            579 ;	genEndFunction
+   02AC DD F9               580 	ld	sp,ix
+   02AE DD E1               581 	pop	ix
+   02B0 C9                  582 	ret
+   02B1                     583 _mem_boundary_end::
+                            584 	.area _CODE

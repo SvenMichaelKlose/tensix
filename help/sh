@@ -1,0 +1,29 @@
+The kernel built-in shell
+=========================
+
+This shell is compiled into the kernel to allow execution of simple functions
+to navigate through the virtual filesystem and to run other processes. The
+shell is started as soon as the kernel is loaded and all components are
+initialised.
+
+When started, the shell shows as prompt '#' to signal that the user should
+type in a command. A command consists of a name, followed by arguments,
+all separated by one or more whitespaces:
+
+    COMMAND_NAME [ARGUMENT_1 [ARGUMENT_2]]
+
+If the command is unknown, a question mark is answered:
+
+    # fnord
+    ?
+    #
+
+Some commands do not require arguments - like 'help' which prints the
+names of all available commands. Here's what it looks like to use it:
+
+    # help
+    create mkdir exit mkfs help pwd mem ls io ps cd rm 
+    #
+
+If you need more specific help, use the command in question as the first
+argument of 'help'.

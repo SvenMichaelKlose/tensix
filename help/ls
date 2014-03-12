@@ -1,0 +1,6 @@
+ls - List directory
+
+Syntax: ls [DIRECTORY]
+
+Prints the names of the file in the current working directory or optional
+DIRECTORY and the file sizes in bytes.

@@ -1,0 +1,49 @@
+ASxxxx Assembler V01.75  (Zilog Z80 / Hitachi HD64180), page 1.
+
+Symbol Table
+
+  0 __str_0                            006A R
+  0 __str_1                            01B2 R
+  0 __str_2                            01CD R
+  0 __str_3                            02E8 R
+  0 __str_4                            0308 R
+  0 _lock_read_ref                     01DD GR
+  0 _lock_read_ref_end                 0233 GR
+  0 _lock_read_ref_start               01DD GR
+  0 _lock_read_unref                   02A0 GR
+  0 _lock_read_unref_end               02E8 GR
+  0 _lock_read_unref_start             02A0 GR
+  0 _lock_ref                          00BD GR
+  0 _lock_ref2                         0000 GR
+  0 _lock_ref2_end                     006A GR
+  0 _lock_ref2_start                   0000 GR
+  0 _lock_ref_end                      00D8 GR
+  0 _lock_ref_start                    00BD GR
+  0 _lock_ref_wait                     00D8 GR
+  0 _lock_ref_wait_end                 00F3 GR
+  0 _lock_ref_wait_start               00D8 GR
+  0 _lock_unref                        0171 GR
+  0 _lock_unref_end                    01B2 GR
+  0 _lock_unref_start                  0171 GR
+  0 _lock_wakeup                       00F3 GR
+  0 _lock_wakeup_end                   0171 GR
+  0 _lock_wakeup_start                 00F3 GR
+  0 _lock_write_ref                    0233 GR
+  0 _lock_write_ref_end                02A0 GR
+  0 _lock_write_ref_start              0233 GR
+    _panic                             **** GX
+    _printk                            **** GX
+    _proc_current                      **** GX
+    _proc_wakeup                       **** GX
+    _sleep                             **** GX
+
+ASxxxx Assembler V01.75  (Zilog Z80 / Hitachi HD64180), page 2.
+
+Area Table
+
+   0 _CODE                              size  31D   flags 0
+   1 _DATA                              size    0   flags 0
+   2 _OVERLAY                           size    0   flags 0
+   3 _HOME                              size    0   flags 0
+   4 _GSINIT                            size    0   flags 0
+   5 _GSFINAL                           size    0   flags 0

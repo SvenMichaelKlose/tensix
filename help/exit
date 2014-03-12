@@ -1,0 +1,5 @@
+exit - Exit the shell.
+
+Syntax: exit
+
+The shell is terminated and removed from memory.

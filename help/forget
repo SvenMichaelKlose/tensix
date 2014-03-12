@@ -1,0 +1,5 @@
+forget - Remove idle ressources
+
+Syntax: forget
+
+Removes all unreferenced buffers from memory.

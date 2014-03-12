@@ -1,0 +1,9 @@
+tensix operating system project documentation
+Copyright (C) 2002-2006 Sven Klose <pixel@copei.de>
+
+Tensix is a multitasking operating system for computers with 16-bit address
+space. It provides memory- and process management, as well as a virtual
+filesystem. tensix can be run as an application on other systems in order
+to utilize up-to-date development tools. (This is still the only way to
+run it.) tensix is very modular and can be gradually shrunk down to provide
+only memory management.

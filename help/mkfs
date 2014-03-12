@@ -1,0 +1,6 @@
+mkfs - Make a file system
+
+Syntax: mkfs IMAGE_FILE
+
+Initialises a nixfs filesystem in IMAGE_FILE. The content of IMAGE_FILE is
+destroyed. IMAGE_FILE must NOT be a stream.

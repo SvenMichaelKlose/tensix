@@ -1,0 +1,162 @@
+                              1 ;--------------------------------------------------------
+                              2 ; File Created by SDCC : FreeWare ANSI-C Compiler
+                              3 ; Version 2.6.0 #4309 (Oct 17 2006)
+                              4 ; This file generated Thu Oct 19 04:12:00 2006
+                              5 ;--------------------------------------------------------
+                              6 	.module crc
+                              7 	.optsdcc -mz80
+                              8 	
+                              9 ;--------------------------------------------------------
+                             10 ; Public variables in this module
+                             11 ;--------------------------------------------------------
+                             12 	.globl _crc
+                             13 ;--------------------------------------------------------
+                             14 ; special function registers
+                             15 ;--------------------------------------------------------
+                             16 ;--------------------------------------------------------
+                             17 ;  ram data
+                             18 ;--------------------------------------------------------
+                             19 	.area _DATA
+                             20 ;--------------------------------------------------------
+                             21 ; overlayable items in  ram 
+                             22 ;--------------------------------------------------------
+                             23 	.area _OVERLAY
+                             24 ;--------------------------------------------------------
+                             25 ; external initialized ram data
+                             26 ;--------------------------------------------------------
+                             27 ;--------------------------------------------------------
+                             28 ; global & static initialisations
+                             29 ;--------------------------------------------------------
+                             30 	.area _HOME
+                             31 	.area _GSINIT
+                             32 	.area _GSFINAL
+                             33 	.area _GSINIT
+                             34 ;--------------------------------------------------------
+                             35 ; Home
+                             36 ;--------------------------------------------------------
+                             37 	.area _HOME
+                             38 	.area _CODE
+                             39 ;--------------------------------------------------------
+                             40 ; code
+                             41 ;--------------------------------------------------------
+                             42 	.area _CODE
+                             43 ;crc.c:14: crc (void *where, size_t size)
+                             44 ;	genLabel
+                             45 ;	genFunction
+                             46 ;	---------------------------------
+                             47 ; Function crc
+                             48 ; ---------------------------------
+   0000                      49 _crc_start::
+   0000                      50 _crc:
+   0000 DD E5                51 	push	ix
+   0002 DD 21 00 00          52 	ld	ix,#0
+   0006 DD 39                53 	add	ix,sp
+   0008 21 FC FF             54 	ld	hl,#-4
+   000B 39                   55 	add	hl,sp
+   000C F9                   56 	ld	sp,hl
+                             57 ;crc.c:16: u8_t v = 0;
+                             58 ;	genAssign
+                             59 ;	AOP_STK for _crc_v_1_1
+   000D DD 36 FF 00          60 	ld	-1(ix),#0x00
+                             61 ;crc.c:17: u8_t *p = (u8_t*) where;
+                             62 ;	genAssign
+                             63 ;	AOP_STK for 
+   0011 DD 5E 04             64 	ld	e,4(ix)
+   0014 DD 56 05             65 	ld	d,5(ix)
+                             66 ;crc.c:21: while (size--) {
+                             67 ;	genAssign
+                             68 ;	AOP_STK for _crc_p_1_1
+   0017 DD 73 FD             69 	ld	-3(ix),e
+   001A DD 72 FE             70 	ld	-2(ix),d
+                             71 ;	genAssign
+                             72 ;	AOP_STK for 
+   001D DD 46 06             73 	ld	b,6(ix)
+   0020 DD 4E 07             74 	ld	c,7(ix)
+                             75 ;	genLabel
+   0023                      76 00101$:
+                             77 ;	genAssign
+   0023 58                   78 	ld	e,b
+   0024 51                   79 	ld	d,c
+                             80 ;	genMinus
+   0025 68                   81 	ld	l,b
+   0026 61                   82 	ld	h,c
+   0027 2B                   83 	dec	hl
+   0028 45                   84 	ld	b,l
+   0029 4C                   85 	ld	c,h
+                             86 ;	genIfx
+   002A 7B                   87 	ld	a,e
+   002B B2                   88 	or	a,d
+   002C CAr66s00             89 	jp	z,00103$
+                             90 ;crc.c:22: tmp = *p++;
+                             91 ;	genPointerGet
+                             92 ;	AOP_STK for _crc_p_1_1
+   002F DD 6E FD             93 	ld	l,-3(ix)
+   0032 DD 66 FE             94 	ld	h,-2(ix)
+   0035 5E                   95 	ld	e,(hl)
+                             96 ;	genPlus
+                             97 ;	AOP_STK for _crc_p_1_1
+                             98 ;	genPlusIncr
+   0036 DD 34 FD             99 	inc	-3(ix)
+   0039 C2r3Fs00            100 	jp	nz,00118$
+   003C DD 34 FE            101 	inc	-2(ix)
+   003F                     102 00118$:
+                            103 ;	genAssign
+                            104 ;	(registers are the same)
+                            105 ;crc.c:23: for (width = sizeof (u8_t) * 8; width > 0; width--) {
+                            106 ;	genAssign
+   003F 16 08               107 	ld	d,#0x08
+                            108 ;	genLabel
+   0041                     109 00104$:
+                            110 ;	genIfx
+   0041 AF                  111 	xor	a,a
+   0042 B2                  112 	or	a,d
+   0043 CAr4Ds00            113 	jp	z,00110$
+                            114 ;	genAssign
+                            115 ;	AOP_STK for _crc_sloc0_1_0
+   0046 DD 36 FC 01         116 	ld	-4(ix),#0x01
+                            117 ;	genGoto
+   004A C3r51s00            118 	jp	00111$
+                            119 ;	genLabel
+   004D                     120 00110$:
+                            121 ;	genAssign
+                            122 ;	AOP_STK for _crc_sloc0_1_0
+   004D DD 36 FC 00         123 	ld	-4(ix),#0x00
+                            124 ;	genLabel
+   0051                     125 00111$:
+                            126 ;	genIfx
+                            127 ;	AOP_STK for _crc_sloc0_1_0
+   0051 AF                  128 	xor	a,a
+   0052 DD B6 FC            129 	or	a,-4(ix)
+   0055 CAr23s00            130 	jp	z,00101$
+                            131 ;crc.c:24: v ^= tmp;
+                            132 ;	genXor
+                            133 ;	AOP_STK for _crc_v_1_1
+   0058 DD 7E FF            134 	ld	a,-1(ix)
+   005B AB                  135 	xor	a,e
+   005C DD 77 FF            136 	ld	-1(ix),a
+                            137 ;crc.c:25: tmp <<= 1;
+                            138 ;	genLeftShift
+   005F 7B                  139 	ld	a,e
+   0060 87                  140 	add	a,a
+   0061 5F                  141 	ld	e,a
+                            142 ;crc.c:23: for (width = sizeof (u8_t) * 8; width > 0; width--) {
+                            143 ;	genMinus
+   0062 15                  144 	dec	d
+                            145 ;	genGoto
+   0063 C3r41s00            146 	jp	00104$
+                            147 ;	genLabel
+   0066                     148 00103$:
+                            149 ;crc.c:29: return v;
+                            150 ;	genRet
+                            151 ;	AOP_STK for _crc_v_1_1
+                            152 ; Dump of IC_LEFT: type AOP_STK size 1
+                            153 ;	 aop_stk -1
+   0066 DD 6E FF            154 	ld	l,-1(ix)
+                            155 ;	genLabel
+   0069                     156 00108$:
+                            157 ;	genEndFunction
+   0069 DD F9               158 	ld	sp,ix
+   006B DD E1               159 	pop	ix
+   006D C9                  160 	ret
+   006E                     161 _crc_end::
+                            162 	.area _CODE

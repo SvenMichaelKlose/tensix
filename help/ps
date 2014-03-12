@@ -1,0 +1,6 @@
+ps - Process list
+
+Syntax: ps
+
+Prints a list of all processes, running or sleeping, and the number of ticks
+they were running. The duration of a tick may vary.

@@ -1,0 +1,61 @@
+tensix operating system project documentation
+Copyright (C) 2004, 2005 Sven Klose <pixel@copei.de>
+
+Internet protocol services
+
+nix provides IP networking based on Adam Dunkel's uIP stack distribution.
+It is split into two device drivers:
+
+	- 'eth' is the ethernet driver accepting raw IP packets
+	- 'ip' is the IP stack which uses 'eth'.
+
+Using 'eth'
+-----------
+
+The ethernet driver is a raw driver needing no instantiation using dup().
+It can be open()ed immediately but requires the IP address and network
+mask to be written before any data can be transmitted:
+
+	open (&obj, '/eth');
+	bref (&buf, obj, 0, 0);
+	ethconf = (struct eth_conf *) buf->data;
+        HTONS(ethconf->ipaddr, 192, 168, 0, 2);
+        HTONS(ethconf->ipmask, 255, 255, 255, 0);
+	bsend (buf);
+
+	/* Transmit data here. */
+
+	close (obj);
+
+Using 'ip'
+----------
+
+The IP stack 'ip' must be dup()licated (usually to instance 'net') and
+configured to transmit IP packets via 'eth':
+
+        dup /ip /net /eth
+
+Afterwards, connections and listen ports may be opened via virtual
+subdirectories of the net device:
+
+Open a connection:
+	/net/<protocol type>/remote address/remote port
+
+Listen to on local port:
+	/net/<protocol type>/local port
+
+The 'protocol type' may be 't' for TCP, 'u' for UDP or 'i' for ICMP.
+Following characters are ignored, so one can also specify 'tcp' for better
+readability.
+
+Connecting the drivers
+----------------------
+
+When writing data to the IP stack it is passed down to the ethernet driver
+via the syncer daemon to keep idle waits outside the user process.
+Processes must not wait for packets to be received by the ethernet driver. 
+Instead, the drivers are polled by the I/O daemon: If the ethernet driver
+provides new data, the IP stack is called to read and process it.
+The new data buffer is finally added to the connection-related object,
+ready to be read by the application (which may still be busy processing
+former input).

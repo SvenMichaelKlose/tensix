@@ -1,0 +1,16 @@
+io - I/O daemon file copy.
+
+Syntax: io SOURCE_FILE DESTINATION_FILE
+
+Commands the I/O daemon to copy SOURCE_FILE to DESTINATION_FILE. Both files
+must exist already. If the destination file is not a stream file, its content
+will be overwritten from the start.
+The I/O channel is closed automatically by the daemon.
+
+IMPORTANT:
+
+The command might return before the file copy was started or finished.
+Because the I/O daemon runs independently from the shell process, there'll
+be no error messages.
+
+See also: create

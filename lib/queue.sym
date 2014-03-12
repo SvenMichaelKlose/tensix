@@ -1,0 +1,51 @@
+ASxxxx Assembler V01.75  (Zilog Z80 / Hitachi HD64180), page 1.
+
+Symbol Table
+
+  0 __str_0                            0012 R
+  0 __str_1                            0027 R
+  0 __str_2                            003B R
+  0 __str_3                            004F R
+  0 __str_4                            005E R
+  0 __str_5                            006C R
+  0 __str_6                            0079 R
+  0 __str_7                            06A3 R
+  0 _clist_insert                      058F GR
+  0 _clist_insert_end                  06A3 GR
+  0 _clist_insert_start                058F GR
+  0 _clist_remove                      048E GR
+  0 _clist_remove_end                  058F GR
+  0 _clist_remove_start                048E GR
+  0 _dequeue_check                     0000 GR
+  0 _dequeue_check_end                 0012 GR
+  0 _dequeue_check_start               0000 GR
+  0 _dequeue_insert_after              0170 GR
+  0 _dequeue_insert_after_end          0257 GR
+  0 _dequeue_insert_after_start        0170 GR
+  0 _dequeue_pop                       0381 GR
+  0 _dequeue_pop_end                   0410 GR
+  0 _dequeue_pop_front                 0410 GR
+  0 _dequeue_pop_front_end             048E GR
+  0 _dequeue_pop_front_start           0410 GR
+  0 _dequeue_pop_start                 0381 GR
+  0 _dequeue_push                      0257 GR
+  0 _dequeue_push_end                  02F3 GR
+  0 _dequeue_push_front                02F3 GR
+  0 _dequeue_push_front_end            0381 GR
+  0 _dequeue_push_front_start          02F3 GR
+  0 _dequeue_push_start                0257 GR
+  0 _dequeue_remove                    008C GR
+  0 _dequeue_remove_end                0170 GR
+  0 _dequeue_remove_start              008C GR
+    _panic                             **** GX
+
+ASxxxx Assembler V01.75  (Zilog Z80 / Hitachi HD64180), page 2.
+
+Area Table
+
+   0 _CODE                              size  6C9   flags 0
+   1 _DATA                              size    0   flags 0
+   2 _OVERLAY                           size    0   flags 0
+   3 _HOME                              size    0   flags 0
+   4 _GSINIT                            size    0   flags 0
+   5 _GSFINAL                           size    0   flags 0

@@ -1,0 +1,27 @@
+tensix operating system project documentation
+Copyright (C) 2003, 2004, 2005 Sven Klose <pixel@copei.de>
+
+The nix terminal
+================
+
+The terminal understands the ASCII control codes BS, CR, DEL, EOT, FF, LF and
+VT, as described in ISO 646. All other control codes are ignored. The form feed
+character (FF) clears the screen and moves the cursor to the leftmost column of
+the first line. If an EOT is read, the current buffer is sent to the process,
+not including the EOT character.
+
+The console is accesible as file 'con' in the root directory.
+
+By default, the console is line-buffered and echoed.
+Input is sent to the process if a line feed character (LF) was read (the enter
+key was pressed).
+
+Alternative modes can be used by opening a subdirectory file of the console
+device. It's name is composed of the character 'b' for no buffering and/or the
+character 'e' for no echo. 
+
+Some examples:
+
+	/con	Line-buffering and echo.
+	/con/b  Unbuffered, with echo.
+	/con/be Unbuffered, without echo.

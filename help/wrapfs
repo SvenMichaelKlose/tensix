@@ -1,0 +1,13 @@
+!!! WRAPFS IS A DIRTY HACK! USE AT YOUR OWN RISK! BACKUP YOUR DATA! !!!
+
+wrapfs - Filesystem driver
+
+In case the kernel is run on a UN*X, this driver mounts its filesystem into
+nix' filesystem. Using 'dup' one can create a new instance of the driver:
+
+    dup /wrapfs / local
+
+mounts the local UN*X filestem into the root directory.
+The directory may be removed with 'rm'.
+
+See also: dup, rm

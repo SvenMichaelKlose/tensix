@@ -1,0 +1,6 @@
+help - Print command help
+
+Syntax: help [PAGE_NAME]
+
+If the page name is missing, a list of all pages is printed.
+If a page name is specified, the according file in /local/help is printed.

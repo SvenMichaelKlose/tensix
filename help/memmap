@@ -1,0 +1,7 @@
+memmap - Print a memory map.
+
+Syntax: mem
+
+This command prints a map of the status of all memory pages. A distinction
+is made between continuous chains of allocated pages, single pages and
+page fragments. Also, the amount of used and free memory is displayed.

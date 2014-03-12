@@ -1,0 +1,192 @@
+tensix operating system project documentation
+Copyright (C) 2003, 2004, 2005 Sven Klose <pixel@copei.de>
+
+System calls
+
+System calls are kernel C functions used by processes.
+
+Memory management
+-----------------
+
+    void *malloc (size_t num_bytes);
+
+        Allocate num_butes for the current process. Must be deallocated using
+	system call free(). Returns pointer to first allocated byte, or NULL
+	if a chunk of the specified size is not available.
+
+    void free (void *malloc_area);
+
+        Frees an allocated memory chunk. If a process exits, all its memory is
+	deallocated automatically.
+
+Process management
+------------------
+
+    int proc_create ();
+
+        Creates a new process and allocates its code, data and stack area.
+	The code and data area must be initialised by the caller afterwards.
+	Then the process can be run with proc_exec().
+	A pointer to the new process descriptor is returned via the first
+	argument. If a NULL pointer is returned, this function also returns
+	an error code (!= 0).
+
+    int proc_kill (struct proc *);
+
+        This function kills a process. All resources allocated by the process
+	are freed.
+
+    int proc_sleep (struct proc *);
+
+        Put a process to sleep until waked up with proc_wakeup().
+	This function returns an error code.
+
+    int proc_wakeup (struct proc *);
+
+	Wakeup a sleeping process. If the specified process is already running
+	or if the process is waiting for a lock, this function does nothing.
+        An error code is returned, or 0 if no error occured.
+
+Locks
+-----
+
+    LOCK(lock_t l);
+
+        Sleep if lock 'l' is already held by another process. It is continued
+	if another process executed UNLOCK().
+
+    UNLOCK(lock_t l);
+
+        Release lock. If processes wait for the lock one of them is continued.
+
+File system namespace
+---------------------
+
+    int open (struct obj **, char *name);
+
+        Open a file located at 'path'. A pointer to a file object descriptor
+	is return or 0 (plus an error code as the return value).
+	Opened files can be read or written (bref()) or its directory
+	entries can be read (dir_open()).
+	Opened files should be closed with close() if not used any longer.
+	If a process exits, all its opened files are closed automatically.
+
+    int close (struct obj *);
+
+        Close an opened file. If a process exits, all its opened files are
+	closed automatically.
+
+    int dir_open (struct dir **, struct obj *directory);
+
+        Open an already opened file as a directory. The directory entries
+	can then be read with dir_read(). Opened directories must be closed
+	with function dir_close(). All open directories are closed
+	automatically if the process exits.
+
+    int dir_read (struct dirent *, struct dir *);
+
+	Read the first or next directory entry from an opened directory.
+	The dirent record must be allocated by the user before.
+
+    int dir_close (struct dir *);
+
+        Close an opened directory. If a process exits, all its opened
+	directories are closed automatically.
+
+    int create (char *path, int type);
+
+        Create an empty file and/or directory, depending on 'type'.
+	'type' must be one of OBJ_TYPE_FILE or OBJ_TYPE_DIR or both.
+
+    int unlink (char *path);
+
+        Remove a file or empty directory.
+
+    int wait4obj (struct obj *, int actions);
+
+	Wait until an action is performed on an object. Argument actions
+	is a bit mask specifying the actions to monitor.
+
+	OBJ_WAIT4WRITE	Wait until object content is modified.
+	OBJ_WAIT4READ	Wait until object content is read.
+	OBJ_WAIT4IO	Wait for I/O operation. Less priority than
+			OBJ_WAIT4READ and OBJ_WAIT4WRITE.
+
+File content
+------------
+
+    int bref (struct buf **returned, struct obj *, blk_t, int mode);
+
+        This function returns a pointer to a structure that describes a part
+	of a file mapped to memory, called a 'buffer'.
+	The reference count of the buffer is incremented and the buffer is
+        not removed from memory until it is freed using bunref().
+
+        Block number:
+
+	All buffers of a file have the same size. Only the last buffer of
+	a file may be smaller to fit the file size. The block number of 
+	the 'blk_t'-typed argument is the index of the block, starting with 0
+        for the first block of a file.
+
+	Flags:
+
+	The flags in argument 'mode' tell if the function should NOT wait for
+        a block
+	until it becomes available (IO_NOWAIT) or if a new block should be
+	created if it doesn't exist already (IO_CREATE), e.g. if the block
+	number exceeds the file size.
+	If IO_JIT is used, the buffer is returned immediately and filled
+	later. (see also bwait())
+
+	Return values:
+
+	Instead of empty buffers NULL pointers are returned without error
+	codes, making application level checks easier. If a block was created,
+	it has the full (file dependent) buffer size which can be only shrinked
+	using bshrink().
+
+        If IO_CREATE isn't set and no buffer is returned if the buffer's
+	index number exceeds the file size or the stream file has ended.
+
+        This function returns an error code if there's not enough
+	main memory to hold the requested buffer.
+
+	If the file is stream-oriented, buffers always behave as if
+	they were the last buffer of a file; the block number is always 0.
+
+    int bwait (struct buf *, size_t len);
+
+        Wait until buffer 'buf' reaches size 'len' or return immediately if
+	the size is already equal or greater than 'len' or if the buffer isn't
+	expanded anymore. This function also return if the buffer doesn't
+	grow anymore, regardless of its size.
+
+    int bshrink (struct buf *, size_t len);
+
+	Shrink the size of a stream buffer.
+
+    int bdirty (struct buf *);
+
+        This function marks the specified buffer as being dirty. It will be
+	written to its file by the syncer daemon as soon as its reference
+	count reaches 0. Applications that need to wait until the write was
+	successfully completed must use the bwrite() system call instead.
+
+    int bwrite (struct buf *);
+
+        This function writes a dirty buffer back to its file and waits until
+	the attempt was completed. The write is performed immediately, not by
+	the syncer daemon. Clean buffers are ignored. bwrite() waits for
+	incomplete buffers (see bref() used with flag IO_JIT).
+
+    int bunref (struct buf *);
+
+        This function unreferences a buffer formerly allocated using bref().
+	Unreferencing buffers allocated by other processes is not permitted.
+	If a process exits, all its referenced buffers are unreferenced
+	automatically.
+
+    int bsend (struct buf *);
+
+        bwrite()s and then bunref()s a buffer.

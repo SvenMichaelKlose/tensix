@@ -1,0 +1,103 @@
+ASxxxx Assembler V01.75  (Zilog Z80 / Hitachi HD64180), page 1.
+
+Symbol Table
+
+    __divsint_rrx_s                    **** GX
+    __rlslong_rrx_s                    **** GX
+  0 __str_0                            01E1 R
+  0 __str_1                            0D71 R
+  0 __str_2                            0D9B R
+  0 __str_3                            0D9E R
+  0 __str_4                            0F87 R
+  0 __str_5                            0F95 R
+  0 __str_6                            0F9F R
+  0 __str_7                            1227 R
+  0 __str_8                            1321 R
+    _bcleanup_glob                     **** GX
+    _bitmap_seek                       **** GX
+    _bzero                             **** GX
+  1 _fragment_stacks                   0000 GR
+  0 _free                              137C GR
+  0 _free_end                          1397 GR
+  0 _free_start                        137C GR
+  0 _freep                             129F GR
+  0 _freep_end                         1321 GR
+  0 _freep_start                       129F GR
+  0 _kmalloc                           1284 GR
+  0 _kmalloc_end                       129F GR
+  0 _kmalloc_start                     1284 GR
+  0 _malloc                            133A GR
+  0 _malloc_end                        137C GR
+  0 _malloc_start                      133A GR
+  0 _mem_frag_add_page                 077D GR
+  0 _mem_frag_add_page_end             099A GR
+  0 _mem_frag_add_page_start           077D GR
+  0 _mem_frag_alloc                    099A GR
+  0 _mem_frag_alloc_end                0ADE GR
+  0 _mem_frag_alloc_start              099A GR
+  0 _mem_frag_clean_stack              0591 GR
+  0 _mem_frag_clean_stack_end          077D GR
+  0 _mem_frag_clean_stack_start        0591 GR
+  0 _mem_frag_free                     0ADE GR
+  0 _mem_frag_free_end                 0D71 GR
+  0 _mem_frag_free_start               0ADE GR
+  0 _mem_frag_sort                     0457 GR
+  0 _mem_frag_sort_end                 0591 GR
+  0 _mem_frag_sort_start               0457 GR
+  0 _mem_init                          0DBD GR
+  0 _mem_init_end                      0F87 GR
+  0 _mem_init_proc                     0FAD GR
+  0 _mem_init_proc_end                 1019 GR
+  0 _mem_init_proc_start               0FAD GR
+  0 _mem_init_start                    0DBD GR
+  0 _mem_kill_proc                     1019 GR
+  0 _mem_kill_proc_end                 1148 GR
+  0 _mem_kill_proc_start               1019 GR
+  1 _mem_num_pages_free                000A GR
+  1 _mem_num_pages_locked              000C GR
+  0 _mem_page_alloc                    02E3 GR
+  0 _mem_page_alloc_end                03A0 GR
+  0 _mem_page_alloc_start              02E3 GR
+  0 _mem_page_free                     0401 GR
+  0 _mem_page_free_end                 0457 GR
+  0 _mem_page_free_start               0401 GR
+  0 _mem_pages_alloc                   03A0 GR
+  0 _mem_pages_alloc_end               0401 GR
+  0 _mem_pages_alloc_start             03A0 GR
+  0 _mem_pages_lock                    0207 GR
+  0 _mem_pages_lock_end                02E3 GR
+  0 _mem_pages_lock_start              0207 GR
+  0 _mem_pages_ref                     0083 GR
+  0 _mem_pages_ref_end                 0102 GR
+  0 _mem_pages_ref_start               0083 GR
+  0 _mem_pages_unref                   0102 GR
+  0 _mem_pages_unref_end               01E1 GR
+  0 _mem_pages_unref_start             0102 GR
+  0 _page_alloc                        0000 GR
+  0 _page_alloc_end                    0083 GR
+  0 _page_alloc_start                  0000 GR
+  1 _page_list                         0008 GR
+  1 _page_map                          0006 GR
+    _panic                             **** GX
+  0 _pmalloc                           1240 GR
+  0 _pmalloc2                          1148 GR
+  0 _pmalloc2_end                      1227 GR
+  0 _pmalloc2_start                    1148 GR
+  0 _pmalloc_end                       1284 GR
+  0 _pmalloc_start                     1240 GR
+    _printk                            **** GX
+    _printnhex                         **** GX
+    _proc_current                      **** GX
+    _proc_holographic                  **** GX
+  1 _ram                               000E GR
+
+ASxxxx Assembler V01.75  (Zilog Z80 / Hitachi HD64180), page 2.
+
+Area Table
+
+   0 _CODE                              size 1397   flags 0
+   1 _DATA                              size    E   flags 0
+   2 _OVERLAY                           size    0   flags 0
+   3 _HOME                              size    0   flags 0
+   4 _GSINIT                            size    0   flags 0
+   5 _GSFINAL                           size    0   flags 0

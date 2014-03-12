@@ -1,0 +1,5 @@
+mkdir - Create a directory
+
+Syntax: mkdir FILENAME
+
+Creates a new, empty directory which must not already exist.

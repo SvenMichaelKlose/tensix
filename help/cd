@@ -1,0 +1,5 @@
+cd - Change directory
+
+Syntax: cd DIRECTORY
+
+Changes the current working directory to DIRECTORY.

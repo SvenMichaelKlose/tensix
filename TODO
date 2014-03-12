@@ -1,0 +1,2 @@
+Generic console driver passing XY and char to machdep console driver.
+Document public macros.
