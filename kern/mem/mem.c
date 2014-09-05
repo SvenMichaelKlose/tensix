@@ -85,14 +85,9 @@ mem_pages_unref (pagenum_t p)
     /* Deallocate page by page. */
     do {
         ASSERT(PAGE_LOCKED(p), "mem_pages_unref(): Shouldn't unlock.\n");
-
-        /* Save continuation flag state. */
         cont = PAGE_CONT(p);
-
-        /* Mark page as being unused and step to next. */
         PAGE_FREE(p);
-
-        p++; /* Next page. */
+        p++;
     } while (cont); /* Continued by next. */
 
 #ifdef MEM_USE_HINTS
@@ -107,15 +102,13 @@ void
 mem_pages_lock (pagenum_t p, u16_t num)
 {
     while (num--) {
-        if (PAGE_LOCKED(p) == FALSE) {
+        if (PAGE_LOCKED(p) == FALSE)
             PAGE_LOCK(p);
-	}
 #ifdef DEBUGLOG_MEM
-	else
-	    printk ("mem_pages_lock: Page %d already locked.\n", p);
+	    else
+	        printk ("mem_pages_lock: Page %d already locked.\n", p);
 #endif
-
-        p++; /* Next page. */
+        p++;
     }
 }
 
@@ -258,7 +251,7 @@ mem_frag_clean_stack (struct stack_hdr *stack, int frags)
 
     /* Skip cleanup if there aren't enough fragments anyway. */
     if (num < frags)
-	return;
+	    return;
 
     mem_frag_sort (stack);
 
@@ -275,14 +268,12 @@ mem_frag_clean_stack (struct stack_hdr *stack, int frags)
 
         /* Remove page if number of fragments is ok. */
         if (id == frags) {
-	    /* Free page. */
-	    mem_pages_unref (pg);
+	        mem_pages_unref (pg);
 
-	    /* Continue with following fragments. */
+	        /* Continue with following fragments. */
             src += id;
 
             MEM_PRINTK("frags %d freed\n", frags);
-
             continue;
         }
 
@@ -331,7 +322,6 @@ mem_frag_add_page (struct stack_hdr *stack, fragsize_t fs, struct proc *proc)
     pagenum_t p;
     pagenum_t i;
 
-    /* Check if there's enough space left on the stack. */
     ERRCHK(FRAGSPACE(proc, fs) < (sizeof (struct fragment) * num), ENOMEM);
 
     /* Allocate a new page for fragments. */
@@ -340,11 +330,10 @@ mem_frag_add_page (struct stack_hdr *stack, fragsize_t fs, struct proc *proc)
 #else
     p = mem_pages_alloc (1, fs, procid);
 #endif
-    ERRCHK(p == 0, ENOMEM); /* Out of memory. */
+    ERRCHK(p == 0, ENOMEM);
 
     /* Push new fragments on the list. */
     for (i = 0; i < num; i++) {
-        /* Add fragment. */
         nfrag = FRAG_PUSH(stack);
 
         /*
@@ -355,15 +344,13 @@ mem_frag_add_page (struct stack_hdr *stack, fragsize_t fs, struct proc *proc)
             while (i--)
                 FRAG_POP(stack);
 
-            /* Free page. */
             PAGE_FREE(p);
             HS_UNLOCK(fragment_locks[fs]);
-            return ENOMEM; /* Out of memory. */
+            return ENOMEM;
         }
 
-        /* Add fragment info to entry. */
-        nfrag->page = p; /* Page number. */
-        nfrag->idx = i;  /* Fragment index within the page. */
+        nfrag->page = p;
+        nfrag->idx = i;
     }
 
     return ENONE;
@@ -388,31 +375,22 @@ mem_frag_alloc (size_t size, struct proc *proc)
 
     HS_LOCK(fragment_locks[fs]);
 
-    /* Get fragment stack. */
     s = FRAG_STACK(proc, fs);
 
-    /* Add new fragments to stack if empty. */
     if (FRAG_AVAILABLE(s) == 0) {
         err = mem_frag_add_page (s, fs, proc);
         if (err != 0) {
             HS_UNLOCK(fragment_locks[fs]);
-	    return 0; /* Out of memory. */
-	}
+	        return 0; /* Out of memory. */
+	    }
     }
 
-    /* Pop a free fragment from the stack. Returns 0 if empty. */
     frag = FRAG_POP(s);
-
-    /* Get address of page. */
     pagebase = frag->page * PAGESIZE;
-
-    /* Get offset of fragment within page. */
     idxofs = frag->idx << FRAGSIZELOG(frag->page);
-
     HS_UNLOCK(fragment_locks[fs]);
 
-    /* Add up everything to get the absolute address. */
-    return (void*) (pagebase + idxofs + ram);
+    return (void *) (pagebase + idxofs + ram);
 }
 
 /* Free page fragment. */
@@ -425,7 +403,6 @@ mem_frag_free (void *pos, struct proc *proc)
     fragsize_t       fs;
 
 #ifndef NO_CHECKS
-    /* Check if address points to a legal fragment boundary. */
     if (IS_ILLEGAL_FRAG(pos)) {
 #ifdef VERBOSE
         printk ("mem_frag_free: Illegal fragment boundary ", 0);
@@ -436,23 +413,15 @@ mem_frag_free (void *pos, struct proc *proc)
     }
 #endif
 
-    /* Get page. */
     p = ADDR2PAGE(pos);
     fs = FRAGLOG(p);
-
     bzero (pos, FRAGSIZE(p));
-
-    /* Get fragment stack. */
     s = FRAG_STACK(proc, fs);
-
     HS_LOCK(fragment_locks[fs]);
-
     mem_frag_clean_stack (s, FRAGLOG2NUM(FRAGLOG(p)));
 
-    /* Push fragment on stack. */
     frag = FRAG_PUSH(s);
     if (frag == NULL) {
-        /* Stack overflow: Fragment is lost until process terminates. */
         VERBOSE_PRINTK("mem_frag_free: stack %d full.\n", FRAGLOG(p));
         return;
     }
@@ -495,10 +464,9 @@ mem_init ()
     i32_t  j;
     /* Simulate spoiled RAM. */
     for (j = 65535; j >= 0; j--)
-	ram[j] = j & 255;
+	    ram[j] = j & 255;
 #endif
 
-    /* Save number of free pages. */
     mem_num_pages_free = NUM_PAGES;
     mem_num_pages_locked = 0;
 #ifdef MEM_USE_HINTS
@@ -506,7 +474,7 @@ mem_init ()
     mem_hint_bottom = 0;
 #endif
 
-    p = MMANAGER_STARTPAGE; /* First page to wire. */
+    p = MMANAGER_STARTPAGE;
 
     /* Wire page map area. */
     page_map = PAGE2ADDR(p);
@@ -518,32 +486,21 @@ mem_init ()
     tmp = sizeof(pageinfo_t) * NUM_PAGES / PAGESIZE;
     p += tmp ? tmp : 1;
 
-    /* Zero out page allocation bitmap and info table. */
     bzero (page_map, NUM_PAGES >> 3);
     bzero (page_list, sizeof (pageinfo_t) * NUM_PAGES);
 
-    /* Lock page list area. */
-    mem_pages_lock (MMANAGER_STARTPAGE, p - MMANAGER_STARTPAGE);
-
-    /* Lock zero page. */
     mem_pages_lock (0, 1);
-
-    /* Lock kernel area. */
+    mem_pages_lock (MMANAGER_STARTPAGE, p - MMANAGER_STARTPAGE);
     mem_pages_lock (KERNEL_STARTPAGE, KERNEL_PAGES);
-
-    /* Allocate kernel process stack. */
     mem_pages_lock (KERNEL_STACKPAGE, KERNEL_STACKPAGES);
 
 #ifdef MEM_USE_FRAGMENTS
     /* Wire a page for each fragment stack. */
     for (i = 0; i < FRAGMENT_SIZES; i++) {
-        /* Mark page as being used. */
         MEM_PAGES_REF(p, 1, 0);
-
-        /* Save address of page to list of stacks. */
         proc_current->fragment_stacks[i] = STACK_PTR(PAGE2ADDR(p));
 
-        p++; /* Next page. */
+        p++;
     }
 #endif
 
@@ -566,9 +523,8 @@ mem_init_proc (struct proc *proc)
 
     MEM_PRINTK("mem_proc_init: %s\n", proc->name);
 
-    for (p = 0; p < FRAGMENT_SIZES; p++) {
-	proc->fragment_stacks[p] = pmalloc (PAGESIZE, proc);
-    }
+    for (p = 0; p < FRAGMENT_SIZES; p++)
+	    proc->fragment_stacks[p] = pmalloc (PAGESIZE, proc);
 
     MEM_PRINTK("<mem_proc_init\n", 0);
 }
@@ -584,20 +540,11 @@ mem_kill_proc (struct proc *proc)
     MEM_PRINTK("mem_proc_kill: %s\n", proc->name);
 
     for (p = 0; p < NUM_PAGES; p++) {
-	/* Skip page if locked. */
-        if (PAGE_LOCKED(p) != FALSE)
-	    continue;
-
-	/* Skip page if unused. */
-	if (PAGE_USED(p) == FALSE)
-	    continue;
-
-	/* Skip page if it has another id. */
-	if (PAGE_PROC(p) != proc->id)
-	    continue;
-
-	/* Free page. */
-	PAGE_FREE(p);
+        if (PAGE_LOCKED(p) != FALSE ||
+	        PAGE_USED(p) == FALSE ||
+	        PAGE_PROC(p) != proc->id)
+	        continue;
+	    PAGE_FREE(p);
     }
 }
 
@@ -616,22 +563,19 @@ pmalloc2 (size_t size, struct proc *proc)
 #endif
 
 #ifdef MEM_USE_FRAGMENTS
-    /* Allocate fragment. */
     if (size <= (PAGESIZE / 2)) {
         ret = mem_frag_alloc (size, proc);
-        MEM_DL(ret, size); /* debug log */
+        MEM_DL(ret, size);
         return ret;
     }
 #endif
 
-    /* Round up to nearest page size. */
     p = mem_pages_alloc (ROUNDBLEN(size, PAGESIZE), 0, proc->id);
     if (p == 0) {
         MEM_PRINTK("malloc: out of mem\n", 0);
         return NULL;
     }
-
-    MEM_DL(PAGE2ADDR(p), size); /* debug log */
+    MEM_DL(PAGE2ADDR(p), size);
 
     ret = PAGE2ADDR(p);
     RAMASSERT(ret);
@@ -644,10 +588,9 @@ pmalloc (size_t size, struct proc *proc)
     void *p = pmalloc2 (size, proc);
 
     if (p == NULL) {
-	bcleanup_glob ();
-	p = pmalloc2 (size, proc);
+	    bcleanup_glob ();
+	    return pmalloc2 (size, proc);
     }
-
     return p;
 }
 
@@ -666,12 +609,10 @@ freep (void *pos, struct proc *proc)
 
     RAMASSERT(pos);
 
-    /* Get page number. */
     p = ADDR2PAGE(pos);
 
 #ifdef MEM_USE_FRAGMENTS
-    /* Decide wether to free a page or fragment. */
-    if (FRAGLOG(p) == 0)    /* Fragment size in page info? */
+    if (FRAGLOG(p) == 0)
         mem_page_free (pos);
     else     
         mem_frag_free (pos, proc);
@@ -706,9 +647,9 @@ malloc (size_t size)
     /* The system will halt in proc_sleep(), if memory is full. */
     if (mem_num_pages_free < tr) {
         if (LOCKED(mem_wait_lock) == FALSE)
-	    bcleanup_glob ();
+	        bcleanup_glob ();
         while (mem_num_pages_free < tr)
-	    lock_ref_wait (&mem_wait_lock);
+	        lock_ref_wait (&mem_wait_lock);
     }
 
     return pmalloc (size, proc);
@@ -719,7 +660,6 @@ free (void *pos)
 {
     freep (pos, CURRENT_PROC());
 
-    /* Wakeup user processes waiting for memory. */
     if (LOCKED(mem_wait_lock))
-	lock_unref (&mem_wait_lock);
+	    lock_unref (&mem_wait_lock);
 }
