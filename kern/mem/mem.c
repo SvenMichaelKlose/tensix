@@ -217,21 +217,21 @@ mem_frag_sort (struct stack_hdr *stack)
     for (i = 0; i < num - 1; i++) {
         for (j = i + 1; j < num; j++) {
             if (st[i].page > st[j].page) {
-	        pg = st[i].page;
-	        id = st[i].idx;
-	        st[i].page = st[j].page;
-	        st[i].idx = st[j].idx;
-	        st[j].page = pg;
-	        st[j].idx = id;
-	    }
+                pg = st[i].page;
+                id = st[i].idx;
+                st[i].page = st[j].page;
+                st[i].idx = st[j].idx;
+                st[j].page = pg;
+                st[j].idx = id;
+            }
         }
     }
 
 #ifdef DEBUGLOG_MEM
     for (i = 0; i < num; i++) {
-	printk ("%d:", i);
-	printk (" %d", st[i].page);
-	printk (" %d\n", st[i].idx);
+        printk ("%d:", i);
+        printk (" %d", st[i].page);
+        printk (" %d\n", st[i].idx);
     }
     printk ("\n", 0);
 #endif
@@ -281,7 +281,7 @@ mem_frag_clean_stack (struct stack_hdr *stack, int frags)
         if (src == dst) {
             src += id;
             dst = src;
-	    continue;
+	        continue;
         }
 
         /* Copy incomplete page fragments to new position. */

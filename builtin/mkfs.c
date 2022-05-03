@@ -27,7 +27,7 @@ mkfs_clr (struct obj *obj, blk_t start, blk_t num)
 
     while (num--) {
         bref (&buf, obj, start, IO_CREATE | IO_ZERO);
-	BDUNREF(buf);
+	    BDUNREF(buf);
         start++;
     }
 
@@ -48,7 +48,7 @@ mkfs (int argc, char** argv)
     int err;
 
     if (argc != 2)
-	return EINVAL;
+	    return EINVAL;
 
     err = open (&obj, argv[1]);
     ERRCODE(err);

@@ -108,7 +108,7 @@ proc_create (struct proc **proc, char *name)
     /* TODO: Collision check missing. */
     proc_id++;
     if (proc_id == 0)
-	proc_id = 1;
+	    proc_id = 1;
 
     /* Initialise process-related memory management. */
     mem_init_proc (p);
@@ -119,7 +119,7 @@ proc_create (struct proc **proc, char *name)
     if (err != ENONE) {
         /* Return descriptor to pool. */
         POOL_SFREE(&proc_pool, p);
-	return err;
+	    return err;
     }
 #endif
 
@@ -150,8 +150,8 @@ proc_exec (struct proc *proc, void *entry)
 
     /* Allocate stack. */
     if (proc->stacksize != 0) {
-	proc->stack = pmalloc (proc->stacksize, proc);
-	ERRCGOTO(proc->stack == NULL, ENOMEM, error1);
+        proc->stack = pmalloc (proc->stacksize, proc);
+        ERRCGOTO(proc->stack == NULL, ENOMEM, error1);
     }
 
     /* Have CPU state initialised. */
@@ -232,8 +232,8 @@ proc_kill (struct proc *proc)
     if (proc == proc_current) {
         if (next != NULL)
 	    	proc_current = (struct proc *) next->prev;
-	else
-	    proc_current = next;
+        else
+            proc_current = next;
     }
 
 #ifdef MANUAL_SWITCH
@@ -279,13 +279,12 @@ proc_funexec (struct proc ** ret, void *func, size_t codesize, size_t datasize, 
     p->codesize = codesize;
     p->datasize = datasize;
     if (stacksize < 4096)
-	stacksize = 4096;
+	    stacksize = 4096;
     p->stacksize = stacksize;
 
     err = proc_exec (p, func);
-    if (err != ENONE) {
+    if (err != ENONE)
         proc_kill (p);
-    }
 
     return err;
 }
@@ -303,15 +302,15 @@ proc_sleep (struct proc *proc)
 
     /* Don't wakeup processes that are already running. */
     if ((proc->state & PROC_RUNNING) == FALSE) {
-	PROC_PRINTK("proc_sleep: no reason", 0);
+	    PROC_PRINTK("proc_sleep: no reason", 0);
         PROC_PRINTNHEX(proc, 8);
-	PROC_PRINTK("\n", 0);
-	goto end;
+	    PROC_PRINTK("\n", 0);
+	    goto end;
     }
 
     /* Don't wakeup processes waiting for locks. */
     if (proc->lock != NULL)
-	goto end;
+	    goto end;
 
     /* Put of scheduler because we'd be lost after a switch if we're
      * removed from the process lists. */
@@ -326,12 +325,11 @@ proc_sleep (struct proc *proc)
     SWITCH_ON();
 
     if (proc == proc_current) {
-	PROC_PRINTK("proc_sleep(): '%s' nodds off.\n", proc->name);
-	proc_current = (struct proc *) next->prev;
-	SWITCH();
-    } else {
-	PROC_PRINTK("proc_sleep(): '%s' asleep.\n", proc->name);
-    }
+	    PROC_PRINTK("proc_sleep(): '%s' nodds off.\n", proc->name);
+	    proc_current = (struct proc *) next->prev;
+	    SWITCH();
+    } else
+	    PROC_PRINTK("proc_sleep(): '%s' asleep.\n", proc->name);
 
     return;
 end:
@@ -351,10 +349,10 @@ proc_wakeup (struct proc *proc)
     SWITCH_OFF();
 
     if (proc->state & PROC_RUNNING) {
-	PROC_PRINTK("proc_wakeup: %d already up", proc);
+	    PROC_PRINTK("proc_wakeup: %d already up", proc);
         PROC_PRINTNHEX(proc, 8);
-	PROC_PRINTK("\n", 0);
-	goto already_up;
+	    PROC_PRINTK("\n", 0);
+	    goto already_up;
     }
 
     proc->state |= PROC_RUNNING;

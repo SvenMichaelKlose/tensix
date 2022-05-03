@@ -48,7 +48,7 @@ pool_alloc (struct pool *pool)
 
     DEQUEUE_POP(&pool->unused, rec);
     if (rec == NULL)
-	goto end;
+	    goto end;
 
     DEQUEUE_PUSH(&pool->used, rec);
 
@@ -67,7 +67,7 @@ pool_salloc (struct pool *pool)
 
     DEQUEUE_POP(&pool->unused, rec);
     if (rec == NULL)
-	goto end;
+	    goto end;
 
     POOL_PRINTK("pool_alloc: ", 0);
     POOL_PRINTNHEX(ADDR2RAM(rec), 4);

@@ -103,8 +103,8 @@ _obj_get_dirent_by_id (struct dirent **retdir, objid_t id, struct obj *obj)
 
     /* Return nothing if operation is not supported. */
     if (sub->ops->get_dirent == FALSE) {
-	SWITCH_ON();
-	return 0;
+        SWITCH_ON();
+        return 0;
     }
 
     /* Allocate new directory, set its ID and lock it. */
@@ -115,7 +115,7 @@ _obj_get_dirent_by_id (struct dirent **retdir, objid_t id, struct obj *obj)
 
     /* Replace ID reference in object by pointer. */
     if (obj != NULL)
-	dirent_set_obj (dirent, obj);
+	    dirent_set_obj (dirent, obj);
 
     /* Now the getter can be called again for the same (locked) object. */
     SWITCH_ON();
@@ -154,15 +154,15 @@ obj_get_parent (struct obj *obj)
     if (obj->state & OBJ_PARENT_UNMAPPED) {
         _obj_get_obj_by_id (&retobj, obj->parent_id, obj, NULL);
     } else {
-	retobj = (struct obj *) obj->parent_id;
-	OBJ_REF(retobj);
-	SWITCH_ON();
+        retobj = (struct obj *) obj->parent_id;
+        OBJ_REF(retobj);
+        SWITCH_ON();
 
-	/*
-	 * Wait if the dirent is under construction
-	 * (_obj_get_object_by_id()).
-	 */
-	LOCK(retobj->lock);
+        /*
+         * Wait if the dirent is under construction
+         * (_obj_get_object_by_id()).
+         */
+        LOCK(retobj->lock);
     }
 
     return retobj;
@@ -176,15 +176,15 @@ obj_get_dirent (struct obj *obj)
 
     SWITCH_OFF();
     if (obj->dirent != NULL) {
-	dirent = obj->dirent;
-	DIRENT_REF(dirent);
-	SWITCH_ON();
+        dirent = obj->dirent;
+        DIRENT_REF(dirent);
+        SWITCH_ON();
 
-	/*
-	 * Wait if the dirent is under construction
-	 * (_obj_get_dirent_by_id()).
-	 */
-	LOCK(dirent->lock);
+        /*
+         * Wait if the dirent is under construction
+         * (_obj_get_dirent_by_id()).
+         */
+        LOCK(dirent->lock);
     } else
         _obj_get_dirent_by_id (&dirent, obj->id, obj);
 
@@ -199,15 +199,15 @@ dirent_get_obj (struct dirent *dirent)
 
     SWITCH_OFF();
     if (dirent->obj != NULL) {
-	retobj = (struct obj *) dirent->obj;
-	OBJ_REF(retobj);
-        SWITCH_ON();
+        retobj = (struct obj *) dirent->obj;
+        OBJ_REF(retobj);
+            SWITCH_ON();
 
-	/*
-	 * Wait if the dirent is under construction
-	 * (_obj_get_object_by_id()).
-	 */
-	LOCK(retobj->lock);
+        /*
+         * Wait if the dirent is under construction
+         * (_obj_get_object_by_id()).
+         */
+        LOCK(retobj->lock);
     } else
         _obj_get_obj_by_id (&retobj, dirent->id, NULL, dirent);
 
@@ -240,8 +240,8 @@ obj_set_dirent (struct obj *obj, struct dirent *dirent)
     ASSERT(obj->dirent != NULL, "obj_set_dirent: used twice");
 #endif
     if (obj->dirent != NULL) {
- 	printk ("obj_set_dirent: used twice", 0);
-	*(char*) 0 = 0;
+        printk ("obj_set_dirent: used twice", 0);
+        *(char*) 0 = 0;
     }
 
     obj->dirent =  dirent;

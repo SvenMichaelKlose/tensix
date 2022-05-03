@@ -17,9 +17,6 @@
 #include <error.h>
 #include "tapdev.h"
 
-/*
- * Read/write an IP packet.
- */
 int
 eth_io (buf, obj, blk, mode)
     struct buf *buf;
@@ -30,11 +27,11 @@ eth_io (buf, obj, blk, mode)
     int has_data;
 
     if (mode == IO_W) {
-	tapdev_send (buf->data, buf->len);
+	    tapdev_send (buf->data, buf->len);
     } else {
-	has_data = tapdev_read (buf->data, OBJ_BUFSIZE(obj));
-	if (has_data == 0)
-	    return ENOIODATA;
+	    has_data = tapdev_read (buf->data, OBJ_BUFSIZE(obj));
+	    if (!has_data)
+	        return ENOIODATA;
     }
 
     return ENONE;
@@ -55,22 +52,14 @@ struct obj_ops eth_obj_ops = {
     NULL  /* int (*get_dirent) (struct dirent *, objid_t id); */
 };
 
-/*
- * Initialise console object type.
- */
 void
 eth_init (obj)
     struct obj *obj;
 {
     tapdev_init ();
 
-    /* Store pointer to our object ops. */
     OBJ_OPS(obj) = &eth_obj_ops;
-
-    /* Make it a strem object. */
     OBJ_SET_STREAMED(obj, TRUE);
-
-    /* Set our class file name. */
     DIRENT_SET_NAME(obj_get_dirent (obj), "eth");
 
     VERBOSE_BOOT_PRINTK("eth: 192.168.0.2/24.\n", 0);

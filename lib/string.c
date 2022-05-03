@@ -36,10 +36,10 @@ memcmp (void *s1, void *s2, size_t len)
 
     while (len--) {
         r = *(u8_t *) s2 - *(u8_t *) s1;
-        if (r != 0)
-	    return r;
-	s1++;
-	s2++;
+        if (r)
+	        return r;
+        s1++;
+        s2++;
     }
 
     return 0;
@@ -72,7 +72,7 @@ strcat (char *dest, char *src)
     char *ret = dest;
 
     while (*dest != 0)
-	dest++;
+	    dest++;
 
     while ((*dest++ = *src++) != 0);
 
@@ -99,12 +99,12 @@ strcmp (char *s1, char *s2)
 	    return r;
 
         /* Additionally check if strings terminate. */
-	if (*s1 == 0)
-	    break;
+        if (*s1 == 0)
+            break;
 
-	/* Get to next chars. */
-	s1++;
-	s2++;
+        /* Get to next chars. */
+        s1++;
+        s2++;
     }
 
     return 0; /* Strings matched. */
@@ -124,12 +124,12 @@ strncmp (char *s1, char *s2, size_t len)
 	    return r;
 
         /* Additionally check if trings terminated. */
-	if (*s1 == 0)
-	    break;
+        if (*s1 == 0)
+            break;
 
-	/* Get to next chars. */
-	s1++;
-	s2++;
+        /* Get to next chars. */
+        s1++;
+        s2++;
     }
 
     return 0; /* Strings matched. */

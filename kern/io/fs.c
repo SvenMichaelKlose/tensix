@@ -44,12 +44,8 @@ open2 (struct obj **file)
     FS_ALLOCOBJHDL(p_obj, CURRENT_PROC());
     ERRCHK(((void *) p_obj) == NULL, ENOMEM);
     *p_obj = *file;
-
-    /* Reference object. */
     OBJ_REF(*file);
-
     MANUAL_SWITCH();
-
     FS_PRINTK("<open: %d\n", *file);
 
     return ENONE;
@@ -64,8 +60,6 @@ open (struct obj **file, char *name)
     int err;
 
     FS_PRINTK("open '%s'\n", name);
-
-    /* Lookup object from directory. */
     err = namespace_lookup_path (file, name);
     ERRCODE(err);
 
@@ -81,8 +75,6 @@ openr (struct obj **file, struct obj * dir, char *name)
     int err;
 
     FS_PRINTK("open '%s'\n", name);
-
-    /* Lookup object from directory. */
     err = namespace_lookup (file, dir, name);
     ERRCODE(err);
 
@@ -110,14 +102,9 @@ closep (struct obj *obj, struct proc *proc)
     }
 #endif
 
-    /* Make sure the object is in the object pool. */
-    ASSERT_MEM(obj_pool.area, obj, "close");
-
+    ASSERT_MEM(obj_pool.area, obj, "close"); /* Make sure the object is in the object pool. */
     FS_DEALLOCOBJHDL(i_obj, obj, proc);
-
-    /* Dereference the object. */
     OBJ_UNREF(obj);
-
     MANUAL_SWITCH();
 
     return ENONE;
@@ -141,7 +128,6 @@ create (struct obj **retobj, struct obj *dirobj, int type, char *name)
     int err = 0;
 
     FS_PRINTK("create '%s'\n", name);
-
     ASSERT_MEM(obj_pool.area, dirobj, "create(dir)");
 
 #ifndef NO_CHECKS
@@ -151,7 +137,6 @@ create (struct obj **retobj, struct obj *dirobj, int type, char *name)
 
     *retobj = NULL;
 
-    /* Check if object supports the operation. */
     if (OBJ_OPS(dirobj)->create == NULL) {
     	FS_PRINTK("<create: not supported\n", err);
 		return ENOTSUP;
@@ -163,12 +148,10 @@ create (struct obj **retobj, struct obj *dirobj, int type, char *name)
     ERRCGOTO(err != ENOTFOUND, err, error);
 
     if (*retobj != NULL) {
-	/* Release object we just looked up. */
-	OBJ_UNREF(*retobj);
+        OBJ_UNREF(*retobj);
 
-	/* Return with error code. */
-	err = EINVAL;
-	goto error;
+        err = EINVAL;
+        goto error;
     }
 
     /* Let vfs create the object and its directory entry. */
@@ -235,7 +218,6 @@ _dir_close (struct dir *dir, struct proc *proc)
 
     OBJ_UNREF(dir->obj);
     freep (dir, proc);
-
     FS_RMDIRFROMPROC(i_dir, dir, proc);
 
     return ENONE;
@@ -323,7 +305,7 @@ dup (char *src, char *destdir, char *destname)
 
     err = open (&dstobj, destdir);
     if (err != ENONE)
-	goto error;
+	    goto error;
 
     /* Check if destination object already exists. */
     err = namespace_lookup (&obj, dstobj, destname);
@@ -447,7 +429,7 @@ reg_buf:
     new = SARRAY_ADD(struct buf*, PROC_BUFFERS(CURRENT_PROC()));
     if (new == NULL) {
         bfree (*buf);
-	return ENOMEM;
+	    return ENOMEM;
     }
     *new = *buf;
 #endif

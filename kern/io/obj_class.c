@@ -55,7 +55,7 @@
 /* Object class initialisers. */
 obj_init_t obj_table[] = {
 #include <config_drivers.h>
-	    NULL
+	NULL
 };
 
 struct obj *
@@ -103,7 +103,7 @@ obj_dup (struct obj *class, struct obj *destdir, char *destname)
     if (err != FALSE)
         obj_free (newobj);
     else
-	OBJ_SET_PERSISTENT(newobj, TRUE);
+	    OBJ_SET_PERSISTENT(newobj, TRUE);
 
     return err;
 }
@@ -141,7 +141,7 @@ obj_classes_init ()
 
     /* Initialise object drivers. */
     while (*i != NULL)
-	obj_class_init (*i++);
+	    obj_class_init (*i++);
 }
 
 #endif

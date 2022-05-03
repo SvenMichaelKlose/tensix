@@ -59,9 +59,9 @@ machdep_switch ()
 {
     if (proc_context == NULL) {
 #ifdef DEBUGLOG_MACHDEP
-    printk ("machdep_switch(): no context to switch from\n ", 0);
+        printk ("machdep_switch(): no context to switch from\n ", 0);
 #endif
-	return;
+	    return;
     }
 
     /* Print debug info. */
@@ -82,11 +82,11 @@ machdep_switch ()
 
     /* Check if stack boundary was overwritten. */
     if ((*(u32_t *) CURRENT_PROC()->stack) != 0)
-	panic ("proc crossed stack boundary.\n");
+	    panic ("proc crossed stack boundary.\n");
 
 #ifdef DIAGNOSTICS
     if ((CURRENT_PROC()->state & PROC_RUNNING) == FALSE)
-	panic ("machdep_switch(): proc is not running.\n");
+	    panic ("machdep_switch(): proc is not running.\n");
 #endif
 
 #ifndef PROC_NO_TICKS

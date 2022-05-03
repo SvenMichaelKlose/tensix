@@ -39,27 +39,26 @@ obj_event_wait (struct obj *obj, int event_mask)
     obj->eventq_num++;
 
     while (1) {
-	/* Wait for an event. */
-	lock_ref_wait (&obj->lock_event);
+        /* Wait for an event. */
+        lock_ref_wait (&obj->lock_event);
 
-	/* Wakeup other process that may be waiting. */
+        /* Wakeup other process that may be waiting. */
         if (LOCKED(obj->lock_event))
-	    lock_unref (&obj->lock_event);
+	        lock_unref (&obj->lock_event);
 
-	obj->eventq_cnt--;
+	    obj->eventq_cnt--;
 
         /*
-	 * If this is the last process handling the event, mask out the event
-	 * flags.
-	 */
-	if (obj->eventq_cnt == 0 && obj->state & OBJEVENT_ALL & event_mask) {
-	    obj->state &= ~OBJEVENT_ALL;
-	}
+         * If this is the last process handling the event, mask out the event
+         * flags.
+         */
+        if (obj->eventq_cnt == 0 && obj->state & OBJEVENT_ALL & event_mask)
+            obj->state &= ~OBJEVENT_ALL;
 
-	/* Check if we're waiting for the type of event. */
-	if (obj->state & OBJEVENT_ALL & event_mask) {
-	    obj->eventq_num--;
-	    break;
+        /* Check if we're waiting for the type of event. */
+        if (obj->state & OBJEVENT_ALL & event_mask) {
+            obj->eventq_num--;
+            break;
         }
     }
 
@@ -110,11 +109,10 @@ obj_io (struct buf *buf, struct obj *obj, blk_t blk, bool mode)
 
 #ifdef OBJ_EVENTS
     if (err == ENONE && OBJ_WANTS_EVENT(obj)) {
-	if (mode == IO_W) {
-	    obj_event_trigger (obj, OBJEVENT_WRITE);
-	} else {
-	    obj_event_trigger (obj, OBJEVENT_READ);
-	}
+        if (mode == IO_W)
+            obj_event_trigger (obj, OBJEVENT_WRITE);
+        else
+            obj_event_trigger (obj, OBJEVENT_READ);
     }
 #endif
 
@@ -171,7 +169,7 @@ obj_unlink (struct obj *obj)
 
 #ifdef OBJ_EVENTS
     if (OBJ_WANTS_EVENT(obj))
-	obj_event_trigger (obj, OBJEVENT_UNLINK);
+	    obj_event_trigger (obj, OBJEVENT_UNLINK);
 #endif
 
     /* Remove file. */
@@ -196,7 +194,7 @@ obj_resize (struct obj *obj, fsize_t newlen)
 
 #ifdef OBJ_EVENTS
     if (OBJ_WANTS_EVENT(obj))
-	obj_event_trigger (obj, OBJEVENT_RESIZE);
+	    obj_event_trigger (obj, OBJEVENT_RESIZE);
 #endif
 
     /* Remove file. */

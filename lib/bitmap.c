@@ -26,14 +26,14 @@ bitmap_seek (u8_t * bitmap, size_t size, size_t b, size_t len)
 
     while (b < (size - len)) {
         if ((b % 8) && (BITMAP_BYTE(bitmap, b) == 255)) {
-	    b += 8;
+	        b += 8;
             continue;
         }
 
         /* Continue if bit is set. */
         if (BITMAP_GET(bitmap, b)) {
-	    b++;
-	    continue;
+	        b++;
+	        continue;
         }
 
         /* Check if range is large enough. */

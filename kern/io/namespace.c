@@ -30,11 +30,11 @@
 #ifndef NO_IO
 
 #ifdef DEBUGLOG_NAMESPACE
-#define NAMESPACE_PRINTK(fmt, val)  printk (fmt, (int) val)
-#define NAMESPACE_PRINTNHEX(fmt, val)  printnhex (fmt, (int) val)
+    #define NAMESPACE_PRINTK(fmt, val)  printk (fmt, (int) val)
+    #define NAMESPACE_PRINTNHEX(fmt, val)  printnhex (fmt, (int) val)
 #else
-#define NAMESPACE_PRINTK(fmt, val)
-#define NAMESPACE_PRINTNHEX(fmt, val)
+    #define NAMESPACE_PRINTK(fmt, val)
+    #define NAMESPACE_PRINTNHEX(fmt, val)
 #endif
 
 struct obj *namespace_root_obj;	/* Root directory. */
@@ -106,8 +106,8 @@ namespace_lookup (struct obj **retobj, struct obj *dir, char *name)
 
     /* Return, if we've found the entry. */
     if (*retobj != NULL) {
-	NAMESPACE_PRINTK("! namespace_lookup(): obj reused.\n", 0);
-	return err;
+        NAMESPACE_PRINTK("! namespace_lookup(): obj reused.\n", 0);
+        return err;
     }
 
     /* Check if the object owns a lookup function. */
@@ -139,27 +139,27 @@ namespace_deescape_path (char* to, char **from)
     while (1) {
         c = *path++;
         if (c == '\\') {
-	    /* Return an error if 0 follows the slash. */
-	    ERRCHK(*path == 0, EINVAL);
+            /* Return an error if 0 follows the slash. */
+            ERRCHK(*path == 0, EINVAL);
 
-	    /* Copy next character as it is. */
-	    *i++ = *path++;
-            ERRCHK(i == &to[NAME_MAX], EINVAL);
-	    continue;
+            /* Copy next character as it is. */
+            *i++ = *path++;
+                ERRCHK(i == &to[NAME_MAX], EINVAL);
+            continue;
         }
 
         /* Stop at path component end. */
         if (c == '/') {
-	    *i = 0; /* Mark string end. */
-	    break;
+            *i = 0; /* Mark string end. */
+            break;
         }
 
         *i++ = c;
         ERRCHK(i == &to[NAME_MAX], EINVAL);
 
         if (c == 0) {
-	    path--;  /* We want to get the end without extra checks. */
-	    break;
+            path--;  /* We want to get the end without extra checks. */
+            break;
         }
     }
 
@@ -201,10 +201,10 @@ namespace_lookup_path (struct obj **retobj, char *path)
     /* Check wether to start from the root node or working directory. */
     if (*path == '/') {
 #endif
-	dir = namespace_root_obj;
+        dir = namespace_root_obj;
 
-	/* Skip any more slashes that follow. */
-	CHARSKIP(path, '/');
+        /* Skip any more slashes that follow. */
+        CHARSKIP(path, '/');
 #ifndef NO_PROC
     } else
         dir = CURRENT_PROC()->pwd;
@@ -214,24 +214,24 @@ namespace_lookup_path (struct obj **retobj, char *path)
 
     /* Lookup component by component. */
     while (*path != 0) {
-	err = namespace_deescape_path (nbuf, &path);
-	ERRGOTO(err, error1);
+        err = namespace_deescape_path (nbuf, &path);
+        ERRGOTO(err, error1);
 
-	/* Lookup object from directory set already in memory. */
-	err = namespace_lookup (retobj, dir, nbuf);
-	ERRGOTO(err, error1);
+        /* Lookup object from directory set already in memory. */
+        err = namespace_lookup (retobj, dir, nbuf);
+        ERRGOTO(err, error1);
 
-	/* Break, if the component wasn't found. */
+        /* Break, if the component wasn't found. */
         ERRGOTO(*retobj == NULL, error1);
 
-	/* Return not found error. */
-	ERRCGOTO(retobj == 0, EINVAL, error1);
+        /* Return not found error. */
+        ERRCGOTO(retobj == 0, EINVAL, error1);
 
-	/* Skip double slashes. */
-	CHARSKIP(path, '/');
+        /* Skip double slashes. */
+        CHARSKIP(path, '/');
 
-	/* The new object is our next directory to use for lookups. */
-	dir = *retobj;
+        /* The new object is our next directory to use for lookups. */
+        dir = *retobj;
     }
 
     /* We have the object. err is 0. */

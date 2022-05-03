@@ -19,11 +19,12 @@ crc (void *where, size_t size)
     u8_t tmp;
 
     while (size--) {
-	tmp = *p++;
-	for (width = sizeof (u8_t) * 8; width > 0; width--) {
-	    v ^= tmp;
-	    tmp <<= 1;
-	}
+	    tmp = *p++;
+
+	    for (width = sizeof (u8_t) * 8; width > 0; width--) {
+	        v ^= tmp;
+	        tmp <<= 1;
+	    }
     }
 
     return v;

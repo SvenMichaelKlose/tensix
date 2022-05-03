@@ -31,7 +31,7 @@ printndec (unsigned int n)
 
     do {
         out[i++] = n % 10;
-	n /= 10;
+	    n /= 10;
     } while (n);
 
     while (i--)
@@ -49,25 +49,26 @@ printk (char *fmt, unsigned int v)
     while ((c = *fmt++) != 0) {
         if (c != '%') {
             con_out (c);
-	    continue;
-	}
-	c = *fmt++;
-	switch (c) {
-        case 'd':
-        case 'l':
-            d = (unsigned int) v;
-	    printndec ((unsigned int) d);
-	    break;
+	        continue;
+	    }
 
-        case 's':
-            s = (char*) v;
-	    while ((c = *s++) != 0)
-	        con_out (c);
-	    break;
+	    c = *fmt++;
+	    switch (c) {
+            case 'd':
+            case 'l':
+                d = (unsigned int) v;
+	            printndec ((unsigned int) d);
+	        break;
 
-        default:
-	    con_out ('%');
-	    con_out (c);
-	}
+            case 's':
+                s = (char*) v;
+	            while ((c = *s++) != 0)
+	                con_out (c);
+	        break;
+
+            default:
+	            con_out ('%');
+	            con_out (c);
+	    }
     }
 }

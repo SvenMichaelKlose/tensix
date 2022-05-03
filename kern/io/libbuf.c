@@ -54,9 +54,9 @@
 
 /* Debugging messages. */
 #ifdef DEBUGLOG_BUF
-#define DEBUGLOG_BUF_PRINTK(msg, arg) printk (msg, (size_t) arg)
+    #define DEBUGLOG_BUF_PRINTK(msg, arg) printk (msg, (size_t) arg)
 #else
-#define DEBUGLOG_BUF_PRINTK(msg, arg)
+    #define DEBUGLOG_BUF_PRINTK(msg, arg)
 #endif
 
 int
@@ -76,18 +76,13 @@ bio_seek_map (struct obj *obj, blk_t start, unsigned int num, unsigned int neede
 int
 batofs (struct buf **buf, void **ptr, struct obj *obj, fsize_t ofs, u8_t mode)
 {
-    int           err;
-    int           size = OBJ_BLKSIZE(obj);
-    blk_t         blk = ofs / size; /* Logical block number. */
+    int    err;
+    int    size = OBJ_BLKSIZE(obj);
+    blk_t  blk = ofs / size; /* Logical block number. */
 
-    /* Relative offset inside buffer. */
     ofs = ofs % size;
-
-    /* Get block. */
     err = bref (buf, obj, blk, mode);
     ERRCODE(err);
-
-    /* Get pointer to offset inside buffer. */
     *ptr = POINTER_ADD((*buf)->data, ofs);
 
     return 0;
@@ -104,5 +99,6 @@ batofsend (struct buf **buf, void **ptr, void **end, struct obj *obj,
 
     err = batofs (buf, ptr, obj, ofs, mode);
     *end = BUF_END(*buf,ptr);
+
     return err;
 }

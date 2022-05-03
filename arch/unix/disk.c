@@ -46,9 +46,6 @@ struct obj_ops disk_obj_ops = {
     NULL  /* int (*get_dirent) (struct dirent *, objid_t id); */
 };
 
-/*
- * Initialise console object type.
- */
 void
 disk_init (obj)
     struct obj *obj;

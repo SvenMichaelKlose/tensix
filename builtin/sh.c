@@ -55,10 +55,10 @@ void
 sh_errno (int err)
 {
     if (err == ENONE)
-	return;
+	    return;
 
     if (err > MAX_ERR)
-	err = EERROR;
+	    err = EERROR;
 
     printf ("%s: ", (int) argv[0]);
     if (err >= sizeof (error_msgs))
@@ -87,20 +87,21 @@ sh_mkargs (char *ap)
     char *d = argstrs;
 
     while (*ap >= ' ' && i < SH_MAX_ARGS) {
-	/* Skip whitespaces. */
-	while (*ap == ' ')
-	    ap++;
+        /* Skip whitespaces. */
+        while (*ap == ' ')
+            ap++;
 
-	/* Break at end of line. */
-	if (*ap < ' ')
-	    break;
+        /* Break at end of line. */
+        if (*ap < ' ')
+            break;
 
-	/* Save argument position. */
-	argv[i++] = d;
+        /* Save argument position. */
+        argv[i++] = d;
 
-	/* Copy argument. */
-	while (*ap != 0 && *ap > ' ')
-	    *d++ = *ap++;
+        /* Copy argument. */
+        while (*ap != 0 && *ap > ' ')
+            *d++ = *ap++;
+
         *d++ = 0;
     }
 
@@ -118,15 +119,15 @@ sh_ps_sub (struct proc *i_proc)
     char *state;
 
     if (first == NULL)
-	return;
+	    return;
 
     do {
-	state = (i_proc->state & PROC_RUNNING) ? "R" : "S";
-	printf ("%d\t", (size_t) i_proc->id);
-	printf ("%s\t", (size_t) state);
-	printf ("%d\t", (size_t) i_proc->ticks_run);
-	printf ("%s\t", (size_t) i_proc->name);
-	printf ("%d\n", (size_t) i_proc->stacksize);
+        state = (i_proc->state & PROC_RUNNING) ? "R" : "S";
+        printf ("%d\t", (size_t) i_proc->id);
+        printf ("%s\t", (size_t) state);
+        printf ("%d\t", (size_t) i_proc->ticks_run);
+        printf ("%s\t", (size_t) i_proc->name);
+        printf ("%d\n", (size_t) i_proc->stacksize);
         i_proc = (struct proc*) i_proc->next;
     } while (i_proc != first);
 }
@@ -205,7 +206,7 @@ sh_cd (int argc, char **argv)
 
     if (!(err || obj == NULL)) {
         CURRENT_PROC()->pwd = obj;
-	close (old);
+	    close (old);
     }
 
     return err;
@@ -236,8 +237,8 @@ sh_pwd (int argc, char **argv)
     char c;
 
     if (CURRENT_PROC()->pwd->dirent == NULL) {
-	printf ("/\n", 0);
-	return ENONE;
+        printf ("/\n", 0);
+        return ENONE;
     }
 
     path = malloc (1024);
@@ -456,9 +457,9 @@ nixfilep_step (struct nixfilep *fp, size_t step)
     fp->rpos = np % OBJ_BLKSIZE(fp->obj);
 
     if (np < 0)
-	blk -= rblk;
+	    blk -= rblk;
     else if (np > fp->buf->len)
-	blk += rblk;
+	    blk += rblk;
 
     if (blk != fp->blk) {
         fp->blk = blk;
@@ -480,7 +481,7 @@ nixfilep_skip_crlf (struct nixfilep *fp, size_t direction)
 
     while (1) {
         nixfilep_step (fp, direction);
-	c = NIXFILEP_GET(char, fp);
+	    c = NIXFILEP_GET(char, fp);
         if (c != '\r' && c == '\n')
 	    break;
     }
@@ -499,20 +500,20 @@ nixfilep_step_line (struct nixfilep *fp, size_t direction)
 
     while (1) {
         nixfilep_step (fp, direction);
-	c = NIXFILEP_GET(char, fp);
+	    c = NIXFILEP_GET(char, fp);
 
         if (c != '\r' && c != '\n')
-	    continue;
+	        continue;
 
         if (direction == 1) {
             nixfilep_step (fp, direction);
-	    c2 = NIXFILEP_GET(char, fp);
+	        c2 = NIXFILEP_GET(char, fp);
             if (c2 != '\r' && c2 != '\n')
                 nixfilep_step (fp, -direction);
-	} else
-	    nixfilep_step (fp, -direction);
+	    } else
+	        nixfilep_step (fp, -direction);
 
-	break;
+	    break;
     }
 
     return ENONE;
@@ -535,21 +536,21 @@ sh_page (int argc, char **argv)
 
     while (1) {
         err = bref (&buf, con, 0, 0);
-	ERRCODE(err);
+	    ERRCODE(err);
 
         switch (*(char *) buf->data) {
-	case 'j':
-	    pagenr++;
-	    break;
-	case 'k':
-	    if (pagenr != 1)
-	        pagenr--;
-	    break;
-	default:
-	    continue;
-	}
+            case 'j':
+                pagenr++;
+                break;
 
-        
+            case 'k':
+                if (pagenr != 1)
+                    pagenr--;
+                break;
+
+            default:
+                continue;
+        }
     }
 
     /* Close console. */
@@ -568,14 +569,14 @@ sh_objstat_findprocs (struct obj *obj, struct dequeue_hdr *proclist)
     i_tmpproc = (struct proc *) proclist->first;
     DEQUEUE_FOREACH(proclist, i_proc) {
         SARRAY_FOREACH(struct obj *, i_proc->objects, i_procobj) {
-	    if (*i_procobj == obj) {
-	        printk (i_proc->name, 0);
-	        printk (" ", 0);
-	        break;
-	    }
-	}
-	if (i_proc->next == (void *) i_tmpproc)
-	    break;
+            if (*i_procobj == obj) {
+                printk (i_proc->name, 0);
+                printk (" ", 0);
+                break;
+            }
+        }
+        if (i_proc->next == (void *) i_tmpproc)
+            break;
     }
 }
 
@@ -587,19 +588,19 @@ sh_objstat (int argc, char **argv)
     printk ("name\trefs\tlocks\tdirty\tstate\tprocs\n", 0);
     DEQUEUE_FOREACH(&obj_pool.used, i_obj) {
         if (i_obj->dirent) {
-	    printk (i_obj->dirent->name, 0);
-	    printk ("\t", 0);
-	} else
-	    printk ("/\t", 0);
-    	printk ("%d\t", i_obj->refcnt);
-    	printk ("%d\t", i_obj->lock);
-    	printk ("%d\t", i_obj->dirtybufs);
+            printk (i_obj->dirent->name, 0);
+            printk ("\t", 0);
+        } else
+            printk ("/\t", 0);
+        printk ("%d\t", i_obj->refcnt);
+        printk ("%d\t", i_obj->lock);
+        printk ("%d\t", i_obj->dirtybufs);
         if (OBJ_IS_STREAM(i_obj))
-	    printk ("s", 0);
-	else
-	    printk ("b", 0);
+            printk ("s", 0);
+        else
+            printk ("b", 0);
         if (OBJ_IS_PERSISTENT(i_obj))
-	    printk ("p", 0);
+	        printk ("p", 0);
     	printk ("\t", 0);
         sh_objstat_findprocs (i_obj, &procs_running);
         sh_objstat_findprocs (i_obj, &procs_sleeping);
@@ -836,14 +837,14 @@ sh_parse_cmdline (char *buf)
 
     while (i_cmd->name != NULL) {
         if (strcmp (argv[0], i_cmd->name) == 0) {
-	    if ((i_cmd->num_args != -1) && (i_cmd->num_args + 1) != argc) {
-		printf ("%s requires ", (size_t) argv[0]);
-		printf ("%d args.\n", (size_t) i_cmd->num_args);
-		return ENONE;
+            if ((i_cmd->num_args != -1) && (i_cmd->num_args + 1) != argc) {
+                printf ("%s requires ", (size_t) argv[0]);
+                printf ("%d args.\n", (size_t) i_cmd->num_args);
+                return ENONE;
             }
-	    return i_cmd->func (argc, argv);
-	}
-	i_cmd++;
+            return i_cmd->func (argc, argv);
+        }
+        i_cmd++;
     }
 
     printf ("?\n", 0);
@@ -888,11 +889,11 @@ sh ()
     libc_init ();
 
     while (1) {
-	err = sh_prompt ();
-	if (err == -1)
+        err = sh_prompt ();
+        if (err == -1)
             break;
         if (err != ENONE)
-  	    sh_errno (err);
+  	        sh_errno (err);
     }
 
     libc_close ();

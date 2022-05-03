@@ -60,7 +60,7 @@ lock_ref2 (lock_t *lockp, bool do_wait)
     /* Return if we're the first who set the lock (others must wait). */
     if (do_wait == FALSE && *lockp == 1) {
         SWITCH_ON();
-	return;
+	    return;
     }
 
     /* Fill in info to get unlocked. */
@@ -70,9 +70,9 @@ lock_ref2 (lock_t *lockp, bool do_wait)
     do {
         sleep (); /* Sleep. Will put switching on again. */
 
-	/* We might have been waked up for other reasons. */
-	if (proc->lock == NULL)
-	    break; /* Ok, we're let loose. */
+        /* We might have been waked up for other reasons. */
+        if (proc->lock == NULL)
+            break; /* Ok, we're let loose. */
     } while (1);
 }
 
@@ -96,8 +96,8 @@ lock_wakeup (lock_t *lockp)
 
     do {
         if (i_proc->lock != lockp) {
-	    i_proc = (struct proc*) i_proc->next;
-	    continue;
+            i_proc = (struct proc*) i_proc->next;
+            continue;
         }
 
         /* Clear lock pointer in process. */
@@ -122,7 +122,7 @@ lock_unref (lock_t *lockp)
 #ifdef DIAGNOSTICS
     /* Allow this function to be called with a NULL pointer. */
     if (lockp == NULL)
-	panic ("lock_unref(): NULL ptr arg");
+	    panic ("lock_unref(): NULL ptr arg");
 #endif
 
     SWITCH_OFF(); /* We can't use lock() here. :) */
@@ -130,8 +130,8 @@ lock_unref (lock_t *lockp)
 #ifndef NO_CHECKS
     /* Check if lock is in use, panic if not. */
     if (*lockp == 0) {
-	LOCK_PRINTNHEX((unsigned int) lockp, 4);
-	panic ("Lock underflow.");
+        LOCK_PRINTNHEX((unsigned int) lockp, 4);
+        panic ("Lock underflow.");
     }
 #endif
 
@@ -140,7 +140,7 @@ lock_unref (lock_t *lockp)
 
     /* Break, if no-one is waiting for the lock. */
     if (*lockp != 0)
-  	lock_wakeup (lockp);
+  	    lock_wakeup (lockp);
 
     SWITCH_ON();
 }
@@ -157,12 +157,12 @@ lock_read_ref (struct rwlock_t *lockp)
         /* Increment pass-by count. */
         if (!lockp->lock) {
             lockp->passed++;
-	    break;
+	        break;
         }
 
-	/* A writer occupied the lock, wait for its release. */
-	lock_ref (&lockp->lock);
-	lock_unref (&lockp->lock);
+        /* A writer occupied the lock, wait for its release. */
+        lock_ref (&lockp->lock);
+        lock_unref (&lockp->lock);
     }
 
     SWITCH_ON();
@@ -179,10 +179,10 @@ lock_write_ref (struct rwlock_t *lockp)
 
     if (lockp->passed) {
         lockp->lock++;
-	lock_ref (&lockp->lock);
+	    lock_ref (&lockp->lock);
         lockp->lock--;
     } else
-	lock_ref (&lockp->lock);
+	    lock_ref (&lockp->lock);
 }
 
 /*
@@ -198,7 +198,7 @@ lock_read_unref (struct rwlock_t *lockp)
 #ifdef DIAGNOSTICS
     /* Allow this function to be called with a NULL pointer. */
     if (lockp == NULL)
-	panic ("lock_read_unref(): NULL ptr arg");
+	    panic ("lock_read_unref(): NULL ptr arg");
 #endif
 
     SWITCH_OFF(); /* We can't use lock() here. :) */
@@ -206,8 +206,8 @@ lock_read_unref (struct rwlock_t *lockp)
 #ifndef NO_CHECKS
     /* Check if lock is in use, panic if not. */
     if (lockp->passed == 0) {
-	LOCK_PRINTNHEX((unsigned int) lockp, 4);
-	panic ("Read lock underflow.");
+	    LOCK_PRINTNHEX((unsigned int) lockp, 4);
+	    panic ("Read lock underflow.");
     }
 #endif
 

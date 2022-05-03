@@ -65,14 +65,16 @@ bcleanup (struct obj *obj)
     /* Return buffer if it's in the object's buffer list. */
     objbufs = OBJ_BUFFERS(obj);
     while (restart != FALSE) {
-	restart = FALSE;
+	    restart = FALSE;
+
         DEQUEUE_FOREACH(objbufs, buf) {
-	    if (buf->refcnt != 0 || BUF_IS_DIRTY(buf) != FALSE)
-		continue;
+            if (buf->refcnt != 0 || BUF_IS_DIRTY(buf) != FALSE)
+                continue;
+
             bfree (buf);
             restart = TRUE;
             break;
-	}
+        }
     }
 }
 
@@ -105,10 +107,10 @@ bcreate (struct buf **buf, struct obj *obj, blk_t blk)
     /* Allocate new buffer from the free buffer list. */
     DEQUEUE_POP(pool, b);
     if (b == NULL) {
-	/* We are out of buffer descriptors. Free unused buffers. */
-	bcleanup_glob ();
+        /* We are out of buffer descriptors. Free unused buffers. */
+        bcleanup_glob ();
 
-	/* Try allocation once again. */
+        /* Try allocation once again. */
         DEQUEUE_POP(pool, b);
         ERRCHK(b == NULL, ENOMEM); /* Out of memory. */
     }
@@ -163,17 +165,17 @@ buf_print_owners (struct dequeue_hdr *list, struct buf *buf)
 	panic ("buf_print_owners: no buf");
 
     DEQUEUE_FOREACH(list, pi) {
-	SARRAY_FOREACH(struct buf *, pi->buffers, bi) {
-	    if (*bi == buf) {
-		printk (pi->name, 0);
-		printk ("\n", 0);
-	    }
+        SARRAY_FOREACH(struct buf *, pi->buffers, bi) {
+            if (*bi == buf) {
+                printk (pi->name, 0);
+                printk ("\n", 0);
+            }
             if (!safe--)
-		panic ("buf_print_owners: proclist invalid");
-	}
- 	/* Process list is circular; break explicitly. */
+                panic ("buf_print_owners: proclist invalid");
+        }
+        /* Process list is circular; break explicitly. */
         if (pi->next == list->first)
-   	    break;
+   	        break;
     }
 }
 
@@ -201,9 +203,9 @@ bfree (struct buf *buf)
         printk ("buf of obj %s also in use by ", (size_t) buf->obj->dirent->name);
         buf_print_owners (&procs_running, buf);
         printk ("\n", 0);
-	return EINVAL;
+	    return EINVAL;
 /*
-	((char *) 0)[0] = 0;
+	    ((char *) 0)[0] = 0;
 */
     }
 #endif
@@ -245,34 +247,34 @@ blookup (struct buf **buf, struct obj *obj, blk_t blk)
     /* Search buffer list. */
     objbufs = OBJ_BUFFERS(obj);
     DEQUEUE_FOREACH(objbufs, i_buf) {
-	if (OBJ_IS_STREAM(obj) == FALSE) {
-	    /* Random-access: Continue, if it's not the right block number. */
+        if (OBJ_IS_STREAM(obj) == FALSE) {
+            /* Random-access: Continue, if it's not the right block number. */
             if (i_buf->blk != blk)
-	        continue;
-	} else {
-	    /* Stream: Ignore buffers that are not marked as fresh. */
-	    if (BUF_IS_DIRTY(i_buf) != FALSE || BUF_IS_FRESH(i_buf) == FALSE)
+                continue;
+        } else {
+            /* Stream: Ignore buffers that are not marked as fresh. */
+            if (BUF_IS_DIRTY(i_buf) != FALSE || BUF_IS_FRESH(i_buf) == FALSE)
                 continue;
         }
 
-	/* Reference buffer so it won't be lost after unlock. */
+        /* Reference buffer so it won't be lost after unlock. */
         _BREF(i_buf);
-	BUF_UNSET_FRESH(i_buf);
+        BUF_UNSET_FRESH(i_buf);
 
-	BUF_PRINTK("blookup(): buffer reused.\n", 0);
+        BUF_PRINTK("blookup(): buffer reused.\n", 0);
 
 #ifdef BUF_SORT_REUSED
-	if (OBJ_IS_STREAM(obj) == FALSE) {
-	    /* Move reused buffer to the front where it is found faster. */
+        if (OBJ_IS_STREAM(obj) == FALSE) {
+            /* Move reused buffer to the front where it is found faster. */
             DEQUEUE_REMOVE(OBJ_BUFFERS(obj), i_buf);
             DEQUEUE_PUSH_FRONT(OBJ_BUFFERS(obj), i_buf);
-	}
+        }
 #endif
 
-	/* Return pointer to buffer. */
-	*buf = i_buf;
+        /* Return pointer to buffer. */
+        *buf = i_buf;
 
-	break;
+        break;
     }
 
     /* Unlock buffer list. */
@@ -295,7 +297,7 @@ bread (struct buf **buf, struct obj *obj, blk_t blk, bool zero)
     /* Reuse buffers already in memory. */
     blookup (buf, obj, blk);
     if (*buf != NULL)
-	return ENONE;
+	    return ENONE;
 
     /* Create new buffer. */
     err = bcreate (buf, obj, blk);
@@ -311,9 +313,8 @@ bread (struct buf **buf, struct obj *obj, blk_t blk, bool zero)
     }
 
     /* Mark stream file buffer, so it can be looked up. */
-    if (OBJ_IS_STREAM(obj) != FALSE) {
+    if (OBJ_IS_STREAM(obj) != FALSE)
         BUF_SET_FRESH(*buf);
-    }
 
     /* Truncate buffer, matching byte granularity of file length. */
     if (!OBJ_IS_STREAM(obj) && blk == (obj->size - 1) && obj->dirent != NULL) {
@@ -337,14 +338,14 @@ _bdirty (struct buf *buf)
 #ifdef BUF_SHARE_DATA
     /* Get source buffer. */
     while (buf->srcbuf != NULL)
-	buf = buf->srcbuf;
+	    buf = buf->srcbuf;
 #endif
 
     HS_LOCK(buf->lock);
 
     /* Don't mark buffer dirty twice. */
     if (buf->state & BUF_DIRTY)
-	return;
+	    return;
 
     buf->state |= BUF_DIRTY;
     buf->obj->dirtybufs++;

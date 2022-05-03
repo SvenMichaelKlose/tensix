@@ -30,31 +30,31 @@ return;
     }
 
     if (!msg) {
-  	DEQUEUE_FOREACH(list, i) {
-	    last = i;
-	    if (i->prev != prev) {
-	    	msg = "invalid ptr to prev";
-		break;
+  	    DEQUEUE_FOREACH(list, i) {
+	        last = i;
+	        if (i->prev != prev) {
+	    	    msg = "invalid ptr to prev";
+		        break;
+	        }
+	        prev = i;
 	    }
-	    prev = i;
-	}
-	if (last != list->last)
-	    msg = "invalid ptr to last";
+	    if (last != list->last)
+	        msg = "invalid ptr to last";
     }
 
     if (!msg) {
     	if (list->first->prev != NULL)
-	    msg = "first has prev";
+	        msg = "first has prev";
         else if (list->last->next != NULL)
-	    msg = "last has next";
+	        msg = "last has next";
         else {
             DEQUEUE_FOREACH(list, i) {
-	        if (!safe--) {
-		    msg = "circular err";
-		    break;
+	            if (!safe--) {
+		            msg = "circular err";
+		            break;
                 }
             }
-	}
+	    }
     }
 
     if (msg != NULL) {
@@ -103,10 +103,10 @@ dequeue_insert_after (struct dequeue_hdr *list, struct dequeue_node *prev, struc
     record->prev = prev;
     if (prev == NULL) {
         next = list->first;
-	list->first = record;
+	    list->first = record;
     } else {
         next = prev->next;
-	prev->next = record;
+	    prev->next = record;
     }
     record->next = next;
     if (next == NULL)
@@ -114,7 +114,7 @@ dequeue_insert_after (struct dequeue_hdr *list, struct dequeue_node *prev, struc
     else
         next->prev = record;
     if (list->first == NULL)
-	list->first = record;
+	    list->first = record;
 
     DEQUEUE_CHECK(list);
 }
@@ -129,7 +129,7 @@ dequeue_push (struct dequeue_hdr *list, struct dequeue_node *record)
     record->prev = list->last;
     record->next = NULL;
     if (record->prev == NULL)
-	list->first = record;
+	    list->first = record;
     else
         record->prev->next = record;
     list->last = record;
@@ -163,12 +163,12 @@ dequeue_pop (struct dequeue_hdr *list, struct dequeue_node **record)
     rec = list->last;
     *record = rec;
     if (rec == NULL)
-	goto end;
+	    goto end;
 
     if (rec->prev != NULL)
         rec->prev->next = NULL;
     else
-	list->first = NULL;
+	    list->first = NULL;
     list->last = rec->prev;
 
 end:
@@ -185,16 +185,15 @@ dequeue_pop_front (struct dequeue_hdr *list, struct dequeue_node **record)
     rec = list->first;
     *record = rec;
     if (rec == NULL)
-	goto end;
+	    goto end;
 
     if (rec->next != NULL)
         rec->next->prev = NULL;
     else
-	list->last = NULL;
+	    list->last = NULL;
     list->first = rec->next;
 
 end:
-
     DEQUEUE_CHECK(list);
 }
 
@@ -208,13 +207,12 @@ clist_remove (struct dequeue_hdr *list, struct dequeue_node *record)
     struct dequeue_node *n = record->next;
 
     if (p == record) {
-	list->first = NULL;
-	list->last = NULL;
-	return;
+	    list->first = NULL;
+	    list->last = NULL;
+	    return;
     }
-    if (list->first == record) {
-	list->first = n;
-    }
+    if (list->first == record)
+	    list->first = n;
     p->next = record->next;
     n->prev = record->prev;
 
@@ -230,16 +228,16 @@ clist_insert (struct dequeue_hdr *list, struct dequeue_node *record)
     struct dequeue_node *prev;
 
     if (list->first == NULL && list->last == NULL) {
-	list->first = record;
-	list->last = record;
-	record->prev = record;
-	record->next = record;
-	return;
+        list->first = record;
+        list->last = record;
+        record->prev = record;
+        record->next = record;
+        return;
     }
 
 #ifdef DIAGNOSTICS
     if (list->first == NULL || list->last == NULL)
-	panic ("clist_insert(): Inconsistent header.\n");
+	    panic ("clist_insert(): Inconsistent header.\n");
 #endif
 
     next = list->first;

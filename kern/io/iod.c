@@ -98,9 +98,9 @@ iod_chn_create (struct iod_cmd *c)
     ch->dstdata = NULL;
     ch->dstrest = 0;
     if (IODCHN_IS_POLLED(ch) || IODCHN_IS_PUSHED(ch)) {
-	CLI();
-	iod_polling++;
-	STI();
+        CLI();
+        iod_polling++;
+        STI();
     }
 
     /* Make object belong to iod as well. */
@@ -132,8 +132,8 @@ iod_chn_create (struct iod_cmd *c)
     if (IODCHN_IS_IMMEDIATE(ch)) {
         while (iod_copy_buf (ch) == ENONE);
         if (IODCHN_IS_AUTOCLOSED(ch))
-	    iod_chn_kill (ch);
-	return ENONE;
+	        iod_chn_kill (ch);
+	    return ENONE;
     }
 
     proc_wakeup (iod_proc);
@@ -170,7 +170,7 @@ iod_chn_kill (struct iod_chn *ch)
     /* Remove channel descriptor from inactive list. */
     CLI();
     if (IODCHN_IS_POLLED(ch))
-	iod_polling--;
+	    iod_polling--;
     DEQUEUE_REMOVE(&iod_chn_inactive, ch);
     STI();
 
@@ -187,7 +187,7 @@ iod_chn_wakeup (struct iod_chn *ch)
     if (IODCHN_IS_ACTIVE(ch) == FALSE) {
         DEQUEUE_REMOVE(&iod_chn_inactive, ch);
         DEQUEUE_PUSH(&iod_chn_active, ch);
-	IODCHN_SET_ACTIVE(ch);
+	    IODCHN_SET_ACTIVE(ch);
     }
     STI();
 }
@@ -200,7 +200,7 @@ iod_chn_sleep (struct iod_chn *ch)
     if (IODCHN_IS_ACTIVE(ch) != FALSE) {
         DEQUEUE_REMOVE(&iod_chn_active, ch);
         DEQUEUE_PUSH(&iod_chn_inactive, ch);
-	IODCHN_SET_INACTIVE(ch);
+	    IODCHN_SET_INACTIVE(ch);
     }
     STI();
 }
@@ -219,8 +219,8 @@ iod_obj_free (struct obj *obj)
         DEQUEUE_FOREACH(&iod_chn_inactive, i_chn) {
 	    if (i_chn->from == obj || i_chn->to == obj) {
 	        iod_chn_kill (i_chn);
-		restart = TRUE;
-		break;
+		    restart = TRUE;
+		    break;
  	    }
 	}
     }
@@ -304,13 +304,8 @@ iod_obj_init (struct obj *obj)
      iod_obj = obj;
 #endif
 
-    /* Store pointer to our object ops. */
     OBJ_OPS(obj) = &iod_obj_ops;
-
-    /* Make it a stream. */
     OBJ_SET_STREAMED(obj, TRUE);
-
-    /* Set our class file name. */
     DIRENT_SET_NAME(obj_get_dirent (obj), "iod");
 }
 
@@ -334,14 +329,14 @@ iod_copy_buf (struct iod_chn  *i_chn)
     ERRCODE(err);
 
     if (srcbuf == NULL) {
-	if (IODCHN_IS_POLLED(i_chn) != FALSE && err == ENOIODATA)
-	    return err;
+        if (IODCHN_IS_POLLED(i_chn) != FALSE && err == ENOIODATA)
+            return err;
 
     	IOD_PRINTK("iod: copy blk: no src buf \n", i_chn->blk_from);
-	if (OBJ_IS_STREAM(srcobj) == FALSE)
+        if (OBJ_IS_STREAM(srcobj) == FALSE)
             iod_free_dstbuf (i_chn);
-            err = ENOIODATA;
-	return err;
+        err = ENOIODATA;
+	    return err;
     }
 
     srcdata = srcbuf->data;
@@ -354,15 +349,15 @@ iod_copy_buf (struct iod_chn  *i_chn)
         if (i_chn->dstrest == 0) {
             iod_free_dstbuf (i_chn);
 
-	    /* Allocate new outgoing buffer. */
+	        /* Allocate new outgoing buffer. */
             err = bref (&i_chn->dstbuf, dstobj, i_chn->blk_to, IO_CREATE);
             ERRGOTO(err != ENONE, error);
-	    i_chn->blk_to++;
+	        i_chn->blk_to++;
 
             /* Initialise copy parameters. */
-	    i_chn->dstdata = i_chn->dstbuf->data;
-	    i_chn->dstrest = i_chn->dstbuf->len;
-	    i_chn->dstbuf->len = 0;
+	        i_chn->dstdata = i_chn->dstbuf->data;
+	        i_chn->dstrest = i_chn->dstbuf->len;
+	        i_chn->dstbuf->len = 0;
         }
 
         len = srcrest > i_chn->dstrest ? i_chn->dstrest : srcrest;
@@ -395,49 +390,49 @@ iod_process_active ()
 
     do {
         int    cnt = 0;
-	restart = FALSE;
+	    restart = FALSE;
 
         DEQUEUE_FOREACH(&iod_chn_active, i_chn) {
-	    /* Don't handle immediate copies in the background. */
-	    if (IODCHN_IS_IMMEDIATE(i_chn))
-		continue;
+            /* Don't handle immediate copies in the background. */
+            if (IODCHN_IS_IMMEDIATE(i_chn))
+                continue;
 
-	    cnt++;
+            cnt++;
 
-	    if (IODCHN_IS_PUSHED(i_chn)) {
-		/* Only push opened objects. */
-		if (i_chn->from->refcnt == 0)
-		    continue;
+            if (IODCHN_IS_PUSHED(i_chn)) {
+                /* Only push opened objects. */
+                if (i_chn->from->refcnt == 0)
+                    continue;
 
-    		err = bread (&dummybuf, i_chn->from, 0, 0);
-		ERRGOTO(err, error);
-		continue;
-	    }
+                err = bread (&dummybuf, i_chn->from, 0, 0);
+                ERRGOTO(err, error);
+                continue;
+            }
 
-	    /* Read waiting buffer. */
-	    err = iod_copy_buf (i_chn);
+            /* Read waiting buffer. */
+            err = iod_copy_buf (i_chn);
 
-	    /*
-	     * Continue if successul. Keep polled channels going except on
-	     * errors.
-	     */
-	    if (err == ENONE ||
-		    (IODCHN_IS_POLLED(i_chn)
-	            && (err == ENONE || err == ENOIODATA))) {
+            /*
+             * Continue if successul. Keep polled channels going except on
+             * errors.
+             */
+            if (err == ENONE ||
+                (IODCHN_IS_POLLED(i_chn)
+                    && (err == ENONE || err == ENOIODATA))) {
                 restart = TRUE;
-	        continue;
-	    }
+                continue;
+            }
 
 error:
-	    /* Close channel due to error? */
-	    if (err && err != ENOIODATA) {
-	        iod_chn_sleep (i_chn); /* Make channel sleep first. */
-	        iod_chn_kill (i_chn);
+            /* Close channel due to error? */
+            if (err && err != ENOIODATA) {
+                iod_chn_sleep (i_chn); /* Make channel sleep first. */
+                iod_chn_kill (i_chn);
                 restart = TRUE;
-	        break;
-	    }
+                break;
+            }
 
-	    /* Deactivate idle channel. */
+            /* Deactivate idle channel. */
             iod_chn_sleep (i_chn);
             restart = TRUE;
             if (IODCHN_IS_AUTOCLOSED(i_chn))
@@ -445,7 +440,8 @@ error:
 
             break;
         }
-	IOD_PRINTK("iod: %d active channels.\n", cnt);
+
+	    IOD_PRINTK("iod: %d active channels.\n", cnt);
     } while (restart != FALSE);
 }
 
@@ -471,12 +467,11 @@ iod ()
 
     while (1) {
         iod_restart = FALSE;
-
         iod_process_active ();
 
         /* Don't rest when polling. */
-	if (iod_polling != 0)
-	    continue;
+	    if (iod_polling != 0)
+	        continue;
 
         if (iod_restart == FALSE)
             sleep ();

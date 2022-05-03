@@ -30,7 +30,7 @@ int objects_in_use;
 /*
  * Initialise this module.
  *
- * This function is called in main. It allocates object and class pools.
+ * This function is called in main(). It allocates object and class pools.
  */
 void
 obj_init ()
@@ -95,9 +95,9 @@ obj_alloc (struct obj *parent)
 
     /* Allocate a directory entry if there's a parent. */
     if (parent != NULL) {
-	dirent = dirent_alloc (parent);
-	if (dirent == NULL)
-	    goto error;
+        dirent = dirent_alloc (parent);
+        if (dirent == NULL)
+            goto error;
         obj_set_dirent (obj, dirent);
         dirent_set_obj (dirent, obj);
     }
@@ -121,12 +121,13 @@ obj_free_buffers (struct obj *obj)
 
     /* Remove buffers from object. */
     do {
-	restart = FALSE;
+	    restart = FALSE;
+
         DEQUEUE_FOREACH(OBJ_BUFFERS(obj), buf) {
             bfree (buf);
-	    restart = TRUE;
-	    break;
-	}
+            restart = TRUE;
+            break;
+        }
     } while (restart);
 }
 
@@ -166,7 +167,7 @@ obj_free (struct obj *obj)
 
     /* Don't free resident objects. */
     if (OBJ_IS_PERSISTENT(obj) != FALSE)
-	return;
+	    return;
 
     /* Close all I/O daemon channels containing the object. */
     iod_obj_free (obj);
@@ -174,7 +175,7 @@ obj_free (struct obj *obj)
     obj_free_buffers (obj);
 
     if (OBJ_OPS(obj)->free != NULL)
-	OBJ_FREE(obj);
+	    OBJ_FREE(obj);
 
     /* Free dirent structure. */
     if (obj->dirent != NULL)
@@ -191,7 +192,7 @@ void
 obj_unref (struct obj *obj)
 {
     if (obj->refcnt == 0)
-	panic ("obj_unref: underflow");
+	    panic ("obj_unref: underflow");
 
     obj->refcnt--;
 

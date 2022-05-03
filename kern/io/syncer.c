@@ -101,7 +101,7 @@ syncer ()
 #ifdef SYNCER
         /* Do run through list again, if someone wrote something. */
         if (syncer_restart != FALSE)
-	    continue;
+	        continue;
 
 #ifdef SYNCER_SLEEP_DELAY
 	if (syncer_sleep_delay-- && syncer_restart != FALSE) {
